@@ -1,0 +1,24 @@
+{
+  "name": "tangobudget",
+  "version": "0.0.1",
+  "description": "JS code for Tango Budget",
+  "scripts": {},
+  "author": "me",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^1.0.3",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.4.0"
+  },
+  "main": "Gruntfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agusrisso25/tangobudget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/agusrisso25/tangobudget/issues"
+  },
+  "homepage": "https://github.com/agusrisso25/tangobudget#readme"
+}
