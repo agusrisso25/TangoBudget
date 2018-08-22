@@ -14,70 +14,53 @@
   <body>
 <!--****************************************Comienza el cuerpo de la página*****************************-->
 
-    <h1>Tango Budget</h1>
-      <div class="container1" id="map"></div> 
+<h1>Tango Budget</h1>
+<div class="container">
 
-    <div id="Boton" class = "ui-widget-content">
-        <input class="Button" onclick="deleteMarkersAndPath();" type="button" value="Eliminar todo el camino">
+    <div class="row">
+        <div class="col-12" id="map"> </div>
+        <div class="col-6">  
+          <input class = "Button"  id="Boton" onclick="deleteMarkersAndPath();" type="button" value="Eliminar todo el camino"></div>
     </div>
 
-  <div class="container2" id="panel-total">
-
-    <div class="row" id="panel-result1">
-        <div class="col-12">Panel de resultados</div></div>
-
-    <div class="row" id="panel-result2">
-        <div class="col-6" value = "tx">Coordenadas Transmisor: </div>
-        <div class="col-6" value = "rx">Coordenadas Receptor: </div></div>
-
-    <div class="row" id="panel-result3">
-        <div class="col-2"></div>  
-        <div class="col-4">  
+    <div class="row" id="panel-total">
+        <div class="col-12"> <h1>Panel de resultados</h1></div>
+        <div class="col-6" value = "tx"><h2>Coordenadas Transmisor:</h2> </div>
+        <div class="col-6" value = "rx"><h2>Coordenadas Receptor: </h2></div>
+    
+        <div class="col-3">  
           <input id="transmisor" type="text" value="" size="40"></div>
-        <div class="col-4">
+        <div class="col-2">
           <input class="Button" type="button" id="Submit" value="Submit"></div>
-        <div class="col-2"></div>
-          </div>
-          <!--<input class="Button" onclick="ClickInput();" type="button" value="Submit"></div>-->
+        <div class="col-1"></div>
 
-        <div class="col-6">
-          <input id="receptor" type="text" value="" size="40">
+        <div class="col-1"></div>
+        <div class="col-3"> 
+          <input id="receptor" type="text" value="" size="40"></div>
+        <div class="col-2">
           <input class="Button" type="button" id="Submit2" value="Submit"></div>
-          
-        <div class="row" id="panel-result4">  
-            <div class="col-12">Largo del camino:</div>
-        <div class="row" id="panel-result5"> 
-            <div class="col-12 result" id="result3"></div>
+        <div class="col-1"></div>
 
-  <div id="panel-total">
-
-    <div id="panel-result">
-      <h2>Panel de resultados</h2>
-        <div value = "tx">Coordenadas Transmisor: </br>
-          <input id="transmisor" type="text" value="" size="40" >
-          <input class="Button" type="button" id="Submit" value="Submit"></div>
-          <!--<input class="Button" onclick="ClickInput();" type="button" value="Submit"></div>-->
-
-        <div value = "rx">Coordenadas Receptor: </br>
-          <input id="receptor" type="text" value="" size="40">
-          <input class="Button" type="button" id="Submit2" value="Submit"></div>
-          
-        <div value = "camino">Largo del camino: </br>
-          <p class="result" id="result3"> </p></div>
+        </br>
+        <div class="col-12"><h2>Largo del camino:</h2></div>
+        <div class="col-12 result" id="result3"></div>
     </div>
 
-  </div>
+    <div class="row" id="elevation_chart"></div>
+    <div class="row" id="elevation_chart2"></div>
 
-    <div id="elevation_chart"></div></br>
-    <div id="elevation_chart2"></div>
-
-
-	  <div id="formulario"> Formulario cliente: </br>
-      <div> Frecuencia: 
-      <input id="frequency" type="text" value="12" size="40">
-      <input class="Button" type="button" id="Submit3" value="Submit" onclick="FSL()">
-      </div>
+	<div class="row" id="formulario">
+        <div class="col-12"><h3>Formulario cliente:</h3></div>
+        <div class="col-6"><h4>Frecuencia:</h4></div>
+        <div class="col-6"></div>
+        <div class="col-3">
+            <input id="frequency" type="text" value="12" size="40"></div>
+        <div class="col-2">
+            <input class="Button" type="button" id="Submit3" value="Submit" onclick="FSL()"> </div>
+        <div class="col-1"></div>
+        <div class="col-6"></div>
     </div>
+</div>
 
 <!--*************************************Termina el cuerpo de la página*****************************-->
     <footer>

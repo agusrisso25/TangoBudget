@@ -4,24 +4,10 @@
     position: absolute;
     }
 
-#Boton {
-    position: relative;
-   }
 
 #panel-total{
     position: relative;
     top: 400px;
-    }
-    #panel-result {
-        float: left;
-        padding: 5%;
-
-    }
-    
-    #panel-test {
-        float: right;
-        padding: 5%;
-
     }
 
 #elevation_chart {
@@ -49,6 +35,7 @@ body {
     margin: 0%}
 
 .Button{
+    position: relative;
     float: right;
     text-decoration: none;
     padding: 10px;
@@ -93,7 +80,7 @@ h4 {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: black;
     font-weight: 400;
-    text-align: center;
+    text-align: left;
     font-size: 15px;
     font-style: italic;  
   }    
