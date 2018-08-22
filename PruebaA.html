@@ -3,12 +3,21 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="css/estilos.css"> 
+<<<<<<< HEAD
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href ="css/bootstrap/bootstrap.css">
+=======
+    <link rel="stylesheet" href ="css/bootstrap/bootstrap.min.css"></script>
+   <!-- <script src= "javascript/bootstrap/bootstrap.min.js"></script>
+    <script src="jquery-2.1.4.min.js"></script>
+    <script src="jquery-1.11.3.min.js"></script>
+    <script src="jquery-ui.min.js"></script> -->
+>>>>>>> master
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://www.google.com/jsapi"></script>      
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkcDHCaJewntkzwLkn-2AE28mKot0Xiog&callback=initMap"></script>
+<<<<<<< HEAD
  </head>
 
   <body>
@@ -16,11 +25,29 @@
     <h1>Tango Budget</h1>
 
       <div class="container1" id="map"></div> 
+=======
+<!-- -->
+<script>
+  
+  </script>
+ </head>
+
+<!--PENDIENTES:
+      A) QUE SE PUEDA MODIFICAR EL MARCADOR DESDE EL MAPA O CAMBIANDO LOS NUMEROS DE SUS COORDENADAS
+      B) VER DE IMPRIMIR COORDENADAS EN DOS BOXES EDITABLES EN EL HTML
+      C) Boton mas lindo para eliminar el camino y poder moverlo-->
+
+  <body>
+    <h1>Tango Budget</h1>
+
+      <div id="map"></div> 
+>>>>>>> master
 
     <div id="Boton" class = "ui-widget-content">
         <input class="Button" onclick="deleteMarkersAndPath();" type="button" value="Eliminar todo el camino">
     </div>
 
+<<<<<<< HEAD
   <div class="container2" id="panel-total">
 
     <div class="row" id="panel-result1">
@@ -48,6 +75,23 @@
             <div class="col-12">Largo del camino:</div>
         <div class="row" id="panel-result5"> 
             <div class="col-12 result" id="result3"></div>
+=======
+  <div id="panel-total">
+
+    <div id="panel-result">
+      <h2>Panel de resultados</h2>
+        <div value = "tx">Coordenadas Transmisor: </br>
+          <input id="transmisor" type="text" value="" size="40" >
+          <input class="Button" type="button" id="Submit" value="Submit"></div>
+          <!--<input class="Button" onclick="ClickInput();" type="button" value="Submit"></div>-->
+
+        <div value = "rx">Coordenadas Receptor: </br>
+          <input id="receptor" type="text" value="" size="40">
+          <input class="Button" type="button" id="Submit2" value="Submit"></div>
+          
+        <div value = "camino">Largo del camino: </br>
+          <p class="result" id="result3"> </p></div>
+>>>>>>> master
     </div>
 
   </div>
@@ -62,6 +106,7 @@
       <input class="Button" type="button" id="Submit3" value="Submit" onclick="FSL()">
       </div>
     </div>
+<<<<<<< HEAD
 <!--*************************************Termina el cuerpo de la página*****************************-->
     <footer>
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -70,6 +115,11 @@
     <script src="bootstrap_js/bootstrap.min.js" ></script>
     
         <script type="text/javascript" src = "src/FunctionInit.js"></script>     
+=======
+
+    <footer>
+       <script type="text/javascript" src = "src/FunctionInit.js"></script>     
+>>>>>>> master
         <script type="text/javascript" src = "src/AddMarkersAndAll.js"></script> 
         <script type="text/javascript" src = "src/FunctionCoordinates.js"></script>
         <script type="text/javascript" src = "src/MarkersToggleBounce.js"></script>

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*! tangobudget - v0.0.1 - 2018-08-22 */        // Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+=======
+/*! tangobudget - v0.0.1 - 2018-08-21 */        // Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+>>>>>>> master
         // Y se dibuja una linea entre cada marcador.
         function addMarkersAndAll(location, map) {
           var distancia_perfil = 0;
