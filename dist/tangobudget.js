@@ -1,78 +1,80 @@
-/*! tangobudget - v0.0.1 - 2018-08-22 */        // Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
-        // Y se dibuja una linea entre cada marcador.
-        function addMarkersAndAll(location, map) {
-          var distancia_perfil = 0;
-          path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
-          path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
- 
-          var marker = new google.maps.Marker({ 
-            position: location, //localizacion en donde se hizo el click
-            label: labels[labelIndex++ % labels.length],
-            map: map,
-            draggable: true, 
-            animation: google.maps.Animation.DROP,
-            title: '#' + path.getLength() 
-          });
+/*! tangobudget - v0.0.1 - 2018-08-22 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+// Y se dibuja una linea entre cada marcador.
+function addMarkersAndAll(location, map) {
+  var distancia_perfil = 0;
+  path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
+  path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
 
-          markers.push(marker);
-          poly.setMap(map); // setea la polyline en el mapa
+  var marker = new google.maps.Marker({
+    position: location, //localizacion en donde se hizo el click
+    label: labels[labelIndex++ % labels.length],
+    map: map,
+    draggable: true,
+    animation: google.maps.Animation.DROP,
+    title: "#" + path.getLength()
+  });
 
-          latitud.push(marker.getPosition().lat()); //guardo en el array latitud la latitud de cada marcador
-          longitud.push(marker.getPosition().lng()); //guardo en el array longitud la longitud de cada marcador
-          coordenadas(latitud, longitud);
+  markers.push(marker);
+  poly.setMap(map); // setea la polyline en el mapa
 
-          //Cuando arrastro un marcador:
-          google.maps.event.addListener(marker, 'drag', function(evt) {
-            //muevo la linea cuando muevo los marcadores y creo una nueva:
-            var etiqueta = marker.getLabel();
-            if (etiqueta == 'B' ){ //Si el marcador que muevo es el B
-                path.pop(); //saco el ulimo elemento de path porque es el relacionado con B
-                path.push(evt.latLng); // hago un push del nuevo lugar del marcador al array
-                path = poly.getPath(); // dibujo la linea con las dos ubicaciones
+  latitud.push(marker.getPosition().lat()); //guardo en el array latitud la latitud de cada marcador
+  longitud.push(marker.getPosition().lng()); //guardo en el array longitud la longitud de cada marcador
+  showCoordenadas(latitud, longitud);
 
-               latitud[1] = marker.getPosition().lat();
-               longitud[1] = marker.getPosition().lng(); 
-            }
-            else { // si muevo el marcador A
-              var remove2 = path.removeAt(1); // Saco el elemento del lugar 1 y lo guardo
-              var remove =  path.removeAt(0); // Saco el elemento 0 y lo guardo porque obliga la funcion pero no lo uso -- al pepe
-              
-              path.setAt(1, remove2);//seteo en el lugar 1 el mismo valor que estaba
-              path.setAt(0, evt.latLng);// seteo en el valor 0 la nueva ubicacion del marcador A
+  //Cuando arrastro un marcador:
+  google.maps.event.addListener(marker, "drag", function(evt) {
+    //muevo la linea cuando muevo los marcadores y creo una nueva:
+    var etiqueta = marker.getLabel();
+    if (etiqueta == "B") {
+      //Si el marcador que muevo es el B
+      path.pop(); //saco el ulimo elemento de path porque es el relacionado con B
+      path.push(evt.latLng); // hago un push del nuevo lugar del marcador al array
+      path = poly.getPath(); // dibujo la linea con las dos ubicaciones
 
-              path = poly.getPath(); //dibujo la poly con ambos valores
+      latitud[1] = marker.getPosition().lat();
+      longitud[1] = marker.getPosition().lng();
+    } else {
+      // si muevo el marcador A
+      var remove2 = path.removeAt(1); // Saco el elemento del lugar 1 y lo guardo
+      var remove = path.removeAt(0); // Saco el elemento 0 y lo guardo porque obliga la funcion pero no lo uso -- al pepe
 
-              latitud[0] = marker.getPosition().lat();
-              longitud[0] = marker.getPosition().lng();               
-            }
-            
-            coordenadas(latitud, longitud);
+      path.setAt(1, remove2); //seteo en el lugar 1 el mismo valor que estaba
+      path.setAt(0, evt.latLng); // seteo en el valor 0 la nueva ubicacion del marcador A
 
-             if (markers.length == 2){ 
-                // Create an ElevationService:
-                var elevator = new google.maps.ElevationService();
-                // Draw the path, using the Visualization API and the Elevation service:
-                camino[0] = path.getAt(0);
-                camino[1] = path.getAt(1);
+      path = poly.getPath(); //dibujo la poly con ambos valores
 
-                var dist = haversine(radius, latitud, longitud); 
-                displayPathElevation(camino, elevator, dist); // OJO porque distl lo saco de coordenadas() !! no funciona
-                }
-          });
+      latitud[0] = marker.getPosition().lat();
+      longitud[0] = marker.getPosition().lng();
+    }
 
-            marker.addListener('click', toggleBounce);
+    showCoordenadas(latitud, longitud);
 
-        if (markers.length == 2){ 
-            // Create an ElevationService:
-            var elevator = new google.maps.ElevationService();
-            // Draw the path, using the Visualization API and the Elevation service:
-            camino[0] = path.getAt(0);
-            camino[1] = path.getAt(1);
-            // Draw the path, using the Visualization API and the Elevation service:
-            var dist = haversine(radius, latitud, longitud); 
-            displayPathElevation(camino, elevator, dist);
-        }
-      }
+    if (markers.length == 2) {
+      // Create an ElevationService:
+      var elevator = new google.maps.ElevationService();
+      // Draw the path, using the Visualization API and the Elevation service:
+      camino[0] = path.getAt(0);
+      camino[1] = path.getAt(1);
+
+      var dist = haversine(radius, latitud, longitud);
+      displayPathElevation(camino, elevator, dist); // OJO porque distl lo saco de showCoordenadas() !! no funciona
+    }
+  });
+
+  marker.addListener("click", toggleBounce);
+
+  if (markers.length == 2) {
+    // Create an ElevationService:
+    var elevator = new google.maps.ElevationService();
+    // Draw the path, using the Visualization API and the Elevation service:
+    camino[0] = path.getAt(0);
+    camino[1] = path.getAt(1);
+    // Draw the path, using the Visualization API and the Elevation service:
+    var dist = haversine(radius, latitud, longitud);
+    displayPathElevation(camino, elevator, dist);
+  }
+}
+
 function FSL(distancia) {
 	var resultado;
 	var lambda;
@@ -387,20 +389,22 @@ function displayPathElevation(camino, elevator, dist) {
 
 
       }
-        function coordenadas(latitud, longitud){
-          
-            for(var i=0; i<markers.length; i++){
-                //document.getElementById('result1').innerHTML= "Latitud: " + latitud[0] + ", "+ "Longitud: " + longitud[0]; 
-                document.getElementById('transmisor').value = latitud[0] + ", " + longitud[0]; 
-                //document.getElementById('result2').innerHTML= "Latitud: " + latitud[1] + ", "+ "Longitud: " + longitud[1]; 
-                document.getElementById('receptor').value = latitud[1] + ", " + longitud[1];
-            }
+function showCoordenadas(latitud, longitud) {
+  for (var i = 0; i < markers.length; i++) {
+    //document.getElementById('result1').innerHTML= "Latitud: " + latitud[0] + ", "+ "Longitud: " + longitud[0];
+    document.getElementById("transmisor").value =
+      latitud[0] + ", " + longitud[0];
+    //document.getElementById('result2').innerHTML= "Latitud: " + latitud[1] + ", "+ "Longitud: " + longitud[1];
+    document.getElementById("receptor").value = latitud[1] + ", " + longitud[1];
+  }
 
-            if (latitud[0]!==0 &&  latitud[1]!==0){
-                var distancia_perfil = haversine(radius, latitud, longitud); // guardo en distancia el resultado de la funcion haversine
-                document.getElementById('result3').innerHTML = distancia_perfil.toFixed(6) + " km"; // imprimo la distancia entre dos puntos
-            }
-        }
+  if (latitud[0] !== 0 && latitud[1] !== 0) {
+    var distancia_perfil = haversine(radius, latitud, longitud); // guardo en distancia el resultado de la funcion haversine
+    document.getElementById("result3").innerHTML =
+      distancia_perfil.toFixed(6) + " km"; // imprimo la distancia entre dos puntos
+  }
+}
+
         // Elimina todos los marcadores en el array removiendo las referencias a ellos y la polyline:
         function deleteMarkersAndPath() {
             markers[0].setMap(null); //elimino el marcador A
@@ -422,51 +426,51 @@ function displayPathElevation(camino, elevator, dist) {
             document.getElementById('elevation_chart').innerHTML="";
             document.getElementById('elevation_chart2').innerHTML="";
         }
-              // Los marcadores aparecen cuando el usuario hace click en el mapa:
-        // Cada marcador se etiqueta con un letra alfabetica.
-        var labels = 'AB';
-        var labelIndex = 0;
-        var markers = [];// Los marcadores se almacenan en un array.
-        var latitud = [];
-        var longitud = [];
-        var radius = 6371; // radio de la tierra
-        var camino = [];
-        var altura = [];
-        var coordenadas = [];        
+// Los marcadores aparecen cuando el usuario hace click en el mapa:
+// Cada marcador se etiqueta con un letra alfabetica.
+var labels = "AB";
+var labelIndex = 0;
+var markers = []; // Los marcadores se almacenan en un array.
+var latitud = [];
+var longitud = [];
+var radius = 6371; // radio de la tierra
+var camino = [];
+var altura = [];
+var coordenadas = [];
 
-        // Load the Visualization API and the columnchart package:
-        google.load('visualization', '1', {packages: ['columnchart']});
-      // Inicializo el mapa centrado en un lugar de Montevideo y con su zoom correspondiente
-    function initMap() {
-        var uluru = {lat: -34.916467, lng: -56.154272};
-        var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 15, 
-        center: uluru
-      });     
-      
-      var geocoder = new google.maps.Geocoder();
-      //var infowindow = new google.maps.InfoWindow;
-      // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
-      google.maps.event.addListener(map, 'click', function(event) {
-      if (markers.length <=1) //Limito a 2 marcadores maximo.
-        addMarkersAndAll(event.latLng, map);
-        });
-       
-      document.getElementById('Submit').addEventListener('click', function() {
-        geocodeLatLng(geocoder, map);
-        });
-      document.getElementById('Submit2').addEventListener('click', function() {
-        geocodeLatLng(geocoder, map);
-        });
-        
-      
+// Load the Visualization API and the columnchart package:
+google.load("visualization", "1", { packages: ["columnchart"] });
+// Inicializo el mapa centrado en un lugar de Montevideo y con su zoom correspondiente
+function initMap() {
+  var uluru = { lat: -34.916467, lng: -56.154272 };
+  var map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: uluru
+  });
 
-      poly = new google.maps.Polyline({
-         strokeColor: '#000000', 
-         strokeOpacity: 1.0,
-         strokeWeight: 3
-         });
-    }
+  var geocoder = new google.maps.Geocoder();
+  //var infowindow = new google.maps.InfoWindow;
+  // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
+  google.maps.event.addListener(map, "click", function(event) {
+    if (markers.length <= 1)
+      //Limito a 2 marcadores maximo.
+      addMarkersAndAll(event.latLng, map);
+  });
+
+  document.getElementById("Submit").addEventListener("click", function() {
+    geocodeLatLng(geocoder, map);
+  });
+  document.getElementById("Submit2").addEventListener("click", function() {
+    geocodeLatLng(geocoder, map);
+  });
+
+  poly = new google.maps.Polyline({
+    strokeColor: "#000000",
+    strokeOpacity: 1.0,
+    strokeWeight: 3
+  });
+}
+
 function geocodeLatLng(geocoder, map) {
     console.log("test2");
     var input = document.getElementById('transmisor').value;
