@@ -20,7 +20,7 @@ function initMap() {
     center: uluru
   });
 
-  var geocoder = new google.maps.Geocoder();
+  var geocoder = new google.maps.Geocoder();// creo que no la usamos para nada
   //var infowindow = new google.maps.InfoWindow;
   // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
   google.maps.event.addListener(map, "click", function(event) {

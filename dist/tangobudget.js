@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-08-22 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-08-25 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -448,7 +448,7 @@ function initMap() {
     center: uluru
   });
 
-  var geocoder = new google.maps.Geocoder();
+  var geocoder = new google.maps.Geocoder();// creo que no la usamos para nada
   //var infowindow = new google.maps.InfoWindow;
   // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
   google.maps.event.addListener(map, "click", function(event) {

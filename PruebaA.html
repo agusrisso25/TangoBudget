@@ -14,8 +14,10 @@
   <body>
 <!--****************************************Comienza el cuerpo de la página*****************************-->
 
-<h1>Tango Budget</h1>
-<div class="container">
+<div class="container-fluid"><!--fluid es para que el contenedor ocupe todo el ancho siempre-->
+    <div class="row">
+        <div class="col-12"><h1>Tango Budget</h1></div>
+    </div>
 
     <div class="row">
         <div class="col-12" id="map"> </div>
@@ -23,10 +25,10 @@
           <input class = "Button"  id="Boton" onclick="deleteMarkersAndPath();" type="button" value="Eliminar todo el camino"></div>
     </div>
 
-    <div class="row" id="panel-total">
-        <div class="col-12"> <h1>Panel de resultados</h1></div>
-        <div class="col-6" value = "tx"><h2>Coordenadas Transmisor:</h2> </div>
-        <div class="col-6" value = "rx"><h2>Coordenadas Receptor: </h2></div>
+    <div class="row" id="panel-total">  
+        <div class="col-12"> <h2>Panel de resultados</h2></div>
+        <div class="col-6" value = "tx"><h3>Coordenadas Transmisor:</h3> </div>
+        <div class="col-6" value = "rx"><h3>Coordenadas Receptor: </h3></div>
     
         <div class="col-3">  
           <input id="transmisor" type="text" value="" size="40"></div>
@@ -42,24 +44,29 @@
         <div class="col-1"></div>
 
         </br>
-        <div class="col-12"><h2>Largo del camino:</h2></div>
+        <div class="col-12"><h3>Largo del camino:</h3></div>
         <div class="col-12 result" id="result3"></div>
     </div>
 
+    <div class="row"  id="info"> 
+        <div class="col-12">
+            <h4>Perfil de elevación del terreno</h4>
+            <p>A continuación se despliega el perfil de elevación del terreno del trayecto entre ambas antenas. Se solicita al usuario utilizar los botones debajo para modificar las alturas de cada punto del perfil</p>
+        </div>
+    </div>
     <div class="row" id="elevation_chart"></div>
     <div class="row" id="elevation_chart2"></div>
 
 	<div class="row" id="formulario">
         <div class="col-12"><h3>Formulario cliente:</h3></div>
-        <div class="col-6"><h4>Frecuencia:</h4></div>
-        <div class="col-6"></div>
-        <div class="col-3">
+        <div class="float-left"><h4>Frecuencia:</h4></div>
+        <div class="col-6">
             <input id="frequency" type="text" value="12" size="40"></div>
-        <div class="col-2">
-            <input class="Button" type="button" id="Submit3" value="Submit" onclick="FSL()"> </div>
-        <div class="col-1"></div>
-        <div class="col-6"></div>
+        <div class="float-left"><h4>Ganancia:</h4></div>
+        <div class="col-6">
+            <input id="gain" type="text" value="" size="40"></div>
     </div>
+ 
 </div>
 
 <!--*************************************Termina el cuerpo de la página*****************************-->
@@ -68,25 +75,8 @@
     <script src="bootstrap_js/jquery-3.3.1.slim.min.js" ></script>
     <script src="bootstrap_js/popper.min.js"></script>
     <script src="bootstrap_js/bootstrap.min.js" ></script>
-    
-    
-     <!--  <script type="text/javascript" src = "src/FunctionInit.js"></script>     
-        <script type="text/javascript" src = "src/AddMarkersAndAll.js"></script> 
-        <script type="text/javascript" src = "src/FunctionCoordinates.js"></script>
-        <script type="text/javascript" src = "src/MarkersToggleBounce.js"></script>
-        <script type="text/javascript" src = "src/HaversineDistance.js"></script>
-        <script type="text/javascript" src = "src/ToRadians.js"></script>
-        <script type="text/javascript" src = "src/ElevationPath.js"></script>
-        <script type="text/javascript" src = "src/FunctionDelete.js"></script>
-        <script type="text/javascript" src = "src/geolocation.js"></script>
-        <script type="text/javascript" src = "src/calculations/LOS.js"></script>
-        <script type="text/javascript" src = "src/DistanceToBorders.js"></script>
-        <script type="text/javascript" src = "src/clickinput.js"></script>
-        <script type="text/javascript" src = "src/calculations/FSL.js"></script>
-        <script type="text/javascript" src = "src/calculations/Tilt.js"></script>
-        <script type="text/javascript" src = "src/toDegrees.js"></script>     -->
 
-        <script type="text/javascript" src = "dist/tangobudget.js"></script>   
+    <script type="text/javascript" src = "dist/tangobudget.js"></script>   
     </footer>    
   </body>
 </html>
