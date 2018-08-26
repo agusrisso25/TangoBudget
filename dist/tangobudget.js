@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-08-25 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-08-26 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -79,7 +79,7 @@ function FSL(distancia,htx,hrx) {
 	var resultado;
 	var lambda;
 	var c= 3*10^8;
-	var freq= document.getElementById("frequency").value;
+	var freq= 12;
 	lambda = c/freq;
 
 	var dbreak = (4*htx*hrx)/(lambda);

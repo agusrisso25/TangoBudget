@@ -2,7 +2,7 @@ function FSL(distancia,htx,hrx) {
 	var resultado;
 	var lambda;
 	var c= 3*10^8;
-	var freq= document.getElementById("frequency").value;
+	var freq= 12;
 	lambda = c/freq;
 
 	var dbreak = (4*htx*hrx)/(lambda);

@@ -20,56 +20,102 @@
     </div>
 
     <div class="row">
-        <div class="col-12" id="map"> </div>
-        <div class="col-6">  
-          <input class = "Button"  id="Boton" onclick="deleteMarkersAndPath();" type="button" value="Eliminar todo el camino"></div>
+        <div class="col-12" id="map"> </div> 
+        <div class="col-12">  
+          <button class = "btn btn-info float-right"  id="Boton" onclick="deleteMarkersAndPath();" >Eliminar todo el camino</button></div>
     </div>
 
     <div class="row" id="panel-total">  
-        <div class="col-12"> <h2>Panel de resultados</h2></div>
+        <div class="col-12"> <h2>Panel de resultados</h2>
+        <p class="alert alert-info text-justify">En este panel se pueden visualizar las coordenadas (lat, lng) de la antena 
+            transmisora y receptora respectivamente. Además, se indica la distancia entre ambas en km.</p></div>
         <div class="col-6" value = "tx"><h3>Coordenadas Transmisor:</h3> </div>
         <div class="col-6" value = "rx"><h3>Coordenadas Receptor: </h3></div>
     
         <div class="col-3">  
           <input id="transmisor" type="text" value="" size="40"></div>
         <div class="col-2">
-          <input class="Button" type="button" id="Submit" value="Submit"></div>
+          <button class="btn btn-info btn-sm" type="button" id="Submit">Submit</button></div>
         <div class="col-1"></div>
 
         <div class="col-1"></div>
         <div class="col-3"> 
           <input id="receptor" type="text" value="" size="40"></div>
         <div class="col-2">
-          <input class="Button" type="button" id="Submit2" value="Submit"></div>
+          <button class="btn btn-info btn-sm" type="button" id="Submit2" value="">Submit</button></div>
         <div class="col-1"></div>
 
         </br>
         <div class="col-12"><h3>Largo del camino:</h3></div>
         <div class="col-12 result" id="result3"></div>
-    </div>
+    </div> 
 
     <div class="row"  id="info"> 
         <div class="col-12">
             <h4>Perfil de elevación del terreno</h4>
-            <p>A continuación se despliega el perfil de elevación del terreno del trayecto entre ambas antenas. Se solicita al usuario utilizar los botones debajo para modificar las alturas de cada punto del perfil</p>
+            <p class="alert alert-info text-justify">A continuación se despliega el perfil de elevación del terreno del trayecto 
+                entre ambas antenas. Se solicita al usuario utilizar los botones debajo para modificar las alturas de cada punto del perfil.</p>
         </div>
     </div>
     <div class="row" id="elevation_chart"></div>
     <div class="row" id="elevation_chart2"></div>
 
-	<div class="row" id="formulario">
-        <div class="col-12"><h3>Formulario cliente:</h3></div>
-        <div class="col-6">
-            <span class="float-left"><h4>Frecuencia:</h4>
-                <input id="frequency" type="text" value="12" size="40"></span>
+	<div id="formulario">
+        <div><h3>Formulario cliente:</h3>
+            <p class="alert alert-info text-justify">En el siguiente formulario se deberán de completar todos los datos obligatorios
+                para que el programa pueda realizar los cálculos del enlace de forma correcta.</p>
         </div>
-        <div class="col-6">
-            <span class="float-left"><h4>Ganancia:</h4>
-                <input id="gain" type="text" value="" size="40"></span>
-        </div>
-    </div>
+
+        <div id="acordion">
+            <div class="card">
+                <div class="card-header"> <!--Datos ENLACE-->
+                    <a href="#uno" class="card-link" data-toggle="collapse" data-parent="#acordion">Datos del enlace</a>
+                </div> <!--cierre card-header-->
+                <div id="uno" class="collapse"> 
+                    <div class="card-body">
+                        <!--hay que ver si usar action o no.. ver bien como funciona-->
+                            <label for="frecuencia">Frecuencia (Hz) </label> <input type="number" id="frecuencia" class="form-control">
+                            <label for="polarización">Polarización </label> <input type="text" id="polarizacion" class="form-control">
+                            <label for="perdidasconectores">Pérdidas de conectores (dB) </label> <input type="number" id="perdidasconectores" class="form-control">
+                                          
+                    </div><!--Cierre card body-->
+                </div> <!--Cierre de div "uno"-->
+                
+                <div class="card-header"><!--Datos antena TX-->
+                        <a href="#dos" class="card-link" data-toggle="collapse" data-parent="#acordion">Datos antena TX</a>
+                    </div> <!--cierre card-header-->
+                    <div id="dos" class="collapse">
+                        <div class="card-body">
+                            <form action="proceso.php" method="POST"> <!--hay que ver si usar action o no.. ver bien como funciona-->
+                                    <label for="alturaantena">Altura de antena (m) </label> <input type="number" id="alturaantena" class="form-control">
+                                    <label for="ganancia">Ganancia (dBi) </label> <input type="number" id="ganancia" class="form-control">
+                                    <label for="potenciatx">Potencia de transmisión (dBm) </label> <input type="number" id="potenciatx" class="form-control">
+                                    <label for="dimensiones">Dimensiones antena (mmxmmxmm) </label> <input type="text" id="dimensiones" class="form-control">
+                            </form> 
+                        </div><!--Cierre card body-->
+                    </div> <!--Cierre de div "dos"-->
+
+                <div class="card-header"><!--Datos antena RX-->
+                        <a href="#tres" class="card-link" data-toggle="collapse" data-parent="#acordion">Datos antena RX</a>
+                    </div> <!--cierre card-header-->
+                    <div id="tres" class="collapse">
+                        <div class="card-body">
+                            <form action="proceso.php" method="POST">
+                                    <label for="alturaantena">Altura de antena (m) </label> <input type="number" id="alturaantena" class="form-control">
+                                    <label for="ganancia">Ganancia (dBi) </label> <input type="number" id="ganancia" class="form-control">
+                                    <label for="sensibilidadrx">Sensibilidad de recepción (dBm) </label> <input type="number" id="potenciatx" class="form-control">
+                                    <label for="dimensiones">Dimensiones antena (mmxmmxmm) </label> <input type="text" id="dimensiones" class="form-control">
+                            </form> 
+                        </div><!--Cierre card body-->
+                    </div> <!--Cierre de div "tres"-->    
+
+            </div><!--Cierre class="card"-->
+        </div><!--div class id acordion-->
+        <div>
+            <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="Submit2" value="">Calcular</button></div>
+    </div><!--cierre div formulario-->
  
-</div>
+</div><!--Cierre div container-->
 
 <!--*************************************Termina el cuerpo de la página*****************************-->
     <footer>
