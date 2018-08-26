@@ -32,6 +32,10 @@
     top: 400px;
 }
 
+#profilebuttons {
+    position: relative;
+    top: 400px;
+}
 
 body {
     background-color: white;
@@ -84,4 +88,11 @@ h5 {
     font-style: italic;  
   }    
 
-
+  h6 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: black;
+    font-weight: 200;
+    text-align: center;
+    font-size: 10px;
+    font-style: italic;  
+  }   

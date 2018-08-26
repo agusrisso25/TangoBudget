@@ -20,7 +20,7 @@ function initMap() {
     center: uluru
   });
 
-  var geocoder = new google.maps.Geocoder();// creo que no la usamos para nada
+ // var geocoder = new google.maps.Geocoder();// creo que no la usamos para nada
   //var infowindow = new google.maps.InfoWindow;
   // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
   google.maps.event.addListener(map, "click", function(event) {
@@ -29,12 +29,12 @@ function initMap() {
       addMarkersAndAll(event.latLng, map);
   });
 
-  document.getElementById("Submit").addEventListener("click", function() {
+ /* document.getElementById("Submit").addEventListener("click", function() {
     geocodeLatLng(geocoder, map);
   });
   document.getElementById("Submit2").addEventListener("click", function() {
     geocodeLatLng(geocoder, map);
-  });
+  });*/
 
   poly = new google.maps.Polyline({
     strokeColor: "#000000",

@@ -32,22 +32,25 @@
         <div class="col-6" value = "tx"><h3>Coordenadas Transmisor:</h3> </div>
         <div class="col-6" value = "rx"><h3>Coordenadas Receptor: </h3></div>
     
-        <div class="col-3">  
-          <input id="transmisor" type="text" value="" size="40"></div>
-        <div class="col-2">
+        <div class="col-6"> 
+          <input id="transmisor" type="text" class="form-control" size="40"></div>
+      <!--  <div class="col-2">
           <button class="btn btn-info btn-sm" type="button" id="Submit">Submit</button></div>
-        <div class="col-1"></div>
+        <div class="col-1"></div>     COMENTO LOS BOTONES PARA EL MAPA POR AHORA-->
 
-        <div class="col-1"></div>
-        <div class="col-3"> 
-          <input id="receptor" type="text" value="" size="40"></div>
-        <div class="col-2">
+        <div class="col-6"> 
+          <input id="receptor" type="text" class="form-control" size="40"></div>
+       <!-- <div class="col-2">
           <button class="btn btn-info btn-sm" type="button" id="Submit2" value="">Submit</button></div>
-        <div class="col-1"></div>
+        <div class="col-1"></div>     COMENTO LOS BOTONES PARA EL MAPA POR AHORA -->
 
-        </br>
-        <div class="col-12"><h3>Largo del camino:</h3></div>
-        <div class="col-12 result" id="result3"></div>
+        <br><br>
+        <div class="col-5"></div>
+        <div class="col-2"><h3>Largo del camino:</h3>
+            <label id="result3" type="text" class="form-control" size="40"></label>
+        </div>
+        <div class="col-5"></div>
+        
     </div> 
 
     <div class="row"  id="info"> 
@@ -59,6 +62,22 @@
     </div>
     <div class="row" id="elevation_chart"></div>
     <div class="row" id="elevation_chart2"></div>
+
+    <div class="row" id="profilebuttons"><!--Botones para modificar perfil de elevación-->
+        <div class="col-6" value = "tx"><h6>Distancia objeto desde TX (km):</h6>
+            <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la distancia al objeto interferente a ingresar en el 
+                perfil, desde la antena transmisora. Por favor ingresar la distancia en km.</p>
+        </div>
+        <div class="col-6" value = "rx"><h6>Altura objeto desde suelo (m): </h6>
+            <p class="alert alert-warning text-justify">En el siguiente campo se debe ingresar la altura del objeto interferente a ingresar en el 
+                perfil. Por favor ingresar la altura en metros.</p>
+        </div>
+    
+        <div class="col-6"> 
+        <input id="distanciaobjeto" type="text" class="form-control" size="40"></div>
+        <div class="col-6"> 
+        <input id="alturaobjeto" type="text" class="form-control" size="40"></div>
+    </div>
 
 	<div id="formulario">
         <div><h3>Formulario cliente:</h3>
@@ -75,7 +94,11 @@
                     <div class="card-body">
                         <!--hay que ver si usar action o no.. ver bien como funciona-->
                             <label for="frecuencia">Frecuencia (Hz) </label> <input type="number" id="frecuencia" class="form-control">
-                            <label for="polarización">Polarización </label> <input type="text" id="polarizacion" class="form-control">
+                            <label for="frecuencia">Polarización </label>
+                                <select name="polarizacion" class="form-control">
+                                    <option value="vertical">Vertical</option>
+                                    <option value="horizontal">Horizontal</option>
+                                </select>
                             <label for="perdidasconectores">Pérdidas de conectores (dB) </label> <input type="number" id="perdidasconectores" class="form-control">
                                           
                     </div><!--Cierre card body-->
@@ -86,7 +109,7 @@
                     </div> <!--cierre card-header-->
                     <div id="dos" class="collapse">
                         <div class="card-body">
-                            <form action="proceso.php" method="POST"> <!--hay que ver si usar action o no.. ver bien como funciona-->
+                            <form action="proceso.php" method="POST"> 
                                     <label for="alturaantena">Altura de antena (m) </label> <input type="number" id="alturaantena" class="form-control">
                                     <label for="ganancia">Ganancia (dBi) </label> <input type="number" id="ganancia" class="form-control">
                                     <label for="potenciatx">Potencia de transmisión (dBm) </label> <input type="number" id="potenciatx" class="form-control">
