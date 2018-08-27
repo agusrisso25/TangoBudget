@@ -75,188 +75,203 @@ function addMarkersAndAll(location, map) {
   }
 }
 
-function FSL(distancia,htx,hrx) {
+function Fresnel(freq,htx,hrx){
+  //Se procede a hallar el radio para hallar la zona de Fresnel
+  var lambda;
+	var c= 3*10^8;
+	lambda = c/freq;
+  var distancia = haversine(radius, latitud, longitud);
+  tan_alpha=(htx-hrx)/distancia;
+  alpha=Math.atan(tan_alpha);
+  var pto_medio=distancia/2;
+  var d1=pto_medio/Math.cos(alpha);
+  var d2=pto_medio/Math.cos(alpha);
+  R1=Math.sqrt((lambda*d1*d2)/(d1+d2));
+
+  var fresnel80= R1*0.8;
+  var fresnel60= R1*0.6;
+  var altura_puntomedio= altura[mitad_cantmuestras];
+  var resultado80=(x-pto_medio)^2/(fresnel80^2+d2^2) + (h-altura_puntomedio)^2/(fresnel80^2);
+  var resultado60=(x-pto_medio)^2/(fresnel60^2+d2^2) + (h-altura_puntomedio)^2/(fresnel60^2);
+
+  return 0;
+}
+
+function FSL(distancia,htx,hrx,freq) {
 	var resultado;
 	var lambda;
 	var c= 3*10^8;
-	var freq= 12;
 	lambda = c/freq;
-
-	var dbreak = (4*htx*hrx)/(lambda);
-
+	//var dbreak = (4*htx*hrx)/(lambda);
 	var freespaceloss=((4*Math.PI*distancia)/(lambda));
 	resultado= 20*(Math.log10(freespaceloss)); //El resultado esta en dB
-  	return (resultado);
+	return (resultado);
 }
 
 //Funcion para tomar los valores que ingresa el usuario
-function InputUser(distancia,freq,htx,hrx) {
-    var Gtx=2;
-    var Grx=2;
-    var Ptx=13.5;
-    var frec=2.4;
+function InputUser() {
+    var Gtx=document.getElementById("gananciatx").value;
+    var Grx=document.getElementById("gananciarx").value;
+    var Ptx=document.getElementById("potenciatx").value;
+    var freq=document.getElementById("frecuencia").value;
     var disp_canal=0.9999;
-    var perdidasFSL = FSL(distancia,htx,hrx);
-    var MF = MF(distancia,A,B,freq,disp_canal);
-    var perdidasConectores=0;
-    var otrasperdidas;
+    var htx=document.getElementById("alturaantenatx").value;
+    var hrx=document.getElementById("alturaantenarx").value;
+    var distancia = haversine(radius, latitud, longitud);
+    var perdidasConectores=document.getElementById("perdidasconectores").value;
+    var perdidasOtras=0;
+    var A=1;
+    var B=0.25;
 
-    var Prx=Gtx+Grx+Ptx-FSL-perdidasConectores-perdidasFSL-otrasperdidas;
-    var sensRX=Prx-MF;
+    var perdidasFSL = FSL(distancia,htx,hrx,freq);
+    var MargenFading = MF(distancia,A,B,freq,disp_canal);
+    var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
 
-    if(Prx-MF>sensRX){
+    console.log("La frecuencia ingresada es: " +freq);
+    console.log("perdidasFSL: " +perdidasFSL);
+    console.log("Prx es: " +Prx);
+    console.log("El margen de fading es: "+MargenFading);
+    //var sensRX=Prx-MF;
+
+    /*if(Prx-MF>sensRX){
       //se debe dibujar la zona de fresnel
       return 0;
     }
     else {
       alert ("No hay sensibilidad del RX suficiente");
       return 2;
-    }
+    }*/
 }
 
-        //Funcion para grados a radianes (necesaria para el calculo de distancia):
-        function LOS(altura,elevations,coordenadas) {
-          	var data2 = new google.visualization.DataTable();
-			var aux=0;
-        	data2.addColumn('string', 'Muestras');
-        	data2.addColumn('number', 'Elevacion');
-
-			for (var j = 0; j < elevations.length; j++) {
-            	data2.addRow(['',altura[j]]);
-				if(data2.getValue(j,1)=='undefined'){
-            		coordenadas [j]=0;
-            		altura[j]=0;
-				  }
-        	}
-        	//data2.setValue(0, 1, altura[0]+10);
-          	//data2.setValue(elevations.length, 1, altura[elevations.length]+10);
-          	var options = {
-            	height: 200,
-            	legend: 'none',
-            	titleY: 'Perfil de elevacion (m)',
-          	};
-
-
-          var chart2 = new google.visualization.LineChart(document.getElementById('elevation_chart2'));
-		  chart2.draw(data2, options);
-
-		  var pend1;
-		  var pend2;
-		  var posic_Pmax2;
-        	
-        	var posic_Pmax= altura.indexOf(data2.getDistinctValues(1)[elevations.length-1]); //calculo la posicion del array del punto mas alto
-
-        	//CASO A: La posicion máxima es distinta al origen o al destino, calculo altura del punto maximo.
-        	if(posic_Pmax != 0 && posic_Pmax != elevations.length-1){  
-				//caso 1: Pmax mayor a ambas antenas
-				console.log("Prueba: " +data2.getDistinctValues(1)[elevations.length-1]);
-				var Pmax= data2.getDistinctValues(1)[elevations.length-1].toFixed(3); //calculo altura maxima
-				
-	        	if (Pmax>altura[elevations.length-1].toFixed(3) && Pmax>altura[0].toFixed(3)){ 
-					//alert (Pmax);
-					return 0; //NO TENGO LOS: return 0
-				}
-
-				//caso 2: Pmax mayor a la antena Tx y menor a la Rx
-				else if (altura[0].toFixed(3)<Pmax<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
-					pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-					pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-						if (pend1>=pend2)
-							return 1; //TENGO LOS: return 1
-						else
-							return 0; //NO TENGO LOS: return 0
-				}
-
-				//caso 3: Pmax mayor a la antena Rx y menor a la Tx
-				else if (altura[elevations.length-1].toFixed(3)<Pmax<altura[0].toFixed(3)){ //el punto mas bajo es el de la posicion 0
-					pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-					pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-					
-					if (pend2>=pend1)
-						return 1; //TENGO LOS: return 1
-					else
-						return 0; //NO TENGO LOS: return 0
-				}
-				//caso 4: Pmax menor a ambas antenas 
-	        	else 
-	        		return 1; //tengo LOS: return 1
-       		}
-
-
-
-       		//CASO B: La posicion máxima el origen o el destino
-       		else if(posic_Pmax == 0 || posic_Pmax == elevations.length-1){
-       			posic_Pmax2= altura.indexOf(data2.getDistinctValues(1)[elevations.length-2]);
-       			
-       			if(posic_Pmax2== 0 || posic_Pmax2 == elevations.length-1){ //Si Pmax2 sigue siendo uno de los extremos...
-       				var Pmax3= data2.getDistinctValues(1)[elevations.length-3].toFixed(1); 
-     	  			var posic_Pmax3=altura.indexOf(data2.getDistinctValues(1)[elevations.length-3]);
-					//caso 1: Pmax3 mayor a ambas antenas
-		        	if (Pmax3>altura[elevations.length-1].toFixed(3) && Pmax3>altura[0].toFixed(3)){ 
-						//alert (Pmax3);
-						return 0; //NO TENGO LOS: return 0
-					}
-					//caso 2: Pmax3 mayor a la antena Tx y menor a la Rx
-					else if (altura[0].toFixed(3)<Pmax3<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
-						pend1= ((altura[elevations.length-2].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-						pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-							if (pend1>=pend2)
-								return 1; //TENGO LOS: return 1
-							else
-								return 0; //NO TENGO LOS: return 0
-					}
-					//caso 3: Pmax mayor a la antena Rx y menor a la Tx
-					else if (altura[elevations.length-1].toFixed(3)<Pmax3<altura[0].toFixed(3)){ //el punto mas bajo es el de la posicion 0
-						pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-						pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-						
-						if (pend2>=pend1)
-							return 1; //TENGO LOS: return 1
-						else
-							return 0; //NO TENGO LOS: return 0
-					}
-					//caso 4: Pmax3 menor a ambas antenas 
-		        	else 
-		        		return 1; //tengo LOS: return 1
-				}
-				else 
-					return 1; //tengo LOS: return 1
-       			}
-				else{ // Si Pmax 2 es la maxima altura en mi path...
-					//caso 1: Pmax mayor a ambas antenas
-					var Pmax2=data2.getDistinctValues(1)[elevations.length-2].toFixed(1); //nos da el valor de altura mas alto
-		        	if (Pmax2>altura[elevations.length-1].toFixed(3) && Pmax2>altura[0].toFixed(3)){ 
-						return 0; //NO TENGO LOS: return 0
-					}
-
-					//caso 2: Pmax mayor a la antena Tx y menor a la Rx
-					else if (altura[0].toFixed(3)<Pmax2<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
-						pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-						pend2= (Pmax2-altura[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-							if (pend1>=pend2)
-								return 1; //TENGO LOS: return 1
-							else
-								return 0; //NO TENGO LOS: return 0 
-					}
-
-					//caso 3: Pmax mayor a la antena Rx y menor a la Tx
-					else if (altura[elevations.length-1].toFixed(1)<Pmax2<altura[0].toFixed(1)){ //el punto mas bajo es el de la posicion 0
-						pend1= ((altura[elevations.length-1].toFixed(1)-altura[0].toFixed(1))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-						pend2= (Pmax2-altura[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-						
-						if (pend2>=pend1)
-							return 1; //TENGO LOS: return 1
-						else
-							return 0; //NO TENGO LOS: return 0
-					}
-					//caso 4: Pmax menor a ambas antenas 
-		        	else 
-		        		return 1; //tengo LOS: return 1
-		       	}
+//Funcion para grados a radianes (necesaria para el calculo de distancia):
+function LOS(altura,elevations,coordenadas) {
+  var data2 = new google.visualization.DataTable();
+	var aux=0;
+  data2.addColumn('string', 'Muestras');
+  data2.addColumn('number', 'Elevacion');
+	for (var j = 0; j < elevations.length; j++) {
+    data2.addRow(['',altura[j]]);
+		if(data2.getValue(j,1)=='undefined'){
+      coordenadas [j]=0;
+  		altura[j]=0;
+	  }
 }
-          
-function MF(distancia,A,B,freq,confiabilidad,disp_canal) {
-	var margen_fading= 30*Math.log10(distancia)+10*Math.log10(6*A*B*frec)-10*log(1-disp_canal)-70;
+  var options = {
+  	height: 200,
+  	legend: 'none',
+  	titleY: 'Perfil de elevacion (m)',
+  };
+  var chart2 = new google.visualization.LineChart(document.getElementById('elevation_chart2'));
+  chart2.draw(data2, options);
+
+  var pend1;
+  var pend2;
+  var posic_Pmax2;
+  var posic_Pmax= altura.indexOf(data2.getDistinctValues(1)[elevations.length-1]); //calculo la posicion del array del punto mas alto
+
+  //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura del punto maximo.
+  if(posic_Pmax != 0 && posic_Pmax != elevations.length-1){
+  	//caso 1: Pmax mayor a ambas antenas
+  	console.log("Prueba: " +data2.getDistinctValues(1)[elevations.length-1]);
+  	var Pmax= data2.getDistinctValues(1)[elevations.length-1].toFixed(3); //calculo altura maxima
+    if (Pmax>altura[elevations.length-1].toFixed(3) && Pmax>altura[0].toFixed(3)){
+  		return 0; //NO TENGO LOS: return 0
+  }
+  //caso 2: Pmax mayor a la antena Tx y menor a la Rx
+  else if (altura[0].toFixed(3)<Pmax<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
+  	pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+  	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+  	if (pend1>=pend2)
+  		return 1; //TENGO LOS: return 1
+  	else
+  		return 0; //NO TENGO LOS: return 0
+  	}
+  //caso 3: Pmax mayor a la antena Rx y menor a la Tx
+  else if (altura[elevations.length-1].toFixed(3)<Pmax<altura[0].toFixed(3)){ //el punto mas bajo es el de la posicion 0
+  	pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+  	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+  	if (pend2>=pend1)
+  		return 1; //TENGO LOS: return 1
+  	else
+  		return 0; //NO TENGO LOS: return 0
+  }
+  //caso 4: Pmax menor a ambas antenas
+  else
+  	return 1; //tengo LOS: return 1
+  }
+
+  //CASO B: La posicion máxima el origen o el destino
+  else if(posic_Pmax == 0 || posic_Pmax == elevations.length-1){
+		posic_Pmax2= altura.indexOf(data2.getDistinctValues(1)[elevations.length-2]);
+	  if(posic_Pmax2== 0 || posic_Pmax2 == elevations.length-1){ //Si Pmax2 sigue siendo uno de los extremos...
+			var Pmax3= data2.getDistinctValues(1)[elevations.length-3].toFixed(1);
+			var posic_Pmax3=altura.indexOf(data2.getDistinctValues(1)[elevations.length-3]);
+	    //caso 1: Pmax3 mayor a ambas antenas
+    	if (Pmax3>altura[elevations.length-1].toFixed(3) && Pmax3>altura[0].toFixed(3)){
+		      return 0; //NO TENGO LOS: return 0
+	    }
+	  //caso 2: Pmax3 mayor a la antena Tx y menor a la Rx
+	    else if (altura[0].toFixed(3)<Pmax3<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
+  		    pend1= ((altura[elevations.length-2].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+  		    pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+  	      if (pend1>=pend2)
+  				    return 1; //TENGO LOS: return 1
+  			  else
+  				    return 0; //NO TENGO LOS: return 0
+          }
+	  //caso 3: Pmax mayor a la antena Rx y menor a la Tx
+	   else if (altura[elevations.length-1].toFixed(3)<Pmax3<altura[0].toFixed(3)){ //el punto mas bajo es el de la posicion 0
+		     pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+		     pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+		     if (pend2>=pend1)
+			      return 1; //TENGO LOS: return 1
+		     else
+			      return 0; //NO TENGO LOS: return 0
+	   }
+	  //caso 4: Pmax3 menor a ambas antenas
+     else
+    	 return 1; //tengo LOS: return 1
+     }
+  else
+	 return 1; //tengo LOS: return 1
+}
+
+else{ // Si Pmax 2 es la maxima altura en mi path...
+	//caso 1: Pmax mayor a ambas antenas
+	var Pmax2=data2.getDistinctValues(1)[elevations.length-2].toFixed(1); //nos da el valor de altura mas alto
+  if (Pmax2>altura[elevations.length-1].toFixed(3) && Pmax2>altura[0].toFixed(3)){
+		return 0; //NO TENGO LOS: return 0
+	}
+  //caso 2: Pmax mayor a la antena Tx y menor a la Rx
+	else if (altura[0].toFixed(3)<Pmax2<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
+		pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+		pend2= (Pmax2-altura[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+			if (pend1>=pend2)
+				return 1; //TENGO LOS: return 1
+			else
+				return 0; //NO TENGO LOS: return 0
+	}
+
+	//caso 3: Pmax mayor a la antena Rx y menor a la Tx
+	else if (altura[elevations.length-1].toFixed(1)<Pmax2<altura[0].toFixed(1)){ //el punto mas bajo es el de la posicion 0
+		pend1= ((altura[elevations.length-1].toFixed(1)-altura[0].toFixed(1))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+		pend2= (Pmax2-altura[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+		if (pend2>=pend1)
+			return 1; //TENGO LOS: return 1
+		else
+			return 0; //NO TENGO LOS: return 0
+	}
+	//caso 4: Pmax menor a ambas antenas
+    else
+    	return 1; //tengo LOS: return 1
+   	}
+
+//valor_puntoMax= data2.getDistinctValues(1)[elevations.length-1].toFixed(3);
+//posic_puntoMax=altura.indexOf(data2.getDistinctValues(1)[elevations.length-1]);
+}
+
+function MF(distancia,A,B,freq,disp_canal) {
+	var margen_fading= 30*(Math.log10(distancia))+10*(Math.log10(6*A*B*freq))-10*(Math.log10(1-disp_canal))-70;
 	return margen_fading;
 }
 
@@ -341,7 +356,7 @@ function displayPathElevation(camino, elevator, dist) {
           'path': camino,
           'samples': cant_redondeo
         }, plotElevation);
-      }        
+      }
 
         // Takes an array of ElevationResult objects, draws the path on the map
         // and plots the elevation profile on a Visualization API ColumnChart.
@@ -363,16 +378,16 @@ function displayPathElevation(camino, elevator, dist) {
         data.addColumn('string', 'Sample'); //en la primer columna se especifica el tipo de valor a almacenar. En este caso en la columna 0 se almacena una variable "Sample" y es de tipo string
         data.addColumn('number', 'Elevation'); //se almacena en la columna 1 valores del tipo number y corresponde a la elevación
         for (var i = 0; i < elevations.length; i++) {
-          data.addRow(['', elevations[i].elevation]); //Acá empieza a recorrer el array 
+          data.addRow(['', elevations[i].elevation]); //Acá empieza a recorrer el array
           if(data.getValue(i,1)=='undefined'){
             coordenadas [i]=0;
             altura [i]=0;
           }
           altura [i] = data.getValue(i,1); // guardo en el array altura todas las alturas de elevation en orden
           coordenadas [i] = elevations[i].location;
-            //var posicionarray = i;
-        } 
-  
+        }
+
+        mitad_cantmuestras=(elevations.length)/2;
         console.log("Altura de cada punto: " + altura[0] + ", " + altura[1] + ", " + altura[2]);
         console.log("Coordenadas de cada punto: (" + coordenadas[0].lat()+ ", " + coordenadas[0].lng() + ")" + " "+ "(" + coordenadas[1].lat()+ ", " + coordenadas[1].lng() + ")");
         console.log("Altura Pmax: " + data.getDistinctValues(1)[elevations.length-1]);
@@ -380,8 +395,6 @@ function displayPathElevation(camino, elevator, dist) {
 
         console.log("Posición de Pmax: " + a);
         //console.log("Coordenadas Pmax: " + elevations[a].location);
-
-
 
         var distancia= haversine (radius,latitud,longitud);
         var freespaceloss= FSL(distancia);
@@ -395,7 +408,7 @@ function displayPathElevation(camino, elevator, dist) {
           legend: 'none',
           titleX: 'Cantidad de muestras',
           titleY: 'Elevation (m)'
-        }); 
+        });
 
         var hayLOS=LOS(altura,elevations,coordenadas);
 
@@ -413,8 +426,8 @@ function displayPathElevation(camino, elevator, dist) {
           legend: 'none',
           titleX: 'Cantidad de muestras',
           titleY: 'Elevation (m)'
-          }); 
-          
+          });
+
           //data.setValue(elevations.length, 1, altura[elevations.length-1]+10);
           }
         else
@@ -422,6 +435,7 @@ function displayPathElevation(camino, elevator, dist) {
 
 
       }
+
 function showCoordenadas(latitud, longitud) {
   for (var i = 0; i < markers.length; i++) {
     //document.getElementById('result1').innerHTML= "Latitud: " + latitud[0] + ", "+ "Longitud: " + longitud[0];
@@ -433,8 +447,7 @@ function showCoordenadas(latitud, longitud) {
 
   if (latitud[0] !== 0 && latitud[1] !== 0) {
     var distancia_perfil = haversine(radius, latitud, longitud); // guardo en distancia el resultado de la funcion haversine
-    document.getElementById("result3").innerHTML =
-      distancia_perfil.toFixed(6) + " km"; // imprimo la distancia entre dos puntos
+    document.getElementById("result3").innerHTML = distancia_perfil.toFixed(6) + " km"; // imprimo la distancia entre dos puntos
   }
 }
 
@@ -470,6 +483,9 @@ var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = [];
 var coordenadas = [];
+var mitad_cantmuestras=0;
+var posic_puntoMax=0;
+var valor_puntoMax=0;
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });

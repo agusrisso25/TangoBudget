@@ -1,24 +1,34 @@
 //Funcion para tomar los valores que ingresa el usuario
-function InputUser(distancia,freq,htx,hrx) {
-    var Gtx=2;
-    var Grx=2;
-    var Ptx=13.5;
-    var frec=2.4;
+function InputUser() {
+    var Gtx=document.getElementById("gananciatx").value;
+    var Grx=document.getElementById("gananciarx").value;
+    var Ptx=document.getElementById("potenciatx").value;
+    var freq=document.getElementById("frecuencia").value;
     var disp_canal=0.9999;
-    var perdidasFSL = FSL(distancia,htx,hrx);
-    var MF = MF(distancia,A,B,freq,disp_canal);
-    var perdidasConectores=0;
-    var otrasperdidas;
+    var htx=document.getElementById("alturaantenatx").value;
+    var hrx=document.getElementById("alturaantenarx").value;
+    var distancia = haversine(radius, latitud, longitud);
+    var perdidasConectores=document.getElementById("perdidasconectores").value;
+    var perdidasOtras=0;
+    var A=1;
+    var B=0.25;
 
-    var Prx=Gtx+Grx+Ptx-FSL-perdidasConectores-perdidasFSL-otrasperdidas;
-    var sensRX=Prx-MF;
+    var perdidasFSL = FSL(distancia,htx,hrx,freq);
+    var MargenFading = MF(distancia,A,B,freq,disp_canal);
+    var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
 
-    if(Prx-MF>sensRX){
+    console.log("La frecuencia ingresada es: " +freq);
+    console.log("perdidasFSL: " +perdidasFSL);
+    console.log("Prx es: " +Prx);
+    console.log("El margen de fading es: "+MargenFading);
+    //var sensRX=Prx-MF;
+
+    /*if(Prx-MF>sensRX){
       //se debe dibujar la zona de fresnel
       return 0;
     }
     else {
       alert ("No hay sensibilidad del RX suficiente");
       return 2;
-    }
+    }*/
 }

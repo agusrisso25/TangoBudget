@@ -10,7 +10,7 @@ function displayPathElevation(camino, elevator, dist) {
           'path': camino,
           'samples': cant_redondeo
         }, plotElevation);
-      }        
+      }
 
         // Takes an array of ElevationResult objects, draws the path on the map
         // and plots the elevation profile on a Visualization API ColumnChart.
@@ -32,16 +32,16 @@ function displayPathElevation(camino, elevator, dist) {
         data.addColumn('string', 'Sample'); //en la primer columna se especifica el tipo de valor a almacenar. En este caso en la columna 0 se almacena una variable "Sample" y es de tipo string
         data.addColumn('number', 'Elevation'); //se almacena en la columna 1 valores del tipo number y corresponde a la elevación
         for (var i = 0; i < elevations.length; i++) {
-          data.addRow(['', elevations[i].elevation]); //Acá empieza a recorrer el array 
+          data.addRow(['', elevations[i].elevation]); //Acá empieza a recorrer el array
           if(data.getValue(i,1)=='undefined'){
             coordenadas [i]=0;
             altura [i]=0;
           }
           altura [i] = data.getValue(i,1); // guardo en el array altura todas las alturas de elevation en orden
           coordenadas [i] = elevations[i].location;
-            //var posicionarray = i;
-        } 
-  
+        }
+
+        mitad_cantmuestras=(elevations.length)/2;
         console.log("Altura de cada punto: " + altura[0] + ", " + altura[1] + ", " + altura[2]);
         console.log("Coordenadas de cada punto: (" + coordenadas[0].lat()+ ", " + coordenadas[0].lng() + ")" + " "+ "(" + coordenadas[1].lat()+ ", " + coordenadas[1].lng() + ")");
         console.log("Altura Pmax: " + data.getDistinctValues(1)[elevations.length-1]);
@@ -49,8 +49,6 @@ function displayPathElevation(camino, elevator, dist) {
 
         console.log("Posición de Pmax: " + a);
         //console.log("Coordenadas Pmax: " + elevations[a].location);
-
-
 
         var distancia= haversine (radius,latitud,longitud);
         var freespaceloss= FSL(distancia);
@@ -64,7 +62,7 @@ function displayPathElevation(camino, elevator, dist) {
           legend: 'none',
           titleX: 'Cantidad de muestras',
           titleY: 'Elevation (m)'
-        }); 
+        });
 
         var hayLOS=LOS(altura,elevations,coordenadas);
 
@@ -82,8 +80,8 @@ function displayPathElevation(camino, elevator, dist) {
           legend: 'none',
           titleX: 'Cantidad de muestras',
           titleY: 'Elevation (m)'
-          }); 
-          
+          });
+
           //data.setValue(elevations.length, 1, altura[elevations.length-1]+10);
           }
         else

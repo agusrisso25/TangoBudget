@@ -9,6 +9,9 @@ var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = [];
 var coordenadas = [];
+var mitad_cantmuestras=0;
+var posic_puntoMax=0;
+var valor_puntoMax=0;
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });
