@@ -4,7 +4,8 @@ function InputUser() {
     var Grx=document.getElementById("gananciarx").value;
     var Ptx=document.getElementById("potenciatx").value;
     var freq=document.getElementById("frecuencia").value;
-    var disp_canal=0.9999;
+    var disp = getElementById("disponibilidad").value;
+    var disp_canal=disp/100;
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
     var distancia = haversine(radius, latitud, longitud);

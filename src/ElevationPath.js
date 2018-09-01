@@ -51,8 +51,8 @@ function displayPathElevation(camino, elevator, dist) {
         //console.log("Coordenadas Pmax: " + elevations[a].location);
 
         var distancia= haversine (radius,latitud,longitud);
-        var freespaceloss= FSL(distancia);
-        console.log("FSL: " +freespaceloss);
+        //var freespaceloss= FSL(distancia);
+        //console.log("FSL: " +freespaceloss);
         //console.log("Downtiltprueba: " +Tilt(40,100,30)); YA SABEMOS QUE EL ANGULO DA 60 GRADOS
 
 

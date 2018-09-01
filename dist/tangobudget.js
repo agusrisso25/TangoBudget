@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-08-26 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-08-29 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -114,7 +114,8 @@ function InputUser() {
     var Grx=document.getElementById("gananciarx").value;
     var Ptx=document.getElementById("potenciatx").value;
     var freq=document.getElementById("frecuencia").value;
-    var disp_canal=0.9999;
+    var disp = getElementById("disponibilidad").value;
+    var disp_canal=disp/100;
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
     var distancia = haversine(radius, latitud, longitud);
@@ -397,8 +398,8 @@ function displayPathElevation(camino, elevator, dist) {
         //console.log("Coordenadas Pmax: " + elevations[a].location);
 
         var distancia= haversine (radius,latitud,longitud);
-        var freespaceloss= FSL(distancia);
-        console.log("FSL: " +freespaceloss);
+        //var freespaceloss= FSL(distancia);
+        //console.log("FSL: " +freespaceloss);
         //console.log("Downtiltprueba: " +Tilt(40,100,30)); YA SABEMOS QUE EL ANGULO DA 60 GRADOS
 
 
