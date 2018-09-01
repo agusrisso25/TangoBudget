@@ -10,7 +10,7 @@ function LOS(altura,elevations,coordenadas) {
       coordenadas [j]=0;
   		altura[j]=0;
 	  }
-}
+  }
   var options = {
   	height: 200,
   	legend: 'none',

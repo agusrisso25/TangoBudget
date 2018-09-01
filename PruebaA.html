@@ -64,11 +64,11 @@
     <div class="row" id="elevation_chart2"></div>
 
     <div class="row" id="profilebuttons"><!--Botones para modificar perfil de elevación-->
-        <div class="col-6" value = "tx"><h6>Distancia objeto desde TX (km):</h6>
+        <div class="col-6"><h6>Distancia objeto desde TX (km):</h6>
             <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la distancia al objeto interferente a ingresar en el
                 perfil, desde la antena transmisora. Por favor ingresar la distancia en km.</p>
         </div>
-        <div class="col-6" value = "rx"><h6>Altura objeto desde suelo (m): </h6>
+        <div class="col-6"><h6>Altura objeto desde suelo (m): </h6>
             <p class="alert alert-warning text-justify">En el siguiente campo se debe ingresar la altura del objeto interferente a ingresar en el
                 perfil. Por favor ingresar la altura en metros.</p>
         </div>
@@ -77,7 +77,10 @@
         <input id="distanciaobjeto" type="text" class="form-control" size="40"></div>
         <div class="col-6">
         <input id="alturaobjeto" type="text" class="form-control" size="40"></div>
+
+        <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="Submit3" value="" onclick="ModifyHeight()">Modificar altura</button></div>
     </div>
+
 
 	<div id="formulario">
         <div><h3>Formulario cliente:</h3>

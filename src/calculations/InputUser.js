@@ -4,7 +4,7 @@ function InputUser() {
     var Grx=document.getElementById("gananciarx").value;
     var Ptx=document.getElementById("potenciatx").value;
     var freq=document.getElementById("frecuencia").value;
-    var disp = getElementById("disponibilidad").value;
+    var disp = document.getElementById("disponibilidad").value;
     var disp_canal=disp/100;
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
@@ -22,6 +22,7 @@ function InputUser() {
     console.log("perdidasFSL: " +perdidasFSL);
     console.log("Prx es: " +Prx);
     console.log("El margen de fading es: "+MargenFading);
+    console.log("La disponibildad del canal es: " +disp_canal);
     //var sensRX=Prx-MF;
 
     /*if(Prx-MF>sensRX){

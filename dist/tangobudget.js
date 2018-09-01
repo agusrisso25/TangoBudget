@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-08-29 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-09-01 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -114,7 +114,7 @@ function InputUser() {
     var Grx=document.getElementById("gananciarx").value;
     var Ptx=document.getElementById("potenciatx").value;
     var freq=document.getElementById("frecuencia").value;
-    var disp = getElementById("disponibilidad").value;
+    var disp = document.getElementById("disponibilidad").value;
     var disp_canal=disp/100;
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
@@ -132,6 +132,7 @@ function InputUser() {
     console.log("perdidasFSL: " +perdidasFSL);
     console.log("Prx es: " +Prx);
     console.log("El margen de fading es: "+MargenFading);
+    console.log("La disponibildad del canal es: " +disp_canal);
     //var sensRX=Prx-MF;
 
     /*if(Prx-MF>sensRX){
@@ -156,7 +157,7 @@ function LOS(altura,elevations,coordenadas) {
       coordenadas [j]=0;
   		altura[j]=0;
 	  }
-}
+  }
   var options = {
   	height: 200,
   	legend: 'none',
@@ -274,6 +275,33 @@ else{ // Si Pmax 2 es la maxima altura en mi path...
 function MF(distancia,A,B,freq,disp_canal) {
 	var margen_fading= 30*(Math.log10(distancia))+10*(Math.log10(6*A*B*freq))-10*(Math.log10(1-disp_canal))-70;
 	return margen_fading;
+}
+
+function ModifyHeight(){
+  var alturaobject= document.getElementById("alturaobjeto").value;
+  var distanciaobject= document.getElementById("distanciaobjeto").value;
+  var distancia = haversine(radius, latitud, longitud);
+  var cant_muestras = distancia*100; // 100 muestras por km
+  var cant_redondeo= Math.floor(cant_muestras);
+  chart = new google.visualization.ColumnChart(chartDiv);
+  data = new google.visualization.DataTable();
+
+  if(0<distanciaobject<distancia){
+    for (j=0;j<=cant_redondeo;j++){
+      for (i=0;i<=distanciaobject<i+10;i=i+10){
+        data.setValue(j, 1, altura[j]+alturaobject);//var aumentar= (altura[0]+10)
+        chart.draw(data, {
+        height: 200,
+        legend: 'none',
+        titleX: 'Cantidad de muestras',
+        titleY: 'Elevation (m)'
+      });
+      }
+    }
+    alert ("Altura modificada correctamente.");
+  }
+  else
+    alert ("Distancia seleccionada excede el largo del camino.");
 }
 
 function Tilt(distancia,htx,hrx) {
@@ -398,9 +426,6 @@ function displayPathElevation(camino, elevator, dist) {
         //console.log("Coordenadas Pmax: " + elevations[a].location);
 
         var distancia= haversine (radius,latitud,longitud);
-        //var freespaceloss= FSL(distancia);
-        //console.log("FSL: " +freespaceloss);
-        //console.log("Downtiltprueba: " +Tilt(40,100,30)); YA SABEMOS QUE EL ANGULO DA 60 GRADOS
 
 
         // Draw the chart using the data within its DIV.
@@ -420,20 +445,18 @@ function displayPathElevation(camino, elevator, dist) {
         }
         else if (hayLOS==0){
           console.log("No!");
-          //console.log("altura[0]: " +aumentar);
-          data.setValue(0, 1, altura[0]+10);//var aumentar= (altura[0]+10)
+          /*data.setValue(0, 1, altura[0]+10);//var aumentar= (altura[0]+10)
           chart.draw(data, {
           height: 200,
           legend: 'none',
           titleX: 'Cantidad de muestras',
           titleY: 'Elevation (m)'
-          });
+        });*/
 
           //data.setValue(elevations.length, 1, altura[elevations.length-1]+10);
           }
         else
           console.log("Indefinido");
-
 
       }
 

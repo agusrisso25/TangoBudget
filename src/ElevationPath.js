@@ -51,9 +51,6 @@ function displayPathElevation(camino, elevator, dist) {
         //console.log("Coordenadas Pmax: " + elevations[a].location);
 
         var distancia= haversine (radius,latitud,longitud);
-        //var freespaceloss= FSL(distancia);
-        //console.log("FSL: " +freespaceloss);
-        //console.log("Downtiltprueba: " +Tilt(40,100,30)); YA SABEMOS QUE EL ANGULO DA 60 GRADOS
 
 
         // Draw the chart using the data within its DIV.
@@ -73,19 +70,17 @@ function displayPathElevation(camino, elevator, dist) {
         }
         else if (hayLOS==0){
           console.log("No!");
-          //console.log("altura[0]: " +aumentar);
-          data.setValue(0, 1, altura[0]+10);//var aumentar= (altura[0]+10)
+          /*data.setValue(0, 1, altura[0]+10);//var aumentar= (altura[0]+10)
           chart.draw(data, {
           height: 200,
           legend: 'none',
           titleX: 'Cantidad de muestras',
           titleY: 'Elevation (m)'
-          });
+        });*/
 
           //data.setValue(elevations.length, 1, altura[elevations.length-1]+10);
           }
         else
           console.log("Indefinido");
-
 
       }
