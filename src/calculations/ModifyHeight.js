@@ -1,26 +1,23 @@
 function ModifyHeight(){
-  var alturaobject= document.getElementById("alturaobjeto").value;
-  var distanciaobject= document.getElementById("distanciaobjeto").value;
-  var distancia = haversine(radius, latitud, longitud);
-  var cant_muestras = distancia*100; // 100 muestras por km
+  //var alturaobject= document.getElementById("alturaobjeto").value; //en metros
+  var distanciaobject= document.getElementById("distanciaobjeto").value; //en km
+  var distancia = haversine(radius, latitud, longitud); //en km
+  var cant_muestras = distancia*100; // 100 muestras por km o distancia en metros
   var cant_redondeo= Math.floor(cant_muestras);
-  chart = new google.visualization.ColumnChart(chartDiv);
-  data = new google.visualization.DataTable();
+  var elevator = new google.maps.ElevationService();
 
-  if(0<distanciaobject<distancia){
-    for (j=0;j<=cant_redondeo;j++){
-      for (i=0;i<=distanciaobject<i+10;i=i+10){
-        data.setValue(j, 1, altura[j]+alturaobject);//var aumentar= (altura[0]+10)
-        chart.draw(data, {
-        height: 200,
-        legend: 'none',
-        titleX: 'Cantidad de muestras',
-        titleY: 'Elevation (m)'
-      });
-      }
-    }
-    alert ("Altura modificada correctamente.");
+  //hay que agregar el replace por si el usuario ingresa una coma y va un punto
+
+  if (0<distanciaobject<cant_muestras){
+    flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
+    muestra_mod=Math.floor(distanciaobject/10);
+    console.log("muestra_mod: "+ muestra_mod);
+
+    displayPathElevation(camino, elevator, distancia);
+    return;
   }
-  else
-    alert ("Distancia seleccionada excede el largo del camino.");
+  else{
+    alert ("distancia excede el largo del camino");
+    return;
+    }
 }

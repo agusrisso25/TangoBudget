@@ -3,14 +3,14 @@
             markers[0].setMap(null); //elimino el marcador A
             markers[1].setMap(null); //elimino el marcador B
             //Vacío todos los arrays:
-            markers = []; 
+            markers = [];
             latitud = [];
             longitud = [];
             camino = []; // NO se borra la elevacion
             elevator = [];
             elevations=[];
             altura = [];
-              
+
             path = poly.setPath([]);  // ELIMINA la poly
             document.getElementById('transmisor').value = "";
             document.getElementById('receptor').value = "";

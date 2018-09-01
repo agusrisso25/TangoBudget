@@ -278,30 +278,27 @@ function MF(distancia,A,B,freq,disp_canal) {
 }
 
 function ModifyHeight(){
-  var alturaobject= document.getElementById("alturaobjeto").value;
-  var distanciaobject= document.getElementById("distanciaobjeto").value;
-  var distancia = haversine(radius, latitud, longitud);
-  var cant_muestras = distancia*100; // 100 muestras por km
+  //var alturaobject= document.getElementById("alturaobjeto").value; //en metros
+  var distanciaobject= document.getElementById("distanciaobjeto").value; //en km
+  var distancia = haversine(radius, latitud, longitud); //en km
+  var cant_muestras = distancia*100; // 100 muestras por km o distancia en metros
   var cant_redondeo= Math.floor(cant_muestras);
-  chart = new google.visualization.ColumnChart(chartDiv);
-  data = new google.visualization.DataTable();
+  var elevator = new google.maps.ElevationService();
 
-  if(0<distanciaobject<distancia){
-    for (j=0;j<=cant_redondeo;j++){
-      for (i=0;i<=distanciaobject<i+10;i=i+10){
-        data.setValue(j, 1, altura[j]+alturaobject);//var aumentar= (altura[0]+10)
-        chart.draw(data, {
-        height: 200,
-        legend: 'none',
-        titleX: 'Cantidad de muestras',
-        titleY: 'Elevation (m)'
-      });
-      }
-    }
-    alert ("Altura modificada correctamente.");
+  //hay que agregar el replace por si el usuario ingresa una coma y va un punto
+
+  if (0<distanciaobject<cant_muestras){
+    flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
+    muestra_mod=Math.floor(distanciaobject/10);
+    console.log("muestra_mod: "+ muestra_mod);
+
+    displayPathElevation(camino, elevator, distancia);
+    return;
   }
-  else
-    alert ("Distancia seleccionada excede el largo del camino.");
+  else{
+    alert ("distancia excede el largo del camino");
+    return;
+    }
 }
 
 function Tilt(distancia,htx,hrx) {
@@ -386,7 +383,6 @@ function displayPathElevation(camino, elevator, dist) {
           'samples': cant_redondeo
         }, plotElevation);
       }
-
         // Takes an array of ElevationResult objects, draws the path on the map
         // and plots the elevation profile on a Visualization API ColumnChart.
         function plotElevation(elevations, status) {
@@ -395,7 +391,7 @@ function displayPathElevation(camino, elevator, dist) {
                 // Show the error code inside the chartDiv.
                 chartDiv.innerHTML = 'Cannot show elevation: request failed because ' + status;
                 return;
-        }
+              }
         // Create a new chart in the elevation_chart DIV.
         var chart = new google.visualization.ColumnChart(chartDiv);
 
@@ -403,6 +399,7 @@ function displayPathElevation(camino, elevator, dist) {
         // Because the samples are equidistant, the 'Sample'
         // column here does double duty as distance along the
         // X axis.
+
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Sample'); //en la primer columna se especifica el tipo de valor a almacenar. En este caso en la columna 0 se almacena una variable "Sample" y es de tipo string
         data.addColumn('number', 'Elevation'); //se almacena en la columna 1 valores del tipo number y corresponde a la elevación
@@ -416,36 +413,53 @@ function displayPathElevation(camino, elevator, dist) {
           coordenadas [i] = elevations[i].location;
         }
 
-        mitad_cantmuestras=(elevations.length)/2;
-        console.log("Altura de cada punto: " + altura[0] + ", " + altura[1] + ", " + altura[2]);
-        console.log("Coordenadas de cada punto: (" + coordenadas[0].lat()+ ", " + coordenadas[0].lng() + ")" + " "+ "(" + coordenadas[1].lat()+ ", " + coordenadas[1].lng() + ")");
-        console.log("Altura Pmax: " + data.getDistinctValues(1)[elevations.length-1]);
-        var a= altura.indexOf(data.getDistinctValues(1)[elevations.length-1]);
+        if (flag==0){
+          mitad_cantmuestras=(elevations.length)/2;
+          console.log("Altura de cada punto: " + altura[0] + ", " + altura[1] + ", " + altura[2]);
+          console.log("Coordenadas de cada punto: (" + coordenadas[0].lat()+ ", " + coordenadas[0].lng() + ")" + " "+ "(" + coordenadas[1].lat()+ ", " + coordenadas[1].lng() + ")");
+          console.log("Altura Pmax: " + data.getDistinctValues(1)[elevations.length-1]);
+          var a= altura.indexOf(data.getDistinctValues(1)[elevations.length-1]);
 
-        console.log("Posición de Pmax: " + a);
-        //console.log("Coordenadas Pmax: " + elevations[a].location);
+          console.log("Posición de Pmax: " + a);
+          //console.log("Coordenadas Pmax: " + elevations[a].location);
 
-        var distancia= haversine (radius,latitud,longitud);
+          var distancia= haversine (radius,latitud,longitud);
+          // Draw the chart using the data within its DIV.
+        }
+        else if(flag==1){
+          var valuetomodify= (parseFloat(altura[muestra_mod])+parseFloat(document.getElementById("alturaobjeto").value));
+          var distanciaobject=document.getElementById("distanciaobjeto").value;
+
+          muestra_mod=Math.floor(distanciaobject/10);
+          data.setValue(muestra_mod, 1, valuetomodify);
+          console.log("Muestra moddh: "+muestra_mod);
+          console.log("alturaobjetodh: " +document.getElementById("alturaobjeto").value);
+          console.log("valuetomodifydh: " + valuetomodify);
+          document.getElementById("alturaobjeto").value = "";
+          document.getElementById("distanciaobjeto").value = "";
+          flag=0;
+        }
+
+          // Draw the chart using the data within its DIV.
+          chart.draw(data, {
+            height: 200,
+            legend: 'none',
+            titleX: 'Cantidad de muestras',
+            titleY: 'Elevation (m)'
+          });
 
 
-        // Draw the chart using the data within its DIV.
-        chart.draw(data, {
-          height: 200,
-          legend: 'none',
-          titleX: 'Cantidad de muestras',
-          titleY: 'Elevation (m)'
-        });
 
         var hayLOS=LOS(altura,elevations,coordenadas);
 
         console.log("¿Hay LOS?: ");
         if (hayLOS==1){
           console.log("Si!");
-          console.log("Tilt: " +Tilt(distancia,elevations[0].elevation,elevations[elevations.length-1].elevation));
+          //console.log("Tilt: " +Tilt(distancia,elevations[0].elevation,elevations[elevations.length-1].elevation));
         }
         else if (hayLOS==0){
           console.log("No!");
-          /*data.setValue(0, 1, altura[0]+10);//var aumentar= (altura[0]+10)
+          /*data.setValue(0, 1, altura[0]+10);
           chart.draw(data, {
           height: 200,
           legend: 'none',
@@ -480,14 +494,14 @@ function showCoordenadas(latitud, longitud) {
             markers[0].setMap(null); //elimino el marcador A
             markers[1].setMap(null); //elimino el marcador B
             //Vacío todos los arrays:
-            markers = []; 
+            markers = [];
             latitud = [];
             longitud = [];
             camino = []; // NO se borra la elevacion
             elevator = [];
             elevations=[];
             altura = [];
-              
+
             path = poly.setPath([]);  // ELIMINA la poly
             document.getElementById('transmisor').value = "";
             document.getElementById('receptor').value = "";
@@ -496,6 +510,7 @@ function showCoordenadas(latitud, longitud) {
             document.getElementById('elevation_chart').innerHTML="";
             document.getElementById('elevation_chart2').innerHTML="";
         }
+
 // Los marcadores aparecen cuando el usuario hace click en el mapa:
 // Cada marcador se etiqueta con un letra alfabetica.
 var labels = "AB";
@@ -510,6 +525,8 @@ var coordenadas = [];
 var mitad_cantmuestras=0;
 var posic_puntoMax=0;
 var valor_puntoMax=0;
+var flag=0; //defino este flag para testear si anteriormente se hizo el displayPathElevation
+var muestra_mod; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });
