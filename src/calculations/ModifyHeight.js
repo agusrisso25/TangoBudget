@@ -14,6 +14,16 @@ function ModifyHeight(){
     console.log("muestra_mod: "+ muestra_mod);
 
     displayPathElevation(camino, elevator, distancia);
+    var hayLOS = LOS(data, elevations, coordenadas);
+
+    console.log("¿Hay LOS2?: ");
+    if (hayLOS == 1)
+      console.log("Si!");
+    else if (hayLOS == 0)
+      console.log("No!");
+    else
+      console.log("Indefinido");
+
     return;
   }
   else{

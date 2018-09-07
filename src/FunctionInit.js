@@ -14,6 +14,9 @@ var posic_puntoMax=0;
 var valor_puntoMax=0;
 var flag=0; //defino este flag para testear si anteriormente se hizo el displayPathElevation
 var muestra_mod; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
+var data;
+var chart;
+var APP = {};
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });
