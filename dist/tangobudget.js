@@ -147,7 +147,6 @@ function InputUser() {
       alert ("No hay sensibilidad del RX suficiente");
       return 2;
     }*/
-    printPDF();
 }
 
 function LOS(elevations,coordenadas) {
