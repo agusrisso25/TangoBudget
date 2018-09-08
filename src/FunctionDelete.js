@@ -11,6 +11,7 @@
             elevations=[];
             altura = [];
             data=0;
+            contador=0;
 
             path = poly.setPath([]);  // ELIMINA la poly
             document.getElementById('transmisor').value = "";

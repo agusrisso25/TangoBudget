@@ -17,7 +17,9 @@ var muestra_mod=[]; // Nos indica cual es el valor del array altura hay que modi
 var data;
 var chart;
 var distanciaobject; // Nos indica la distancia desde el TX que queremos modificar
-//var contador=0;
+var contador=0;
+var elevator;
+var dist;
 var APP = {};
 
 // Load the Visualization API and the columnchart package:

@@ -57,7 +57,7 @@ function addMarkersAndAll(location, map) {
       camino[0] = path.getAt(0);
       camino[1] = path.getAt(1);
 
-      var dist = haversine(radius, latitud, longitud);
+      dist = haversine(radius, latitud, longitud);
       displayPathElevation(camino, elevator, dist); // OJO porque distl lo saco de showCoordenadas() !! no funciona
     }
   });
@@ -65,13 +65,15 @@ function addMarkersAndAll(location, map) {
   marker.addListener("click", toggleBounce);
 
   if (markers.length == 2) {
-    // Create an ElevationService:
-    var elevator = new google.maps.ElevationService();
+    if(!elevator){
+      // Create an ElevationService:
+      elevator = new google.maps.ElevationService();
+    }
     // Draw the path, using the Visualization API and the Elevation service:
     camino[0] = path.getAt(0);
     camino[1] = path.getAt(1);
     // Draw the path, using the Visualization API and the Elevation service:
-    var dist = haversine(radius, latitud, longitud);
+    dist = haversine(radius, latitud, longitud);
     displayPathElevation(camino, elevator, dist);
   }
 }
@@ -279,19 +281,19 @@ function MF(distancia,A,B,freq,disp_canal) {
 function ModifyHeight(){
   //var alturaobject= document.getElementById("alturaobjeto").value; //en metros
   distanciaobject= document.getElementById("distanciaobjeto").value; //en km
-  var distancia = haversine(radius, latitud, longitud); //en km
-  var cant_muestras = distancia*100; // 100 muestras por km o distancia en metros
+  var cant_muestras = dist*100; // 100 muestras por km o distancia en metros
   var cant_redondeo= Math.floor(cant_muestras);
-  var elevator = new google.maps.ElevationService();
+  //var elevator = new google.maps.ElevationService();
 
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
 
   if (0<distanciaobject<cant_muestras){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
-    muestra_mod=Math.floor(distanciaobject/10);
-    console.log("muestra_mod: "+ muestra_mod);
+    contador ++;
+    muestra_mod[contador]=Math.floor(distanciaobject/10);
+    console.log("muestra_mod: "+ muestra_mod[contador]);
 
-    displayPathElevation(camino, elevator, distancia);
+    displayPathElevation(camino, elevator, dist);
     var hayLOS = LOS(elevations, coordenadas);
 
     console.log("¿Hay LOS2?: ");
@@ -317,7 +319,7 @@ function Tilt(distancia,htx,hrx) {
 }
 function DeshacerAltura() {
 	flag=3;
-	displayPathElevation(camino, elevator, distancia);
+	displayPathElevation(camino, elevator, dist);
 	return;
 }
 
@@ -445,23 +447,23 @@ function plotElevation(elevations, status) {
     var distancia = haversine(radius, latitud, longitud);
   // Draw the chart using the data within its DIV.
   } else if (flag == 1) {
-    var valuetomodify = (parseFloat(altura[muestra_mod]) + parseFloat(document.getElementById("alturaobjeto").value));
+    var valuetomodify = (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
-    muestra_mod = Math.floor(distanciaobject / 10);
-    data.setValue(muestra_mod, 1, valuetomodify);
-    console.log("Muestra moddh: " + muestra_mod);
+    muestra_mod[contador] = Math.floor(distanciaobject / 10);
+    data.setValue(muestra_mod[contador], 1, valuetomodify);
+    console.log("Muestra moddh: " + muestra_mod[contador]);
     console.log("alturaobjetodh: " + document.getElementById("alturaobjeto").value);
     console.log("valuetomodifydh: " + valuetomodify);
     document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
     flag = 0;
-  }/*
+  }
   else if (flag==3){
     data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]);
     flag=0;
     contador--;
-  }*/
+  }
 
   // Draw the chart using the data within its DIV.
   chart.draw(data, {
@@ -524,6 +526,7 @@ function showCoordenadas(latitud, longitud) {
             elevations=[];
             altura = [];
             data=0;
+            contador=0;
 
             path = poly.setPath([]);  // ELIMINA la poly
             document.getElementById('transmisor').value = "";
@@ -553,7 +556,9 @@ var muestra_mod=[]; // Nos indica cual es el valor del array altura hay que modi
 var data;
 var chart;
 var distanciaobject; // Nos indica la distancia desde el TX que queremos modificar
-//var contador=0;
+var contador=0;
+var elevator;
+var dist;
 var APP = {};
 
 // Load the Visualization API and the columnchart package:

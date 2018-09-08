@@ -57,7 +57,7 @@ function addMarkersAndAll(location, map) {
       camino[0] = path.getAt(0);
       camino[1] = path.getAt(1);
 
-      var dist = haversine(radius, latitud, longitud);
+      dist = haversine(radius, latitud, longitud);
       displayPathElevation(camino, elevator, dist); // OJO porque distl lo saco de showCoordenadas() !! no funciona
     }
   });
@@ -65,13 +65,15 @@ function addMarkersAndAll(location, map) {
   marker.addListener("click", toggleBounce);
 
   if (markers.length == 2) {
-    // Create an ElevationService:
-    var elevator = new google.maps.ElevationService();
+    if(!elevator){
+      // Create an ElevationService:
+      elevator = new google.maps.ElevationService();
+    }
     // Draw the path, using the Visualization API and the Elevation service:
     camino[0] = path.getAt(0);
     camino[1] = path.getAt(1);
     // Draw the path, using the Visualization API and the Elevation service:
-    var dist = haversine(radius, latitud, longitud);
+    dist = haversine(radius, latitud, longitud);
     displayPathElevation(camino, elevator, dist);
   }
 }

@@ -57,24 +57,25 @@ function plotElevation(elevations, status) {
 
     var distancia = haversine(radius, latitud, longitud);
   // Draw the chart using the data within its DIV.
-  } else if (flag == 1) {
-    var valuetomodify = (parseFloat(altura[muestra_mod]) + parseFloat(document.getElementById("alturaobjeto").value));
+  }
+  else if (flag == 1) {
+    var valuetomodify = (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
-    muestra_mod = Math.floor(distanciaobject / 10);
-    data.setValue(muestra_mod, 1, valuetomodify);
-    console.log("Muestra moddh: " + muestra_mod);
+    muestra_mod[contador] = Math.floor(distanciaobject / 10);
+    data.setValue(muestra_mod[contador], 1, valuetomodify);
+    console.log("Muestra moddh: " + muestra_mod[contador]);
     console.log("alturaobjetodh: " + document.getElementById("alturaobjeto").value);
     console.log("valuetomodifydh: " + valuetomodify);
     document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
     flag = 0;
-  }/*
-  else if (flag==3){
+  }
+  else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]);
     flag=0;
     contador--;
-  }*/
+  }
 
   // Draw the chart using the data within its DIV.
   chart.draw(data, {
