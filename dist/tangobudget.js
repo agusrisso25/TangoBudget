@@ -147,6 +147,7 @@ function InputUser() {
       alert ("No hay sensibilidad del RX suficiente");
       return 2;
     }*/
+    printPDF();
 }
 
 function LOS(elevations,coordenadas) {
@@ -318,9 +319,14 @@ function Tilt(distancia,htx,hrx) {
 	return resultado;
 }
 function DeshacerAltura() {
-	flag=3;
-	displayPathElevation(camino, elevator, dist);
-	return;
+	if(contador>=0){
+		flag=3;
+		displayPathElevation(camino, elevator, dist);
+		return;
+	}
+	else {
+		alert("Ya se deshicieron todos los cambios.");
+	}
 }
 
 function ClickInput(){
@@ -446,7 +452,8 @@ function plotElevation(elevations, status) {
 
     var distancia = haversine(radius, latitud, longitud);
   // Draw the chart using the data within its DIV.
-  } else if (flag == 1) {
+  }
+  else if (flag == 1) {
     var valuetomodify = (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
@@ -459,7 +466,7 @@ function plotElevation(elevations, status) {
     document.getElementById("distanciaobjeto").value = "";
     flag = 0;
   }
-  else if (flag==3){
+  else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]);
     flag=0;
     contador--;
