@@ -643,6 +643,24 @@ function toggleBounce(){
           marker.setAnimation(google.maps.Animation.BOUNCE);//rebora marcador la primera vez que se ingresa en el mapa
           // Si da el tiempo, ver como hacer que robote cada vez que se hace click en el marcador (sin arrastrar)
         }
+function printPDF(){
+       var doc = new jsPDF();          
+    var elementHandler = {
+      '#ignorePDF': function (element, renderer) {
+        return true;
+      }
+    };
+    var source = window.document.getElementsByTagName("body")[0];
+    doc.fromHTML(
+        source,
+        15,
+        15,
+        {
+          'width': 180,'elementHandlers': elementHandler
+        });
+    
+    doc.output("dataurlnewwindow");
+}
 // Convert from radians to degrees.
 function toDegrees(radians){
 	return ((radians * 180) / Math.PI);
