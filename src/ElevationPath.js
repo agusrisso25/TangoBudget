@@ -29,7 +29,7 @@ function plotElevation(elevations, status) {
   // column here does double duty as distance along the
   // X axis.
 
-  if (!data) { //Inicializa la variable global data solamente si no está inicializada.
+  if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     data = new google.visualization.DataTable();
     chart = new google.visualization.ColumnChart(chartDiv);
     data.addColumn('string', 'Sample'); //en la primer columna se especifica el tipo de valor a almacenar. En este caso en la columna 0 se almacena una variable "Sample" y es de tipo string
@@ -43,6 +43,7 @@ function plotElevation(elevations, status) {
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
       coordenadas[i] = elevations[i].location;
     }
+    flag=0;
   }
   if (flag == 0) {
     mitad_cantmuestras = (elevations.length) / 2;
@@ -68,7 +69,12 @@ function plotElevation(elevations, status) {
     document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
     flag = 0;
-  }
+  }/*
+  else if (flag==3){
+    data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]);
+    flag=0;
+    contador--;
+  }*/
 
   // Draw the chart using the data within its DIV.
   chart.draw(data, {
@@ -80,7 +86,7 @@ function plotElevation(elevations, status) {
 
 
 
-  var hayLOS = LOS(altura, elevations, coordenadas);
+  var hayLOS = LOS(elevations, coordenadas);
 
   console.log("¿Hay LOS?: ");
   if (hayLOS == 1) {

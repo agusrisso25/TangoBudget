@@ -13,9 +13,11 @@ var mitad_cantmuestras=0;
 var posic_puntoMax=0;
 var valor_puntoMax=0;
 var flag=0; //defino este flag para testear si anteriormente se hizo el displayPathElevation
-var muestra_mod; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
+var muestra_mod=[]; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
 var data;
 var chart;
+var distanciaobject; // Nos indica la distancia desde el TX que queremos modificar
+//var contador=0;
 var APP = {};
 
 // Load the Visualization API and the columnchart package:
@@ -36,13 +38,6 @@ function initMap() {
       //Limito a 2 marcadores maximo.
       addMarkersAndAll(event.latLng, map);
   });
-
- /* document.getElementById("Submit").addEventListener("click", function() {
-    geocodeLatLng(geocoder, map);
-  });
-  document.getElementById("Submit2").addEventListener("click", function() {
-    geocodeLatLng(geocoder, map);
-  });*/
 
   poly = new google.maps.Polyline({
     strokeColor: "#000000",

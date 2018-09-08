@@ -61,6 +61,7 @@
         </div>
     </div>
     <div class="row" id="elevation_chart"></div>
+
     <div class="row" id="elevation_chart2"></div>
 
     <div class="row" id="profilebuttons"><!--Botones para modificar perfil de elevación-->
@@ -74,12 +75,18 @@
         </div>
 
         <div class="col-6">
-        <input id="distanciaobjeto" type="text" class="form-control" size="40" value="0"></div>
+          <input id="distanciaobjeto" type="text" class="form-control" size="40" value="0"></div>
         <div class="col-6">
-        <input id="alturaobjeto" type="text" class="form-control" size="40" value="0"></div>
-
-        <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="Submit3" value="" onclick="ModifyHeight()">Modificar altura</button></div>
+          <input id="alturaobjeto" type="text" class="form-control" size="40" value="0"></div>
+        <div class="col-12"></div>
+        <div class="col-12"></div>
+        <div class="col-12">
+          <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="Submit3" value="" onclick="ModifyHeight()">Modificar altura</button></div>
+        <div class="col-12"></div>
+        <div class="col-12">
+          <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="deshacer" value="" onclick="DeshacerAltura()">Deshacer altura anterior</button></div>
     </div>
+ </div>
 
 
 	<div id="formulario">
@@ -137,6 +144,8 @@
 
             </div><!--Cierre class="card"-->
         </div><!--div class id acordion-->
+        <div class="col-12"></div>
+        <div class="col-12"></div>
         <div>
             <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="Submit2" value="" onclick="InputUser()">Calcular</button></div>
     </div><!--cierre div formulario-->

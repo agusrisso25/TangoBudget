@@ -16,6 +16,7 @@ function Fresnel(freq,htx,hrx){
   var altura_puntomedio= altura[mitad_cantmuestras];
   var resultado80=(x-pto_medio)^2/(fresnel80^2+d2^2) + (h-altura_puntomedio)^2/(fresnel80^2);
   var resultado60=(x-pto_medio)^2/(fresnel60^2+d2^2) + (h-altura_puntomedio)^2/(fresnel60^2);
+  
 
   return 0;
 }

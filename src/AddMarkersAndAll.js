@@ -45,8 +45,9 @@ function addMarkersAndAll(location, map) {
 
       latitud[0] = marker.getPosition().lat();
       longitud[0] = marker.getPosition().lng();
-    }
 
+    }
+    flag=2; //Seteo el flag en 2 para que desde elevationPath se actualice el data
     showCoordenadas(latitud, longitud);
 
     if (markers.length == 2) {

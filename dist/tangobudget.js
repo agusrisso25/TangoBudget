@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-09-06 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-09-08 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -45,8 +45,9 @@ function addMarkersAndAll(location, map) {
 
       latitud[0] = marker.getPosition().lat();
       longitud[0] = marker.getPosition().lng();
-    }
 
+    }
+    flag=2; //Seteo el flag en 2 para que desde elevationPath se actualice el data
     showCoordenadas(latitud, longitud);
 
     if (markers.length == 2) {
@@ -93,6 +94,7 @@ function Fresnel(freq,htx,hrx){
   var altura_puntomedio= altura[mitad_cantmuestras];
   var resultado80=(x-pto_medio)^2/(fresnel80^2+d2^2) + (h-altura_puntomedio)^2/(fresnel80^2);
   var resultado60=(x-pto_medio)^2/(fresnel60^2+d2^2) + (h-altura_puntomedio)^2/(fresnel60^2);
+  
 
   return 0;
 }
@@ -145,10 +147,9 @@ function InputUser() {
     }*/
 }
 
-//Funcion para grados a radianes (necesaria para el calculo de distancia):
-function LOS(altura,elevations,coordenadas) {
+function LOS(elevations,coordenadas) {
+//El data2 se va a borrar mas adelante.
   var data2 = new google.visualization.DataTable();
-	var aux=0;
   data2.addColumn('string', 'Muestras');
   data2.addColumn('number', 'Elevacion');
 	for (var j = 0; j < elevations.length; j++) {
@@ -164,18 +165,19 @@ function LOS(altura,elevations,coordenadas) {
   	titleY: 'Perfil de elevacion (m)',
   };
   var chart2 = new google.visualization.LineChart(document.getElementById('elevation_chart2'));
+
   chart2.draw(data2, options);
 
   var pend1;
   var pend2;
   var posic_Pmax2;
-  var posic_Pmax= altura.indexOf(data2.getDistinctValues(1)[elevations.length-1]); //calculo la posicion del array del punto mas alto
+  var posic_Pmax= altura.indexOf(data.getDistinctValues(1)[elevations.length-1]); //calculo la posicion del array del punto mas alto
 
   //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura del punto maximo.
   if(posic_Pmax != 0 && posic_Pmax != elevations.length-1){
   	//caso 1: Pmax mayor a ambas antenas
-  	console.log("Prueba: " +data2.getDistinctValues(1)[elevations.length-1]);
-  	var Pmax= data2.getDistinctValues(1)[elevations.length-1].toFixed(3); //calculo altura maxima
+  	console.log("Prueba: " +data.getDistinctValues(1)[elevations.length-1]);
+  	var Pmax= data.getDistinctValues(1)[elevations.length-1].toFixed(3); //calculo altura maxima
     if (Pmax>altura[elevations.length-1].toFixed(3) && Pmax>altura[0].toFixed(3)){
   		return 0; //NO TENGO LOS: return 0
   }
@@ -204,10 +206,10 @@ function LOS(altura,elevations,coordenadas) {
 
   //CASO B: La posicion máxima el origen o el destino
   else if(posic_Pmax == 0 || posic_Pmax == elevations.length-1){
-		posic_Pmax2= altura.indexOf(data2.getDistinctValues(1)[elevations.length-2]);
+		posic_Pmax2= altura.indexOf(data.getDistinctValues(1)[elevations.length-2]);
 	  if(posic_Pmax2== 0 || posic_Pmax2 == elevations.length-1){ //Si Pmax2 sigue siendo uno de los extremos...
-			var Pmax3= data2.getDistinctValues(1)[elevations.length-3].toFixed(1);
-			var posic_Pmax3=altura.indexOf(data2.getDistinctValues(1)[elevations.length-3]);
+			var Pmax3= data.getDistinctValues(1)[elevations.length-3].toFixed(1);
+			var posic_Pmax3=altura.indexOf(data.getDistinctValues(1)[elevations.length-3]);
 	    //caso 1: Pmax3 mayor a ambas antenas
     	if (Pmax3>altura[elevations.length-1].toFixed(3) && Pmax3>altura[0].toFixed(3)){
 		      return 0; //NO TENGO LOS: return 0
@@ -240,7 +242,7 @@ function LOS(altura,elevations,coordenadas) {
 
 else{ // Si Pmax 2 es la maxima altura en mi path...
 	//caso 1: Pmax mayor a ambas antenas
-	var Pmax2=data2.getDistinctValues(1)[elevations.length-2].toFixed(1); //nos da el valor de altura mas alto
+	var Pmax2=data.getDistinctValues(1)[elevations.length-2].toFixed(1); //nos da el valor de altura mas alto
   if (Pmax2>altura[elevations.length-1].toFixed(3) && Pmax2>altura[0].toFixed(3)){
 		return 0; //NO TENGO LOS: return 0
 	}
@@ -267,9 +269,6 @@ else{ // Si Pmax 2 es la maxima altura en mi path...
     else
     	return 1; //tengo LOS: return 1
    	}
-
-//valor_puntoMax= data2.getDistinctValues(1)[elevations.length-1].toFixed(3);
-//posic_puntoMax=altura.indexOf(data2.getDistinctValues(1)[elevations.length-1]);
 }
 
 function MF(distancia,A,B,freq,disp_canal) {
@@ -279,7 +278,7 @@ function MF(distancia,A,B,freq,disp_canal) {
 
 function ModifyHeight(){
   //var alturaobject= document.getElementById("alturaobjeto").value; //en metros
-  var distanciaobject= document.getElementById("distanciaobjeto").value; //en km
+  distanciaobject= document.getElementById("distanciaobjeto").value; //en km
   var distancia = haversine(radius, latitud, longitud); //en km
   var cant_muestras = distancia*100; // 100 muestras por km o distancia en metros
   var cant_redondeo= Math.floor(cant_muestras);
@@ -293,7 +292,7 @@ function ModifyHeight(){
     console.log("muestra_mod: "+ muestra_mod);
 
     displayPathElevation(camino, elevator, distancia);
-    var hayLOS = LOS(data, elevations, coordenadas);
+    var hayLOS = LOS(elevations, coordenadas);
 
     console.log("¿Hay LOS2?: ");
     if (hayLOS == 1)
@@ -316,6 +315,12 @@ function Tilt(distancia,htx,hrx) {
 	resultado=toDegrees(Math.atan((htx-hrx)/(distancia)));
 	return resultado;
 }
+function DeshacerAltura() {
+	flag=3;
+	displayPathElevation(camino, elevator, distancia);
+	return;
+}
+
 function ClickInput(){
     var geocoder = new google.maps.Geocoder();
     geocodeLatLng(geocoder, map);
@@ -411,7 +416,7 @@ function plotElevation(elevations, status) {
   // column here does double duty as distance along the
   // X axis.
 
-  if (!data) { //Inicializa la variable global data solamente si no está inicializada.
+  if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     data = new google.visualization.DataTable();
     chart = new google.visualization.ColumnChart(chartDiv);
     data.addColumn('string', 'Sample'); //en la primer columna se especifica el tipo de valor a almacenar. En este caso en la columna 0 se almacena una variable "Sample" y es de tipo string
@@ -425,6 +430,7 @@ function plotElevation(elevations, status) {
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
       coordenadas[i] = elevations[i].location;
     }
+    flag=0;
   }
   if (flag == 0) {
     mitad_cantmuestras = (elevations.length) / 2;
@@ -450,7 +456,12 @@ function plotElevation(elevations, status) {
     document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
     flag = 0;
-  }
+  }/*
+  else if (flag==3){
+    data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]);
+    flag=0;
+    contador--;
+  }*/
 
   // Draw the chart using the data within its DIV.
   chart.draw(data, {
@@ -462,7 +473,7 @@ function plotElevation(elevations, status) {
 
 
 
-  var hayLOS = LOS(altura, elevations, coordenadas);
+  var hayLOS = LOS(elevations, coordenadas);
 
   console.log("¿Hay LOS?: ");
   if (hayLOS == 1) {
@@ -512,6 +523,7 @@ function showCoordenadas(latitud, longitud) {
             elevator = [];
             elevations=[];
             altura = [];
+            data=0;
 
             path = poly.setPath([]);  // ELIMINA la poly
             document.getElementById('transmisor').value = "";
@@ -537,9 +549,11 @@ var mitad_cantmuestras=0;
 var posic_puntoMax=0;
 var valor_puntoMax=0;
 var flag=0; //defino este flag para testear si anteriormente se hizo el displayPathElevation
-var muestra_mod; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
+var muestra_mod=[]; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
 var data;
 var chart;
+var distanciaobject; // Nos indica la distancia desde el TX que queremos modificar
+//var contador=0;
 var APP = {};
 
 // Load the Visualization API and the columnchart package:
@@ -560,13 +574,6 @@ function initMap() {
       //Limito a 2 marcadores maximo.
       addMarkersAndAll(event.latLng, map);
   });
-
- /* document.getElementById("Submit").addEventListener("click", function() {
-    geocodeLatLng(geocoder, map);
-  });
-  document.getElementById("Submit2").addEventListener("click", function() {
-    geocodeLatLng(geocoder, map);
-  });*/
 
   poly = new google.maps.Polyline({
     strokeColor: "#000000",

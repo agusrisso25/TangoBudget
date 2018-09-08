@@ -1,6 +1,6 @@
 function ModifyHeight(){
   //var alturaobject= document.getElementById("alturaobjeto").value; //en metros
-  var distanciaobject= document.getElementById("distanciaobjeto").value; //en km
+  distanciaobject= document.getElementById("distanciaobjeto").value; //en km
   var distancia = haversine(radius, latitud, longitud); //en km
   var cant_muestras = distancia*100; // 100 muestras por km o distancia en metros
   var cant_redondeo= Math.floor(cant_muestras);
@@ -14,7 +14,7 @@ function ModifyHeight(){
     console.log("muestra_mod: "+ muestra_mod);
 
     displayPathElevation(camino, elevator, distancia);
-    var hayLOS = LOS(data, elevations, coordenadas);
+    var hayLOS = LOS(elevations, coordenadas);
 
     console.log("¿Hay LOS2?: ");
     if (hayLOS == 1)
