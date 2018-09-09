@@ -92,7 +92,6 @@ function plotElevation(elevations, status) {
   console.log("¿Hay LOS?: ");
   if (hayLOS == 1) {
     console.log("Si!");
-  //console.log("Tilt: " +Tilt(distancia,elevations[0].elevation,elevations[elevations.length-1].elevation));
   } else if (hayLOS == 0) {
     console.log("No!");
     /*data.setValue(0, 1, altura[0]+10);

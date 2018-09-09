@@ -125,18 +125,21 @@ function InputUser() {
     var distancia = haversine(radius, latitud, longitud);
     var perdidasConectores=document.getElementById("perdidasconectores").value;
     var perdidasOtras=0;
-    var A=1;
+    var A=document.getElementById("FactorRugosidad").value;
     var B=0.25;
 
     var perdidasFSL = FSL(distancia,htx,hrx,freq);
     var MargenFading = MF(distancia,A,B,freq,disp_canal);
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
+    var AnguloTilt=Tilt(dist,htx+altura[0],hrx+altura[altura.length]);
 
     console.log("La frecuencia ingresada es: " +freq);
     console.log("perdidasFSL: " +perdidasFSL);
     console.log("Prx es: " +Prx);
     console.log("El margen de fading es: "+MargenFading);
     console.log("La disponibildad del canal es: " +disp_canal);
+    console.log("El valor de A es: "+A);
+    console.log("El angulo del tilt es: " +AnguloTilt);
     //var sensRX=Prx-MF;
 
     /*if(Prx-MF>sensRX){
@@ -274,7 +277,16 @@ else{ // Si Pmax 2 es la maxima altura en mi path...
 }
 
 function MF(distancia,A,B,freq,disp_canal) {
-	var margen_fading= 30*(Math.log10(distancia))+10*(Math.log10(6*A*B*freq))-10*(Math.log10(1-disp_canal))-70;
+	var margen_fading;
+	var valueA;
+	if(A=="1")
+		valueA=4;
+	else if(A=="2")
+		valueA=1;
+	else
+		valueA=0.25;
+
+	margen_fading= 30*(Math.log10(distancia))+10*(Math.log10(6*valueA*B*freq))-10*(Math.log10(1-disp_canal))-70;
 	return margen_fading;
 }
 
@@ -486,7 +498,6 @@ function plotElevation(elevations, status) {
   console.log("¿Hay LOS?: ");
   if (hayLOS == 1) {
     console.log("Si!");
-  //console.log("Tilt: " +Tilt(distancia,elevations[0].elevation,elevations[elevations.length-1].elevation));
   } else if (hayLOS == 0) {
     console.log("No!");
     /*data.setValue(0, 1, altura[0]+10);
