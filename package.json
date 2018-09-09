@@ -5,7 +5,9 @@
   "scripts": {},
   "author": "me",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "jspdf": "^1.4.1"
+  },
   "devDependencies": {
     "grunt": "^1.0.3",
     "grunt-contrib-concat": "^1.0.1",

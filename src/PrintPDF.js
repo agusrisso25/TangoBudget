@@ -1,35 +1,28 @@
 function printPDF(){
-  /*     var doc = new jsPDF();          
-    var elementHandler = {
-      '#ignorePDF': function (element, renderer) {
-        return true;
-      }
-    };
-    var source = window.document.getElementsByTagName("body")[0];
-    doc.fromHTML(
-        source,
-        15,
-        15,
-        {
-          'width': 180,'elementHandlers': elementHandler
-        });
-    
-    doc.output("dataurlnewwindow");*/
+  var doc = new jsPDF();
 
-  var pdf = new jsPDF('p', 'pt', 'letter'); //lo genera vacío! Y da errores raros
-    pdf.canvas.height = 72 * 11;
-    pdf.canvas.width = 72 * 8.5;
+//Titulo del Reporte
+//  doc.setFontSize(30);
+ // doc.text (50, 50, 'Tango Budget'); // se indica la locacion del texto en el formato de coordenadas (x,y)
 
-    pdf.fromHTML(document.body);
+/*var elementHandler = {
+  '#ignorePDF': function (element, renderer){
+    return true;
+  }
+};
+//var source = window.document.getElementsByTagName("body")[0];
+ var source = window.document.getElementById("panel-total")[0];
+doc.fromHTML(
+  source,
+  15,
+  15,
+  {
+    'width': 180, 'elementHandlers': elementHandler
+  });
+*/
 
-    pdf.save('test.pdf');
+  doc.fromHTML($('#panel-total').get(0), 20, 20, {
+    'width': 500});
 
- /* var printDoc = new jsPDF();
-    printDoc.fromHTML($('#pdf').get(0), 10, 10, {'width': 180});
-    printDoc.autoPrint();
-    printDoc.output("dataurlnewwindow"); //Este abre una pagina aparte en el browser pero vacía*/
-
-    // this opens a new popup,  after this the PDF opens the print window view but there are browser inconsistencies with how this is handled
-
-
+  doc.save('Reporte.pdf');
 }
