@@ -1,5 +1,5 @@
 function Tilt(distancia,htx,hrx) {
-	var resultado;	
+	var resultado;
 	resultado=toDegrees(Math.atan((htx-hrx)/(distancia)));
 	return resultado;
 }

@@ -105,9 +105,10 @@
                 <div id="uno" class="collapse">
                     <div class="card-body">
                         <!--hay que ver si usar action o no.. ver bien como funciona-->
-                            <label for="frecuencia">Frecuencia (Hz) </label> <input type="number" id="frecuencia" class="form-control" value="">
+                            <label for="frecuencia">Frecuencia (GHz) </label> <input type="number" id="frecuencia" class="form-control" value="">
                             <label for="polarizacion">Polarización </label>
                                 <select name="polarizacion" class="form-control">
+                                    <option value="Ninguno" disabled selected>**Elija una opcion**</option>
                                     <option value="vertical">Vertical</option>
                                     <option value="horizontal">Horizontal</option>
                                 </select>
@@ -162,9 +163,9 @@
         <div class="col-12"></div>
         <div class="col-12">
             <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="Submit2" value="" onclick="InputUser()">Calcular</button></div>
-        
+
         <div class="col-12"><h3>Resultados de cálculos:</h3>
-            <p class="alert alert-info text-justify">En el siguiente sección se encuentran los resultados obtenidos a partir de los valores ingresados por 
+            <p class="alert alert-info text-justify">En el siguiente sección se encuentran los resultados obtenidos a partir de los valores ingresados por
                 el usuario en el formulario. Es necesario haber "clickeado" en el botón de Calcular para que esta sección se visualice.</p>
             <p>SECCIÓN VACÍA</p>
         </div> <!--Cierre de Resultados de calculos-->
@@ -173,7 +174,7 @@
         <div class="col-12"></div>
         <div class="col-12">
                 <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="printPDF" value="" onclick="printPDF()">Generar Reporte</button></div>
-          
+
     </div><!--cierre div formulario-->
 
 </div><!--Cierre div container-->

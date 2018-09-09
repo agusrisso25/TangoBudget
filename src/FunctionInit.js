@@ -9,7 +9,6 @@ var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = [];
 var coordenadas = [];
-var mitad_cantmuestras=0;
 var posic_puntoMax=0;
 var valor_puntoMax=0;
 var flag=0; //defino este flag para testear si anteriormente se hizo el displayPathElevation
@@ -20,6 +19,11 @@ var distanciaobject; // Nos indica la distancia desde el TX que queremos modific
 var contador=0;
 var elevator;
 var dist;
+var cant_redondeo;
+var Pmax1; //Esta variable corresponde al punto mas alto
+var Pmax2; //Esta variable corresponde al segundo punto mas alto
+var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
+var h_Pmax2; //Esta variable corresponde a la altura del segundo punto mas alto
 var APP = {};
 
 // Load the Visualization API and the columnchart package:
