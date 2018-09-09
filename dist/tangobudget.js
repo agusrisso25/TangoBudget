@@ -84,21 +84,28 @@ function Fresnel(freq,htx,hrx){
 	var c= 3*10^8;
 	lambda = c/freq;
   var distancia = haversine(radius, latitud, longitud);
-  tan_alpha=(htx-hrx)/distancia;
+  tan_alpha=((htx-hrx)/distancia);
   alpha=Math.atan(tan_alpha);
   var pto_medio=distancia/2;
   var d1=pto_medio/Math.cos(alpha);
   var d2=pto_medio/Math.cos(alpha);
+  var altura_puntomedio= altura[(cant_redondeo/2)];
+  console.log("altura_puntomedio: " +altura_puntomedio);
+
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2));
 
   var fresnel80= R1*0.8;
   var fresnel60= R1*0.6;
-  var altura_puntomedio= altura[mitad_cantmuestras];
-  var resultado80=(x-pto_medio)^2/(fresnel80^2+d2^2) + (h-altura_puntomedio)^2/(fresnel80^2);
-  var resultado60=(x-pto_medio)^2/(fresnel60^2+d2^2) + (h-altura_puntomedio)^2/(fresnel60^2);
-  
 
-  return 0;
+  var resultado80=((Pmax1*100)-pto_medio)^2/(fresnel80^2+d2^2) + (h_Pmax1-altura_puntomedio)^2/(fresnel80^2);
+  var resultado60=((Pmax2*100)-pto_medio)^2/(fresnel60^2+d2^2) + (h_Pmax2-altura_puntomedio)^2/(fresnel60^2);
+
+  if(resultado80>1)
+    return despeje80;
+  else if(resultado60>1)
+    return despeje60;
+  else
+    return sindespeje;
 }
 
 function FSL(distancia,htx,hrx,freq) {
@@ -126,12 +133,14 @@ function InputUser() {
     var perdidasConectores=document.getElementById("perdidasconectores").value;
     var perdidasOtras=0;
     var A=document.getElementById("FactorRugosidad").value;
-    var B=0.25;
+    var B=0.25; //Dado que esto apunta a estudios de Uruguay, este valor no cambia
+    var cant_muestras=dist*100;
+    var cant_redondeo=Math.floor(cant_muestras);
 
     var perdidasFSL = FSL(distancia,htx,hrx,freq);
     var MargenFading = MF(distancia,A,B,freq,disp_canal);
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
-    var AnguloTilt=Tilt(dist,htx+altura[0],hrx+altura[altura.length]);
+    var AnguloTilt=Tilt(distancia,htx,hrx);
 
     console.log("La frecuencia ingresada es: " +freq);
     console.log("perdidasFSL: " +perdidasFSL);
@@ -140,16 +149,24 @@ function InputUser() {
     console.log("La disponibildad del canal es: " +disp_canal);
     console.log("El valor de A es: "+A);
     console.log("El angulo del tilt es: " +AnguloTilt);
-    //var sensRX=Prx-MF;
 
-    /*if(Prx-MF>sensRX){
-      //se debe dibujar la zona de fresnel
+
+    var sensRX=Prx-MF;
+
+    if(Prx-MF>sensRX){
+      var hayDespeje=Fresnel(freq,htx,hrx);
+      if(hayDespeje==despeje80)
+        console.log("Existe el despeje del 80%");
+      else if (hayDespeje==despeje60)
+        console.log("Existe el despeje del 60%");
+      else
+        console.log("No hay despeje de Fresnel");
       return 0;
     }
     else {
       alert ("No hay sensibilidad del RX suficiente");
       return 2;
-    }*/
+    }
 }
 
 function LOS(elevations,coordenadas) {
@@ -325,10 +342,11 @@ function ModifyHeight(){
 }
 
 function Tilt(distancia,htx,hrx) {
-	var resultado;	
+	var resultado;
 	resultado=toDegrees(Math.atan((htx-hrx)/(distancia)));
 	return resultado;
 }
+
 function DeshacerAltura() {
 	if(contador>=0){
 		flag=3;
@@ -337,6 +355,7 @@ function DeshacerAltura() {
 	}
 	else {
 		alert("Ya se deshicieron todos los cambios.");
+		return;
 	}
 }
 
@@ -406,7 +425,7 @@ function dragElement(elmnt) {
 }
 function displayPathElevation(camino, elevator, dist) {
   var cant_muestras = dist * 100; // 100 muestras por km
-  var cant_redondeo = Math.floor(cant_muestras);
+  cant_redondeo = Math.floor(cant_muestras);
   console.log("Cantidad de muestras por km: " + cant_muestras);
   console.log("Redondeo de muestras: " + cant_redondeo);
 
@@ -452,16 +471,19 @@ function plotElevation(elevations, status) {
     flag=0;
   }
   if (flag == 0) {
-    mitad_cantmuestras = (elevations.length) / 2;
-    console.log("Altura de cada punto: " + altura[0] + ", " + altura[1] + ", " + altura[2]);
-    console.log("Coordenadas de cada punto: (" + coordenadas[0].lat() + ", " + coordenadas[0].lng() + ")" + " " + "(" + coordenadas[1].lat() + ", " + coordenadas[1].lng() + ")");
+    h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
+    h_Pmax2=data.getDistinctValues(1)[elevations.length-2];
+
+    Pmax1=altura.indexOf(h_Pmax1);
+    Pmax2=altura.indexOf(h_Pmax2);
+
+    /*console.log("Coordenadas de cada punto: (" + coordenadas[0].lat() + ", " + coordenadas[0].lng() + ")" + " " + "(" + coordenadas[1].lat() + ", " + coordenadas[1].lng() + ")");
     console.log("Altura Pmax: " + data.getDistinctValues(1)[elevations.length - 1]);
     var a = altura.indexOf(data.getDistinctValues(1)[elevations.length - 1]);
 
     console.log("Posición de Pmax: " + a);
-    //console.log("Coordenadas Pmax: " + elevations[a].location);
 
-    var distancia = haversine(radius, latitud, longitud);
+    var distancia = haversine(radius, latitud, longitud);*/
   // Draw the chart using the data within its DIV.
   }
   else if (flag == 1) {
@@ -565,7 +587,6 @@ var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = [];
 var coordenadas = [];
-var mitad_cantmuestras=0;
 var posic_puntoMax=0;
 var valor_puntoMax=0;
 var flag=0; //defino este flag para testear si anteriormente se hizo el displayPathElevation
@@ -576,6 +597,11 @@ var distanciaobject; // Nos indica la distancia desde el TX que queremos modific
 var contador=0;
 var elevator;
 var dist;
+var cant_redondeo;
+var Pmax1; //Esta variable corresponde al punto mas alto
+var Pmax2; //Esta variable corresponde al segundo punto mas alto
+var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
+var h_Pmax2; //Esta variable corresponde a la altura del segundo punto mas alto
 var APP = {};
 
 // Load the Visualization API and the columnchart package:
@@ -686,7 +712,7 @@ doc.fromHTML(
 function toDegrees(radians){
 	return ((radians * 180) / Math.PI);
 }
-        //Funcion para grados a radianes (necesaria para el calculo de distancia):
-        function ToRadians(degree) {
-          return (degree * (Math.PI / 180));
-        }
+//Funcion para grados a radianes (necesaria para el calculo de distancia):
+function ToRadians(degree) {
+  return (degree * (Math.PI / 180));
+}

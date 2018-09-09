@@ -1,6 +1,6 @@
 function displayPathElevation(camino, elevator, dist) {
   var cant_muestras = dist * 100; // 100 muestras por km
-  var cant_redondeo = Math.floor(cant_muestras);
+  cant_redondeo = Math.floor(cant_muestras);
   console.log("Cantidad de muestras por km: " + cant_muestras);
   console.log("Redondeo de muestras: " + cant_redondeo);
 
@@ -46,16 +46,19 @@ function plotElevation(elevations, status) {
     flag=0;
   }
   if (flag == 0) {
-    mitad_cantmuestras = (elevations.length) / 2;
-    console.log("Altura de cada punto: " + altura[0] + ", " + altura[1] + ", " + altura[2]);
-    console.log("Coordenadas de cada punto: (" + coordenadas[0].lat() + ", " + coordenadas[0].lng() + ")" + " " + "(" + coordenadas[1].lat() + ", " + coordenadas[1].lng() + ")");
+    h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
+    h_Pmax2=data.getDistinctValues(1)[elevations.length-2];
+
+    Pmax1=altura.indexOf(h_Pmax1);
+    Pmax2=altura.indexOf(h_Pmax2);
+
+    /*console.log("Coordenadas de cada punto: (" + coordenadas[0].lat() + ", " + coordenadas[0].lng() + ")" + " " + "(" + coordenadas[1].lat() + ", " + coordenadas[1].lng() + ")");
     console.log("Altura Pmax: " + data.getDistinctValues(1)[elevations.length - 1]);
     var a = altura.indexOf(data.getDistinctValues(1)[elevations.length - 1]);
 
     console.log("Posición de Pmax: " + a);
-    //console.log("Coordenadas Pmax: " + elevations[a].location);
 
-    var distancia = haversine(radius, latitud, longitud);
+    var distancia = haversine(radius, latitud, longitud);*/
   // Draw the chart using the data within its DIV.
   }
   else if (flag == 1) {

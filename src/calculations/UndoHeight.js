@@ -6,5 +6,6 @@ function DeshacerAltura() {
 	}
 	else {
 		alert("Ya se deshicieron todos los cambios.");
+		return;
 	}
 }
