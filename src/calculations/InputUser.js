@@ -31,8 +31,9 @@ function InputUser() {
 
 
     var sensRX=Prx-MF;
+    var sensRXreal=document.getElementById("sensibilidadrx").value;
 
-    if(Prx-MF>sensRX){
+    if(Prx-MF>sensRXreal){
       var hayDespeje=Fresnel(freq,htx,hrx);
       if(hayDespeje==despeje80)
         console.log("Existe el despeje del 80%");
