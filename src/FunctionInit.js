@@ -15,7 +15,7 @@ var flag=0; //defino este flag para testear si anteriormente se hizo el displayP
 var muestra_mod=[]; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
 var data;
 var chart;
-var distanciaobject; // Nos indica la distancia desde el TX que queremos modificar
+var distanciaobject_array=[]; // Nos indica la distancia desde el TX que queremos modificar
 var contador=0;
 var elevator;
 var dist;
@@ -24,6 +24,8 @@ var Pmax1; //Esta variable corresponde al punto mas alto
 var Pmax2; //Esta variable corresponde al segundo punto mas alto
 var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var h_Pmax2; //Esta variable corresponde a la altura del segundo punto mas alto
+var valuetomodify_array= [];
+//var valuetomodify;
 var APP = {};
 
 // Load the Visualization API and the columnchart package:

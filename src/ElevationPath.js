@@ -61,26 +61,30 @@ function plotElevation(elevations, status) {
     var distancia = haversine(radius, latitud, longitud);*/
   // Draw the chart using the data within its DIV.
   }
-  else if (flag == 1) {
-    var valuetomodify = (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
+  else if (flag == 1) {//En caso que el flag sea 1, se modifica la altura
+    var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
-    muestra_mod[contador] = Math.floor(distanciaobject / 10);
+    valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
+    distanciaobject_array[contador]=document.getElementById("distanciaobjeto").value;
+
+    muestra_mod[contador] = Math.floor(distanciaobject/10);
+
     data.setValue(muestra_mod[contador], 1, valuetomodify);
-    console.log("Muestra moddh: " + muestra_mod[contador]);
-    console.log("alturaobjetodh: " + document.getElementById("alturaobjeto").value);
-    console.log("valuetomodifydh: " + valuetomodify);
     document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
+
+    google.charts.load('current', {'packages':['table']});
+    google.charts.setOnLoadCallback(drawTable);// actualizo la tabla
     flag = 0;
-  }
+    }
+
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
-    data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]);
-    flag=0;
-    contador--;
+    data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]); //Se modifica al valor anterior
+    flag=0; //se resetea el flag en 0
+    contador--; //y se decrementa el contador
   }
 
-  // Draw the chart using the data within its DIV.
   chart.draw(data, {
     height: 200,
     legend: 'none',
@@ -88,26 +92,12 @@ function plotElevation(elevations, status) {
     titleY: 'Elevation (m)'
   });
 
-
-
   var hayLOS = LOS(elevations, coordenadas);
-
-  console.log("¿Hay LOS?: ");
-  if (hayLOS == 1) {
-    console.log("Si!");
-  } else if (hayLOS == 0) {
-    console.log("No!");
-    /*data.setValue(0, 1, altura[0]+10);
-    chart.draw(data, {
-    height: 200,
-    legend: 'none',
-    titleX: 'Cantidad de muestras',
-    titleY: 'Elevation (m)'
-        });*/
-
-  //data.setValue(elevations.length, 1, altura[elevations.length-1]+10);
-  }
+  if (hayLOS == 1)
+    document.getElementById("Ldevista").innerHTML = "Si!";
+  else if (hayLOS == 0)
+    document.getElementById("Ldevista").innerHTML = "No!";
   else
-    console.log("Indefinido");
+    document.getElementById("Ldevista").innerHTML = "Indefinido";
 
 }

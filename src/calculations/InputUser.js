@@ -6,6 +6,7 @@ function InputUser() {
     var freq=document.getElementById("frecuencia").value;
     var disp = document.getElementById("disponibilidad").value;
     var disp_canal=disp/100;
+    
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
     var distancia = haversine(radius, latitud, longitud);
@@ -19,7 +20,10 @@ function InputUser() {
     var perdidasFSL = FSL(distancia,htx,hrx,freq);
     var MargenFading = MF(distancia,A,B,freq,disp_canal);
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
-    var AnguloTilt=Tilt(distancia,htx,hrx);
+
+    var htx2= (htx+altura[muestra_mod[0]]);
+    var hrx2= (hrx+altura[muestra_mod[cant_redondeo]]);
+    var AnguloTilt=Tilt(distancia,htx2,hrx2);
 
     console.log("La frecuencia ingresada es: " +freq);
     console.log("perdidasFSL: " +perdidasFSL);

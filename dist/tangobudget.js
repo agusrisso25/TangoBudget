@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-09-09 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-09-22 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -127,6 +127,7 @@ function InputUser() {
     var freq=document.getElementById("frecuencia").value;
     var disp = document.getElementById("disponibilidad").value;
     var disp_canal=disp/100;
+    
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
     var distancia = haversine(radius, latitud, longitud);
@@ -140,7 +141,10 @@ function InputUser() {
     var perdidasFSL = FSL(distancia,htx,hrx,freq);
     var MargenFading = MF(distancia,A,B,freq,disp_canal);
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
-    var AnguloTilt=Tilt(distancia,htx,hrx);
+
+    var htx2= (htx+altura[muestra_mod[0]]);
+    var hrx2= (hrx+altura[muestra_mod[cant_redondeo]]);
+    var AnguloTilt=Tilt(distancia,htx2,hrx2);
 
     console.log("La frecuencia ingresada es: " +freq);
     console.log("perdidasFSL: " +perdidasFSL);
@@ -152,8 +156,9 @@ function InputUser() {
 
 
     var sensRX=Prx-MF;
+    var sensRXreal=document.getElementById("sensibilidadrx").value;
 
-    if(Prx-MF>sensRX){
+    if(Prx-MF>sensRXreal){
       var hayDespeje=Fresnel(freq,htx,hrx);
       if(hayDespeje==despeje80)
         console.log("Existe el despeje del 80%");
@@ -321,17 +326,15 @@ function ModifyHeight(){
     contador ++;
     muestra_mod[contador]=Math.floor(distanciaobject/10);
     console.log("muestra_mod: "+ muestra_mod[contador]);
-
     displayPathElevation(camino, elevator, dist);
-    var hayLOS = LOS(elevations, coordenadas);
 
-    console.log("¿Hay LOS2?: ");
+    var hayLOS = LOS(elevations, coordenadas);
     if (hayLOS == 1)
-      console.log("Si!");
+      document.getElementById("Ldevista").innerHTML = "Si!";
     else if (hayLOS == 0)
-      console.log("No!");
+      document.getElementById("Ldevista").innerHTML = "No!";
     else
-      console.log("Indefinido");
+      document.getElementById("Ldevista").innerHTML = "Indefinido";
 
     return;
   }
@@ -339,6 +342,22 @@ function ModifyHeight(){
     alert ("distancia excede el largo del camino");
     return;
     }
+}
+
+function drawTable(){
+  var data_detabla = new google.visualization.DataTable();
+        data_detabla.addColumn('string', 'Tipo');
+        data_detabla.addColumn('string', 'Distancia desde el Tx (m)');
+        data_detabla.addColumn('string', 'Altura (m)');
+        data_detabla.addColumn('boolean', 'Despeje 80%?');
+        data_detabla.addColumn('boolean', 'Despeje 60%?');
+        data_detabla.addColumn('string', 'Muestra Modificada');
+        for (var i = 1; i < (contador+1); i++) {
+          data_detabla.addRow(['Arbol', distanciaobject[contador].value,valuetomodify_array[contador].value,true ,true ,'muestra_mod[contador]']); //Acá empieza a recorrer el array
+        }
+  var table = new google.visualization.Table(document.getElementById('table_div'));
+  table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
+
 }
 
 function Tilt(distancia,htx,hrx) {
@@ -486,26 +505,30 @@ function plotElevation(elevations, status) {
     var distancia = haversine(radius, latitud, longitud);*/
   // Draw the chart using the data within its DIV.
   }
-  else if (flag == 1) {
-    var valuetomodify = (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
+  else if (flag == 1) {//En caso que el flag sea 1, se modifica la altura
+    var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
-    muestra_mod[contador] = Math.floor(distanciaobject / 10);
+    valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
+    distanciaobject_array[contador]=document.getElementById("distanciaobjeto").value;
+
+    muestra_mod[contador] = Math.floor(distanciaobject/10);
+
     data.setValue(muestra_mod[contador], 1, valuetomodify);
-    console.log("Muestra moddh: " + muestra_mod[contador]);
-    console.log("alturaobjetodh: " + document.getElementById("alturaobjeto").value);
-    console.log("valuetomodifydh: " + valuetomodify);
     document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
+
+    google.charts.load('current', {'packages':['table']});
+    google.charts.setOnLoadCallback(drawTable);// actualizo la tabla
     flag = 0;
-  }
+    }
+
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
-    data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]);
-    flag=0;
-    contador--;
+    data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]); //Se modifica al valor anterior
+    flag=0; //se resetea el flag en 0
+    contador--; //y se decrementa el contador
   }
 
-  // Draw the chart using the data within its DIV.
   chart.draw(data, {
     height: 200,
     legend: 'none',
@@ -513,27 +536,13 @@ function plotElevation(elevations, status) {
     titleY: 'Elevation (m)'
   });
 
-
-
   var hayLOS = LOS(elevations, coordenadas);
-
-  console.log("¿Hay LOS?: ");
-  if (hayLOS == 1) {
-    console.log("Si!");
-  } else if (hayLOS == 0) {
-    console.log("No!");
-    /*data.setValue(0, 1, altura[0]+10);
-    chart.draw(data, {
-    height: 200,
-    legend: 'none',
-    titleX: 'Cantidad de muestras',
-    titleY: 'Elevation (m)'
-        });*/
-
-  //data.setValue(elevations.length, 1, altura[elevations.length-1]+10);
-  }
+  if (hayLOS == 1)
+    document.getElementById("Ldevista").innerHTML = "Si!";
+  else if (hayLOS == 0)
+    document.getElementById("Ldevista").innerHTML = "No!";
   else
-    console.log("Indefinido");
+    document.getElementById("Ldevista").innerHTML = "Indefinido";
 
 }
 
@@ -593,7 +602,7 @@ var flag=0; //defino este flag para testear si anteriormente se hizo el displayP
 var muestra_mod=[]; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
 var data;
 var chart;
-var distanciaobject; // Nos indica la distancia desde el TX que queremos modificar
+var distanciaobject_array=[]; // Nos indica la distancia desde el TX que queremos modificar
 var contador=0;
 var elevator;
 var dist;
@@ -602,6 +611,8 @@ var Pmax1; //Esta variable corresponde al punto mas alto
 var Pmax2; //Esta variable corresponde al segundo punto mas alto
 var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var h_Pmax2; //Esta variable corresponde a la altura del segundo punto mas alto
+var valuetomodify_array= [];
+//var valuetomodify;
 var APP = {};
 
 // Load the Visualization API and the columnchart package:

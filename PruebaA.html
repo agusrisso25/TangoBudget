@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href ="css/bootstrap/bootstrap.css">
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">    </script>
     <script src="https://www.google.com/jsapi"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkcDHCaJewntkzwLkn-2AE28mKot0Xiog&callback=initMap"></script>
-
 
 </head>
 
@@ -63,23 +62,33 @@
         </div>
     </div>
     <div class="row" id="elevation_chart"></div>
-
     <div class="row" id="elevation_chart2"></div>
 
     <div class="row" id="profilebuttons"><!--Botones para modificar perfil de elevación-->
-        <div class="col-6"><h6>Distancia objeto desde TX (m):</h6>
+        <div class="col-4"><h6>Distancia objeto desde TX (m):</h6>
             <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la distancia al objeto interferente a ingresar en el
                 perfil, desde la antena transmisora. Por favor ingresar la distancia en km.</p>
         </div>
-        <div class="col-6"><h6>Altura objeto desde suelo (m): </h6>
+        <div class="col-4"><h6>Altura objeto desde suelo (m): </h6>
             <p class="alert alert-warning text-justify">En el siguiente campo se debe ingresar la altura del objeto interferente a ingresar en el
                 perfil. Por favor ingresar la altura en metros.</p>
         </div>
+        <div class="col-4"><h6>Objeto interferente: </h6>
+            <p class="alert alert-warning text-justify">En este campo se debe ingresar el tipo de objeto interferente.</p>
+        </div>
 
-        <div class="col-6">
+        <div class="col-4">
           <input id="distanciaobjeto" type="text" class="form-control" size="40" value="0"></div>
-        <div class="col-6">
+        <div class="col-4">
           <input id="alturaobjeto" type="text" class="form-control" size="40" value="0"></div>
+        <div class="col-4">
+              <select name="objetointerferente" class="form-control">
+                  <option value="Ninguno" disabled selected>**Elija una opcion**</option>
+                  <option value="arbol">Arbol</option>
+                  <option value="edificio">Edificio</option>
+              </select>
+        </div>
+
         <div class="col-12"></div>
         <div class="col-12"></div>
         <div class="col-12">
@@ -87,9 +96,24 @@
         <div class="col-12"></div>
         <div class="col-12">
           <button class="btn btn-info btn-block" style="border-top: 400px" type="button" id="deshacer" value="" onclick="DeshacerAltura()">Deshacer altura anterior</button></div>
-    </div>
- </div>
 
+        <div class="col-12"></div>
+        <div class="col-12"></div>
+
+        <div class="col-12" id="tablas">
+           <div class="col-12"><h3>Hay linea de vista?</h3></div>
+           <div class="col-5"></div>
+               <div class="col-2" id="Ldevista" type="text" class="form-control" size= "60"></label></div>
+           <div class="col-5"></div>
+
+           <div class="col-12" id="table_div"></div>
+        </div>
+
+    </div>
+
+
+  <div class="col-12"></div>
+  <div class="col-12"></div>
 
 	<div class="row" id="formulario">
         <div class="col-12"><h3>Formulario cliente:</h3>
@@ -185,9 +209,9 @@
     <script src="bootstrap_js/jquery-3.3.1.slim.min.js" ></script>
     <script src="bootstrap_js/popper.min.js"></script>
     <script src="bootstrap_js/bootstrap.min.js" ></script>
-    <!-- scripts de la librería de jsPDF para poder generar un PDF a partir del HTML en javascript  
+    <!-- scripts de la librería de jsPDF para poder generar un PDF a partir del HTML en javascript
     <script src="jsPDF-1.3.2/jspdf.js" ></script>
-    
+
     <script src="jsPDF-1.3.2/plugins/from_html.js" ></script>
     <script src="jsPDF-1.3.2/plugins/split_text_to_size.js" ></script>
     <script src="jsPDF-1.3.2/plugins/standard_fonts_metrics.js" ></script>-->
