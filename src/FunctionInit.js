@@ -25,7 +25,7 @@ var Pmax2; //Esta variable corresponde al segundo punto mas alto
 var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var h_Pmax2; //Esta variable corresponde a la altura del segundo punto mas alto
 var valuetomodify_array= [];
-//var valuetomodify;
+var elevations;
 var APP = {};
 
 // Load the Visualization API and the columnchart package:

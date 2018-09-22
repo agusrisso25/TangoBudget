@@ -33,13 +33,13 @@ function ModifyHeight(){
 function drawTable(){
   var data_detabla = new google.visualization.DataTable();
         data_detabla.addColumn('string', 'Tipo');
-        data_detabla.addColumn('string', 'Distancia desde el Tx (m)');
-        data_detabla.addColumn('string', 'Altura (m)');
+        data_detabla.addColumn('number', 'Distancia desde el Tx (m)');
+        data_detabla.addColumn('number', 'Altura (m)');
         data_detabla.addColumn('boolean', 'Despeje 80%?');
         data_detabla.addColumn('boolean', 'Despeje 60%?');
-        data_detabla.addColumn('string', 'Muestra Modificada');
-        for (var i = 1; i < (contador+1); i++) {
-          data_detabla.addRow(['Arbol', distanciaobject[contador].value,valuetomodify_array[contador].value,true ,true ,'muestra_mod[contador]']); //Acá empieza a recorrer el array
+        data_detabla.addColumn('number', 'Muestra Modificada');
+        for (var i = 1; i < (contador+1); contador++) {
+          data_detabla.addRow(['Arbol', +distanciaobject[contador],+valuetomodify_array[contador],true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
         }
   var table = new google.visualization.Table(document.getElementById('table_div'));
   table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});

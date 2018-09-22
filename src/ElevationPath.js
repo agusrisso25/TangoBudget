@@ -74,8 +74,8 @@ function plotElevation(elevations, status) {
     document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
 
-    google.charts.load('current', {'packages':['table']});
-    google.charts.setOnLoadCallback(drawTable);// actualizo la tabla
+    //google.charts.load('current', {'packages':['table']});
+    //google.charts.setOnLoadCallback(drawTable);// actualizo la tabla
     flag = 0;
     }
 
