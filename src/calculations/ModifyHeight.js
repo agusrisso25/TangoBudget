@@ -10,38 +10,29 @@ function ModifyHeight(){
   if (0<distanciaobject<cant_muestras){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
     contador ++;
+
     muestra_mod[contador]=Math.floor(distanciaobject/10);
     console.log("muestra_mod: "+ muestra_mod[contador]);
     displayPathElevation(camino, elevator, dist);
 
-    var hayLOS = LOS(elevations, coordenadas);
-    if (hayLOS == 1)
+    //var hayLOS = LOS(elevations, coordenadas);
+    var hayLOS=0;
+    if (hayLOS == 1){
       document.getElementById("Ldevista").innerHTML = "Si!";
-    else if (hayLOS == 0)
+      console.log("Hay los? Si");
+    }
+    else if (hayLOS == 0){
       document.getElementById("Ldevista").innerHTML = "No!";
-    else
+      console.log("Hay los? No");
+    }
+    else{
       document.getElementById("Ldevista").innerHTML = "Indefinido";
-
+      console.log("Hay los? Indef");
+    }
     return;
   }
   else{
     alert ("distancia excede el largo del camino");
     return;
     }
-}
-
-function drawTable(){
-  var data_detabla = new google.visualization.DataTable();
-        data_detabla.addColumn('string', 'Tipo');
-        data_detabla.addColumn('number', 'Distancia desde el Tx (m)');
-        data_detabla.addColumn('number', 'Altura (m)');
-        data_detabla.addColumn('boolean', 'Despeje 80%?');
-        data_detabla.addColumn('boolean', 'Despeje 60%?');
-        data_detabla.addColumn('number', 'Muestra Modificada');
-        for (var i = 1; i < (contador+1); contador++) {
-          data_detabla.addRow(['Arbol', +distanciaobject[contador],+valuetomodify_array[contador],true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
-        }
-  var table = new google.visualization.Table(document.getElementById('table_div'));
-  table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
-
 }

@@ -21,13 +21,6 @@ function plotElevation(elevations, status) {
     chartDiv.innerHTML = 'Cannot show elevation: request failed because ' + status;
     return;
   }
-  // Create a new chart in the elevation_chart DIV.
-
-
-  // Extract the data from which to populate the chart.
-  // Because the samples are equidistant, the 'Sample'
-  // column here does double duty as distance along the
-  // X axis.
 
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     data = new google.visualization.DataTable();
@@ -66,23 +59,20 @@ function plotElevation(elevations, status) {
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
-    distanciaobject_array[contador]=document.getElementById("distanciaobjeto").value;
+    distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
 
     muestra_mod[contador] = Math.floor(distanciaobject/10);
 
     data.setValue(muestra_mod[contador], 1, valuetomodify);
-    document.getElementById("alturaobjeto").value = "";
-    document.getElementById("distanciaobjeto").value = "";
-
-    //google.charts.load('current', {'packages':['table']});
-    //google.charts.setOnLoadCallback(drawTable);// actualizo la tabla
+    AgregarTabla();
     flag = 0;
     }
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]); //Se modifica al valor anterior
-    flag=0; //se resetea el flag en 0
+    BorrarFila(); //Elimina de la tabla el ultimo valor modificado
     contador--; //y se decrementa el contador
+    flag=0; //se resetea el flag en 0
   }
 
   chart.draw(data, {

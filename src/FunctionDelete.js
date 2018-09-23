@@ -17,6 +17,7 @@
             document.getElementById('transmisor').value = "";
             document.getElementById('receptor').value = "";
             document.getElementById('result3').innerHTML="";
+            document.getElementById("Ldevista").innerHTML= "";
 
             document.getElementById('elevation_chart').innerHTML="";
             document.getElementById('elevation_chart2').innerHTML="";

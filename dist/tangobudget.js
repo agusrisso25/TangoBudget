@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-09-22 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-09-23 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -324,18 +324,25 @@ function ModifyHeight(){
   if (0<distanciaobject<cant_muestras){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
     contador ++;
+
     muestra_mod[contador]=Math.floor(distanciaobject/10);
     console.log("muestra_mod: "+ muestra_mod[contador]);
     displayPathElevation(camino, elevator, dist);
 
-    var hayLOS = LOS(elevations, coordenadas);
-    if (hayLOS == 1)
+    //var hayLOS = LOS(elevations, coordenadas);
+    var hayLOS=0;
+    if (hayLOS == 1){
       document.getElementById("Ldevista").innerHTML = "Si!";
-    else if (hayLOS == 0)
+      console.log("Hay los? Si");
+    }
+    else if (hayLOS == 0){
       document.getElementById("Ldevista").innerHTML = "No!";
-    else
+      console.log("Hay los? No");
+    }
+    else{
       document.getElementById("Ldevista").innerHTML = "Indefinido";
-
+      console.log("Hay los? Indef");
+    }
     return;
   }
   else{
@@ -344,21 +351,39 @@ function ModifyHeight(){
     }
 }
 
-function drawTable(){
-  var data_detabla = new google.visualization.DataTable();
-        data_detabla.addColumn('string', 'Tipo');
-        data_detabla.addColumn('number', 'Distancia desde el Tx (m)');
-        data_detabla.addColumn('number', 'Altura (m)');
-        data_detabla.addColumn('boolean', 'Despeje 80%?');
-        data_detabla.addColumn('boolean', 'Despeje 60%?');
-        data_detabla.addColumn('number', 'Muestra Modificada');
-        for (var i = 1; i < (contador+1); contador++) {
-          data_detabla.addRow(['Arbol', +distanciaobject[contador],+valuetomodify_array[contador],true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
-        }
-  var table = new google.visualization.Table(document.getElementById('table_div'));
-  table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
+function AgregarTabla(){
+	google.charts.load('current', {'packages':['table']});
+	google.charts.setOnLoadCallback(drawTable);
 
+	function drawTable() {
+		if(!data_detabla){
+			data_detabla = new google.visualization.DataTable();
+			data_detabla.addColumn('string', 'Tipo');
+			data_detabla.addColumn('number', 'Distancia desde el Tx (m)');
+			data_detabla.addColumn('number', 'Altura (m)');
+			data_detabla.addColumn('boolean', 'Despeje 80%?');
+			data_detabla.addColumn('boolean', 'Despeje 60%?');
+			data_detabla.addColumn('number', 'Muestra Modificada');
+
+			table = new google.visualization.Table(document.getElementById('table_div'));
+		}
+		data_detabla.addRow(['Arbol',+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
+		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
+		document.getElementById("alturaobjeto").value = "";
+    document.getElementById("distanciaobjeto").value = "";
+		/*else{
+			data_detabla.removeRow(contador);
+			table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
+		}*/
+	}
 }
+
+function BorrarFila(){
+	//google.charts.load('current', {'packages':['table']});
+	//google.charts.setOnLoadCallback(drawTable);
+	data_detabla.removeRow(contador-1); //Acá empieza a recorrer el array
+	table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
+	}
 
 function Tilt(distancia,htx,hrx) {
 	var resultado;
@@ -465,13 +490,6 @@ function plotElevation(elevations, status) {
     chartDiv.innerHTML = 'Cannot show elevation: request failed because ' + status;
     return;
   }
-  // Create a new chart in the elevation_chart DIV.
-
-
-  // Extract the data from which to populate the chart.
-  // Because the samples are equidistant, the 'Sample'
-  // column here does double duty as distance along the
-  // X axis.
 
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     data = new google.visualization.DataTable();
@@ -510,23 +528,20 @@ function plotElevation(elevations, status) {
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
-    distanciaobject_array[contador]=document.getElementById("distanciaobjeto").value;
+    distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
 
     muestra_mod[contador] = Math.floor(distanciaobject/10);
 
     data.setValue(muestra_mod[contador], 1, valuetomodify);
-    document.getElementById("alturaobjeto").value = "";
-    document.getElementById("distanciaobjeto").value = "";
-
-    //google.charts.load('current', {'packages':['table']});
-    //google.charts.setOnLoadCallback(drawTable);// actualizo la tabla
+    AgregarTabla();
     flag = 0;
     }
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]); //Se modifica al valor anterior
-    flag=0; //se resetea el flag en 0
+    BorrarFila(); //Elimina de la tabla el ultimo valor modificado
     contador--; //y se decrementa el contador
+    flag=0; //se resetea el flag en 0
   }
 
   chart.draw(data, {
@@ -580,6 +595,7 @@ function showCoordenadas(latitud, longitud) {
             document.getElementById('transmisor').value = "";
             document.getElementById('receptor').value = "";
             document.getElementById('result3').innerHTML="";
+            document.getElementById("Ldevista").innerHTML= "";
 
             document.getElementById('elevation_chart').innerHTML="";
             document.getElementById('elevation_chart2').innerHTML="";
@@ -613,6 +629,8 @@ var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var h_Pmax2; //Esta variable corresponde a la altura del segundo punto mas alto
 var valuetomodify_array= [];
 var elevations;
+var data_detabla;
+var table;
 var APP = {};
 
 // Load the Visualization API and the columnchart package:
