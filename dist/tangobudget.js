@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-09-23 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-09-29 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -127,7 +127,7 @@ function InputUser() {
     var freq=document.getElementById("frecuencia").value;
     var disp = document.getElementById("disponibilidad").value;
     var disp_canal=disp/100;
-    
+
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
     var distancia = haversine(radius, latitud, longitud);
@@ -142,8 +142,8 @@ function InputUser() {
     var MargenFading = MF(distancia,A,B,freq,disp_canal);
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
 
-    var htx2= (htx+altura[muestra_mod[0]]);
-    var hrx2= (hrx+altura[muestra_mod[cant_redondeo]]);
+    var htx2= (parseFloat(htx)+parseFloat(altura[0]));
+    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
     var AnguloTilt=Tilt(distancia,htx2,hrx2);
 
     console.log("La frecuencia ingresada es: " +freq);
@@ -152,6 +152,8 @@ function InputUser() {
     console.log("El margen de fading es: "+MargenFading);
     console.log("La disponibildad del canal es: " +disp_canal);
     console.log("El valor de A es: "+A);
+    console.log("htx1 es: " +htx2);
+    console.log("htx2 es: " +hrx2);
     console.log("El angulo del tilt es: " +AnguloTilt);
 
 
@@ -328,22 +330,6 @@ function ModifyHeight(){
     muestra_mod[contador]=Math.floor(distanciaobject/10);
     console.log("muestra_mod: "+ muestra_mod[contador]);
     displayPathElevation(camino, elevator, dist);
-
-    //var hayLOS = LOS(elevations, coordenadas);
-    var hayLOS=0;
-    if (hayLOS == 1){
-      document.getElementById("Ldevista").innerHTML = "Si!";
-      console.log("Hay los? Si");
-    }
-    else if (hayLOS == 0){
-      document.getElementById("Ldevista").innerHTML = "No!";
-      console.log("Hay los? No");
-    }
-    else{
-      document.getElementById("Ldevista").innerHTML = "Indefinido";
-      console.log("Hay los? Indef");
-    }
-    return;
   }
   else{
     alert ("distancia excede el largo del camino");
@@ -371,10 +357,6 @@ function AgregarTabla(){
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
-		/*else{
-			data_detabla.removeRow(contador);
-			table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
-		}*/
 	}
 }
 

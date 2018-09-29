@@ -6,7 +6,7 @@ function InputUser() {
     var freq=document.getElementById("frecuencia").value;
     var disp = document.getElementById("disponibilidad").value;
     var disp_canal=disp/100;
-    
+
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
     var distancia = haversine(radius, latitud, longitud);
@@ -21,8 +21,8 @@ function InputUser() {
     var MargenFading = MF(distancia,A,B,freq,disp_canal);
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
 
-    var htx2= (htx+altura[muestra_mod[0]]);
-    var hrx2= (hrx+altura[muestra_mod[cant_redondeo]]);
+    var htx2= (parseFloat(htx)+parseFloat(altura[0]));
+    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
     var AnguloTilt=Tilt(distancia,htx2,hrx2);
 
     console.log("La frecuencia ingresada es: " +freq);
@@ -31,6 +31,8 @@ function InputUser() {
     console.log("El margen de fading es: "+MargenFading);
     console.log("La disponibildad del canal es: " +disp_canal);
     console.log("El valor de A es: "+A);
+    console.log("htx1 es: " +htx2);
+    console.log("htx2 es: " +hrx2);
     console.log("El angulo del tilt es: " +AnguloTilt);
 
 

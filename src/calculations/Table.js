@@ -18,10 +18,6 @@ function AgregarTabla(){
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
-		/*else{
-			data_detabla.removeRow(contador);
-			table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
-		}*/
 	}
 }
 
