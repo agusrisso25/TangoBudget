@@ -1,4 +1,7 @@
-function LOS(elevations,coordenadas) {
+var LOS = (function () {
+  var chart2DrawCount = 0;
+
+return function LOS(elevations,coordenadas) {
 //El data2 se va a borrar mas adelante.
   var data2 = new google.visualization.DataTable();
   data2.addColumn('string', 'Muestras');
@@ -15,9 +18,12 @@ function LOS(elevations,coordenadas) {
   	legend: 'none',
   	titleY: 'Perfil de elevacion (m)',
   };
-  var chart2 = new google.visualization.LineChart(document.getElementById('elevation_chart2'));
+  if (chart2DrawCount === 0) {
+    var chart2 = new google.visualization.LineChart(document.getElementById('elevation_chart2'));
+    chart2.draw(data2, options);
+    chart2DrawCount++;
+  }
 
-  chart2.draw(data2, options);
 
   var pend1;
   var pend2;
@@ -120,4 +126,5 @@ else{ // Si Pmax 2 es la maxima altura en mi path...
     else
     	return 1; //tengo LOS: return 1
    	}
-}
+};
+})();
