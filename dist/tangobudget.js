@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-10-01 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-10-04 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -326,8 +326,11 @@ function ModifyHeight(){
   distanciaobject= document.getElementById("distanciaobjeto").value; //en km
   var cant_muestras = dist*100; // 100 muestras por km o distancia en metros
   var cant_redondeo= Math.floor(cant_muestras);
-  //var elevator = new google.maps.ElevationService();
 
+  if (Math.floor(distanciaobject/10) ==0 || Math.floor(distanciaobject/10) == cant_redondeo){
+    alert ("No se pueden colocar objetos interferentes en las antenas");
+    return;
+  }
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
 
   if (0<distanciaobject<cant_muestras){
@@ -342,6 +345,14 @@ function ModifyHeight(){
     alert ("distancia excede el largo del camino");
     return;
     }
+}
+
+function ModifyRxTx() {
+	var htx= document.getElementById("alturaantenatx").value;
+	var hrx= document.getElementById("alturaantenarx").value;
+	flag=4;
+	displayPathElevation(camino,elevator,dist);
+	return;
 }
 
 function AgregarTabla(){
@@ -515,11 +526,10 @@ function plotElevation(elevations, status) {
   else if (flag == 1) {//En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
+    muestra_mod[contador] = Math.floor(distanciaobject/10);
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
-
-    muestra_mod[contador] = Math.floor(distanciaobject/10);
 
     data.setValue(muestra_mod[contador], 1, valuetomodify);
     AgregarTabla();
@@ -531,6 +541,13 @@ function plotElevation(elevations, status) {
     BorrarFila(); //Elimina de la tabla el ultimo valor modificado
     contador--; //y se decrementa el contador
     flag=0; //se resetea el flag en 0
+  }
+  else if (flag==4){
+    data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+altura[0]);
+    data.setValue(cant_redondeo-1,1,parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1]);
+    altura[0]=altura[0]+parseFloat(document.getElementById("alturaantenatx").value);
+    altura[cant_redondeo-1]= altura[cant_redondeo-1]+parseFloat(document.getElementById("alturaantenarx").value);
+    flag=0;
   }
 
   chart.draw(data, {
