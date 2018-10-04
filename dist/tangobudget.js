@@ -132,7 +132,7 @@ function InputUser() {
     var hrx=document.getElementById("alturaantenarx").value;
     var distancia = haversine(radius, latitud, longitud);
     var perdidasConectores=document.getElementById("perdidasconectores").value;
-    var perdidasOtras=0;
+    var perdidasOtras=document.getElementById("otrasperdidas").value;
     var A=document.getElementById("FactorRugosidad").value;
     var B=0.25; //Dado que esto apunta a estudios de Uruguay, este valor no cambia
     var cant_muestras=dist*100;
