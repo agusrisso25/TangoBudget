@@ -22,8 +22,6 @@ function AgregarTabla(){
 }
 
 function BorrarFila(){
-	//google.charts.load('current', {'packages':['table']});
-	//google.charts.setOnLoadCallback(drawTable);
 	data_detabla.removeRow(contador-1); //Acá empieza a recorrer el array
 	table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 	}

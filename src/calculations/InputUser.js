@@ -17,12 +17,13 @@ function InputUser() {
     var cant_muestras=dist*100;
     var cant_redondeo=Math.floor(cant_muestras);
 
-    var perdidasFSL = FSL(distancia,htx,hrx,freq);
+
+    var htx2= (parseFloat(htx)+parseFloat(altura[0])); //Se suma la altura inicial a la altura definida por el usuario
+    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
+
+    var perdidasFSL = FSL(distancia,htx2,hrx2,freq);
     var MargenFading = MF(distancia,A,B,freq,disp_canal);
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
-
-    var htx2= (parseFloat(htx)+parseFloat(altura[0]));
-    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
     var AnguloTilt=Tilt(distancia,htx2,hrx2);
 
     console.log("La frecuencia ingresada es: " +freq);
@@ -31,26 +32,41 @@ function InputUser() {
     console.log("El margen de fading es: "+MargenFading);
     console.log("La disponibildad del canal es: " +disp_canal);
     console.log("El valor de A es: "+A);
-    console.log("htx1 es: " +htx2);
-    console.log("htx2 es: " +hrx2);
     console.log("El angulo del tilt es: " +AnguloTilt);
 
-
-    var sensRX=Prx-MF;
-    var sensRXreal=document.getElementById("sensibilidadrx").value;
-
-    if(Prx-MF>sensRXreal){
-      var hayDespeje=Fresnel(freq,htx,hrx);
-      if(hayDespeje==despeje80)
-        console.log("Existe el despeje del 80%");
-      else if (hayDespeje==despeje60)
-        console.log("Existe el despeje del 60%");
-      else
-        console.log("No hay despeje de Fresnel");
-      return 0;
+    //var sensRX=Prx-MargenFading;
+    //var sensRXdeseada=parseFloat(document.getElementById("sensibilidadrx").value);
+    if (hayLOS == 1){
+      document.getElementById("Ldevista").innerHTML = "Si!";
+      hayLOS=true;
     }
-    else {
-      alert ("No hay sensibilidad del RX suficiente");
-      return 2;
+    else if (hayLOS == 0){
+      hayLOS=false;
+      document.getElementById("Ldevista").innerHTML = "No!";
     }
+    else
+      document.getElementById("Ldevista").innerHTML = "Indefinido";
+
+    var hayDespeje1=Fresnel(freq,htx2,hrx2,Pmax1,h_Pmax1);
+    var despeje80;
+    var despeje60;
+    if(hayDespeje1==0){ //Si hay despeje en el punto mas alto, entonces no calculo del segundo pmax
+      console.log("Existe el despeje del 80%");
+      despeje80=true;
+      despeje60=true;
+    }
+    else if (hayDespeje1==1){ //El punto mas alto tiene un despeje 60%
+      console.log("Existe el despeje del 60%");
+      despeje80=false;
+      despeje60=true;
+    }
+    else{
+      console.log("No hay despeje de Fresnel");
+      despeje80=false;
+      despeje60=false;
+    }
+
+    Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje60);
+    return;
+
 }

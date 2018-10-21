@@ -39,11 +39,9 @@
 
 body {
     background-color: white;
-    text-align: center; 
+    text-align: center;
     padding: 0%;
     margin: 0%}
-
-
 
 h1 {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -59,15 +57,15 @@ h2 {
     font-weight: 600;
     text-align: center;
     font-size: 30px;
-    } 
-    
+    }
+
 h3 {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: black;
     font-weight: 500;
     text-align: center;
     font-size: 25px;
-    font-style: italic;  
+    font-style: italic;
     }
 
 h4 {
@@ -76,7 +74,7 @@ h4 {
     font-weight: 500;
     text-align: left;
     font-size: 25px;
-    font-style: italic;  
+    font-style: italic;
     }
 
 h5 {
@@ -85,8 +83,8 @@ h5 {
     font-weight: 200;
     text-align: left;
     font-size: 10px;
-    font-style: italic;  
-  }    
+    font-style: italic;
+  }
 
   h6 {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -94,5 +92,5 @@ h5 {
     font-weight: 200;
     text-align: center;
     font-size: 10px;
-    font-style: italic;  
-  }   
+    font-style: italic;
+  }

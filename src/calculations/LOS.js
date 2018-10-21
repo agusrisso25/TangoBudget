@@ -6,21 +6,32 @@ return function LOS(elevations,coordenadas) {
   var data2 = new google.visualization.DataTable();
   data2.addColumn('string', 'Muestras');
   data2.addColumn('number', 'Elevacion');
-	for (var j = 0; j < elevations.length; j++) {
+  data2.addRow(['TX',altura[0]]);
+	for (var j = 1; j <(elevations.length-1); j++) {
     data2.addRow(['',altura[j]]);
 		if(data2.getValue(j,1)=='undefined'){
       coordenadas [j]=0;
   		altura[j]=0;
 	  }
   }
+  data2.addRow(['RX',altura[elevations.length]]);
   var options = {
   	height: 200,
-  	legend: 'none',
+  	legend: { position: "none" },
   	titleY: 'Perfil de elevacion (m)',
+    titleX: 'Muestras (m)',
+    color: 'yellow',
   };
   if (chart2DrawCount === 0) {
-    var chart2 = new google.visualization.LineChart(document.getElementById('elevation_chart2'));
-    chart2.draw(data2, options);
+    var chart2 = new google.visualization.ColumnChart(document.getElementById('elevation_chart2'));
+    var view = new google.visualization.DataView(data2);
+    view.setColumns([0, 1,
+                     { calc: "stringify",
+                       sourceColumn: 1,
+                       type: "string",
+                       role: "annotation" }]);
+
+    chart2.draw(view, options);
     chart2DrawCount++;
   }
 

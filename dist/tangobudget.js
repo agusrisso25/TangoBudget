@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-10-07 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-10-21 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -78,7 +78,7 @@ function addMarkersAndAll(location, map) {
   }
 }
 
-function Fresnel(freq,htx,hrx){
+function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
   //Se procede a hallar el radio para hallar la zona de Fresnel
   var lambda;
 	var c= 3*10^8;
@@ -96,16 +96,28 @@ function Fresnel(freq,htx,hrx){
 
   var fresnel80= R1*0.8;
   var fresnel60= R1*0.6;
+  var resultado80;
+  var resultado60;
 
-  var resultado80=((Pmax1*100)-pto_medio)^2/(fresnel80^2+d2^2) + (h_Pmax1-altura_puntomedio)^2/(fresnel80^2);
-  var resultado60=((Pmax2*100)-pto_medio)^2/(fresnel60^2+d2^2) + (h_Pmax2-altura_puntomedio)^2/(fresnel60^2);
+  if (Pmax==0){
+    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel80^2));
+    resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
+  }
+  else if (Pmax==(cant_redondeo-1)*100){
+    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel80^2));
+    resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel60^2));
+  }
+  else{
+    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel80^2));
+    resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel60^2));
+  }
 
   if(resultado80>1)
-    return despeje80;
+    return 0; //Tengo despeje del 80%
   else if(resultado60>1)
-    return despeje60;
+    return 1; //Tengo despeje del 60%
   else
-    return sindespeje;
+    return 2; //No tengo despeje de fresnel
 }
 
 function FSL(distancia,htx,hrx,freq) {
@@ -138,12 +150,13 @@ function InputUser() {
     var cant_muestras=dist*100;
     var cant_redondeo=Math.floor(cant_muestras);
 
-    var perdidasFSL = FSL(distancia,htx,hrx,freq);
+
+    var htx2= (parseFloat(htx)+parseFloat(altura[0])); //Se suma la altura inicial a la altura definida por el usuario
+    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
+
+    var perdidasFSL = FSL(distancia,htx2,hrx2,freq);
     var MargenFading = MF(distancia,A,B,freq,disp_canal);
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
-
-    var htx2= (parseFloat(htx)+parseFloat(altura[0]));
-    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
     var AnguloTilt=Tilt(distancia,htx2,hrx2);
 
     console.log("La frecuencia ingresada es: " +freq);
@@ -152,28 +165,43 @@ function InputUser() {
     console.log("El margen de fading es: "+MargenFading);
     console.log("La disponibildad del canal es: " +disp_canal);
     console.log("El valor de A es: "+A);
-    console.log("htx1 es: " +htx2);
-    console.log("htx2 es: " +hrx2);
     console.log("El angulo del tilt es: " +AnguloTilt);
 
-
-    var sensRX=Prx-MF;
-    var sensRXreal=document.getElementById("sensibilidadrx").value;
-
-    if(Prx-MF>sensRXreal){
-      var hayDespeje=Fresnel(freq,htx,hrx);
-      if(hayDespeje==despeje80)
-        console.log("Existe el despeje del 80%");
-      else if (hayDespeje==despeje60)
-        console.log("Existe el despeje del 60%");
-      else
-        console.log("No hay despeje de Fresnel");
-      return 0;
+    //var sensRX=Prx-MargenFading;
+    //var sensRXdeseada=parseFloat(document.getElementById("sensibilidadrx").value);
+    if (hayLOS == 1){
+      document.getElementById("Ldevista").innerHTML = "Si!";
+      hayLOS=true;
     }
-    else {
-      alert ("No hay sensibilidad del RX suficiente");
-      return 2;
+    else if (hayLOS == 0){
+      hayLOS=false;
+      document.getElementById("Ldevista").innerHTML = "No!";
     }
+    else
+      document.getElementById("Ldevista").innerHTML = "Indefinido";
+
+    var hayDespeje1=Fresnel(freq,htx2,hrx2,Pmax1,h_Pmax1);
+    var despeje80;
+    var despeje60;
+    if(hayDespeje1==0){ //Si hay despeje en el punto mas alto, entonces no calculo del segundo pmax
+      console.log("Existe el despeje del 80%");
+      despeje80=true;
+      despeje60=true;
+    }
+    else if (hayDespeje1==1){ //El punto mas alto tiene un despeje 60%
+      console.log("Existe el despeje del 60%");
+      despeje80=false;
+      despeje60=true;
+    }
+    else{
+      console.log("No hay despeje de Fresnel");
+      despeje80=false;
+      despeje60=false;
+    }
+
+    Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje60);
+    return;
+
 }
 
 var LOS = (function () {
@@ -184,21 +212,32 @@ return function LOS(elevations,coordenadas) {
   var data2 = new google.visualization.DataTable();
   data2.addColumn('string', 'Muestras');
   data2.addColumn('number', 'Elevacion');
-	for (var j = 0; j < elevations.length; j++) {
+  data2.addRow(['TX',altura[0]]);
+	for (var j = 1; j <(elevations.length-1); j++) {
     data2.addRow(['',altura[j]]);
 		if(data2.getValue(j,1)=='undefined'){
       coordenadas [j]=0;
   		altura[j]=0;
 	  }
   }
+  data2.addRow(['RX',altura[elevations.length]]);
   var options = {
   	height: 200,
-  	legend: 'none',
+  	legend: { position: "none" },
   	titleY: 'Perfil de elevacion (m)',
+    titleX: 'Muestras (m)',
+    color: 'yellow',
   };
   if (chart2DrawCount === 0) {
-    var chart2 = new google.visualization.LineChart(document.getElementById('elevation_chart2'));
-    chart2.draw(data2, options);
+    var chart2 = new google.visualization.ColumnChart(document.getElementById('elevation_chart2'));
+    var view = new google.visualization.DataView(data2);
+    view.setColumns([0, 1,
+                     { calc: "stringify",
+                       sourceColumn: 1,
+                       type: "string",
+                       role: "annotation" }]);
+
+    chart2.draw(view, options);
     chart2DrawCount++;
   }
 
@@ -355,6 +394,28 @@ function ModifyRxTx() {
 	return;
 }
 
+function Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje60){
+	google.charts.load('current', {'packages':['table']});
+	google.charts.setOnLoadCallback(ResultTable);
+
+	function ResultTable() {
+		if(!data_resultados){
+			data_resultados = new google.visualization.DataTable();
+			data_resultados.addColumn('boolean','Hay linea de vista?');
+			data_resultados.addColumn('number', 'Perdidas de espacio libre (dB)');
+			data_resultados.addColumn('number', 'Margen de Fading (dB)');
+			data_resultados.addColumn('number', 'Angulo de Tilt');
+			data_resultados.addColumn('boolean', 'Despeje 80%?');
+			data_resultados.addColumn('boolean', 'Despeje 60%?');
+
+			tableRes = new google.visualization.Table(document.getElementById('result_table'));
+		}
+		//data_resultados.addRow([false,2,2,2,false,false]); //Acá empieza a recorrer el array
+		data_resultados.addRow([hayLOS,+perdidasFSL,+MargenFading,+AnguloTilt ,despeje80 ,despeje60]); //Acá empieza a recorrer el array
+		tableRes.draw(data_resultados, {showRowNumber: false, width: '100%', height: '100%'});
+	}
+}
+
 function AgregarTabla(){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
@@ -379,8 +440,6 @@ function AgregarTabla(){
 }
 
 function BorrarFila(){
-	//google.charts.load('current', {'packages':['table']});
-	//google.charts.setOnLoadCallback(drawTable);
 	data_detabla.removeRow(contador-1); //Acá empieza a recorrer el array
 	table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 	}
@@ -557,14 +616,7 @@ function plotElevation(elevations, status) {
     titleY: 'Elevation (m)'
   });
 
-  var hayLOS = LOS(elevations, coordenadas);
-  if (hayLOS == 1)
-    document.getElementById("Ldevista").innerHTML = "Si!";
-  else if (hayLOS == 0)
-    document.getElementById("Ldevista").innerHTML = "No!";
-  else
-    document.getElementById("Ldevista").innerHTML = "Indefinido";
-
+  hayLOS = LOS(elevations, coordenadas);
 }
 
 function showCoordenadas(latitud, longitud) {
@@ -630,14 +682,17 @@ var elevator;
 var dist;
 var cant_redondeo;
 var Pmax1; //Esta variable corresponde al punto mas alto
-var Pmax2; //Esta variable corresponde al segundo punto mas alto
 var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
-var h_Pmax2; //Esta variable corresponde a la altura del segundo punto mas alto
 var valuetomodify_array= [];
 var elevations;
 var data_detabla;
+var data_resultados;
 var table;
-var APP = {};
+var tableRes;
+var hayLOS;
+var APP = {
+
+};
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });

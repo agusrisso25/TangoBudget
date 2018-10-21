@@ -21,14 +21,17 @@ var elevator;
 var dist;
 var cant_redondeo;
 var Pmax1; //Esta variable corresponde al punto mas alto
-var Pmax2; //Esta variable corresponde al segundo punto mas alto
 var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
-var h_Pmax2; //Esta variable corresponde a la altura del segundo punto mas alto
 var valuetomodify_array= [];
 var elevations;
 var data_detabla;
+var data_resultados;
 var table;
-var APP = {};
+var tableRes;
+var hayLOS;
+var APP = {
+
+};
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });

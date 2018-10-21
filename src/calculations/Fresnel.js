@@ -1,4 +1,4 @@
-function Fresnel(freq,htx,hrx){
+function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
   //Se procede a hallar el radio para hallar la zona de Fresnel
   var lambda;
 	var c= 3*10^8;
@@ -16,14 +16,26 @@ function Fresnel(freq,htx,hrx){
 
   var fresnel80= R1*0.8;
   var fresnel60= R1*0.6;
+  var resultado80;
+  var resultado60;
 
-  var resultado80=((Pmax1*100)-pto_medio)^2/(fresnel80^2+d2^2) + (h_Pmax1-altura_puntomedio)^2/(fresnel80^2);
-  var resultado60=((Pmax2*100)-pto_medio)^2/(fresnel60^2+d2^2) + (h_Pmax2-altura_puntomedio)^2/(fresnel60^2);
+  if (Pmax==0){
+    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel80^2));
+    resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
+  }
+  else if (Pmax==(cant_redondeo-1)*100){
+    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel80^2));
+    resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel60^2));
+  }
+  else{
+    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel80^2));
+    resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel60^2));
+  }
 
   if(resultado80>1)
-    return despeje80;
+    return 0; //Tengo despeje del 80%
   else if(resultado60>1)
-    return despeje60;
+    return 1; //Tengo despeje del 60%
   else
-    return sindespeje;
+    return 2; //No tengo despeje de fresnel
 }

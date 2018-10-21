@@ -88,12 +88,5 @@ function plotElevation(elevations, status) {
     titleY: 'Elevation (m)'
   });
 
-  var hayLOS = LOS(elevations, coordenadas);
-  if (hayLOS == 1)
-    document.getElementById("Ldevista").innerHTML = "Si!";
-  else if (hayLOS == 0)
-    document.getElementById("Ldevista").innerHTML = "No!";
-  else
-    document.getElementById("Ldevista").innerHTML = "Indefinido";
-
+  hayLOS = LOS(elevations, coordenadas);
 }
