@@ -59,11 +59,25 @@ function plotElevation(elevations, status) {
     var distanciaobject = document.getElementById("distanciaobjeto").value;
     muestra_mod[contador] = Math.floor(distanciaobject/10);
 
+    if (muestra_mod[contador]==0 || muestra_mod[contador]==(cant_redondeo-1)){
+      alert("No se pueden colocar objetos interferentes en las antenas, corrija las distancias");
+      return;
+    }
+
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
-
     data.setValue(muestra_mod[contador], 1, valuetomodify);
-    AgregarTabla();
+
+    var objInterferente=parseInt(document.getElementById("objetointerferente").value);
+    if(objInterferente){
+      if (objInterferente==1)
+        objInterferente='Arbol';
+      else if (objInterferente==2)
+        objInterferente='Edificio';
+      AgregarTabla(objInterferente);
+    }
+    else
+      alert ("Ingrese un tipo de interferencia");
     flag = 0;
     }
 

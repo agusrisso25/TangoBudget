@@ -14,7 +14,7 @@ return function LOS(elevations,coordenadas) {
   		altura[j]=0;
 	  }
   }
-  data2.addRow(['RX',altura[elevations.length]]);
+  data2.addRow(['RX',altura[elevations.length-1]]);
   var options = {
   	height: 200,
   	legend: { position: "none" },
@@ -72,7 +72,7 @@ return function LOS(elevations,coordenadas) {
   	return 1; //tengo LOS: return 1
   }
 
-  //CASO B: La posicion máxima el origen o el destino
+  //CASO B: La posicion máxima es el origen o el destino
   else if(posic_Pmax == 0 || posic_Pmax == elevations.length-1){
 		posic_Pmax2= altura.indexOf(data.getDistinctValues(1)[elevations.length-2]);
 	  if(posic_Pmax2== 0 || posic_Pmax2 == elevations.length-1){ //Si Pmax2 sigue siendo uno de los extremos...

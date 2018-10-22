@@ -1,4 +1,4 @@
-function AgregarTabla(){
+function AgregarTabla(objInterferente){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
 
@@ -14,7 +14,7 @@ function AgregarTabla(){
 
 			table = new google.visualization.Table(document.getElementById('table_div'));
 		}
-		data_detabla.addRow(['Arbol',+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
+		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";

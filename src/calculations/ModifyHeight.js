@@ -15,7 +15,6 @@ function ModifyHeight(){
     contador ++;
 
     muestra_mod[contador]=Math.floor(distanciaobject/10);
-    console.log("muestra_mod: "+ muestra_mod[contador]);
     displayPathElevation(camino, elevator, dist);
   }
   else{

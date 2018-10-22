@@ -98,7 +98,7 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
   var fresnel60= R1*0.6;
   var resultado80;
   var resultado60;
-
+  
   if (Pmax==0){
     resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
@@ -220,7 +220,7 @@ return function LOS(elevations,coordenadas) {
   		altura[j]=0;
 	  }
   }
-  data2.addRow(['RX',altura[elevations.length]]);
+  data2.addRow(['RX',altura[elevations.length-1]]);
   var options = {
   	height: 200,
   	legend: { position: "none" },
@@ -278,7 +278,7 @@ return function LOS(elevations,coordenadas) {
   	return 1; //tengo LOS: return 1
   }
 
-  //CASO B: La posicion máxima el origen o el destino
+  //CASO B: La posicion máxima es el origen o el destino
   else if(posic_Pmax == 0 || posic_Pmax == elevations.length-1){
 		posic_Pmax2= altura.indexOf(data.getDistinctValues(1)[elevations.length-2]);
 	  if(posic_Pmax2== 0 || posic_Pmax2 == elevations.length-1){ //Si Pmax2 sigue siendo uno de los extremos...
@@ -377,7 +377,6 @@ function ModifyHeight(){
     contador ++;
 
     muestra_mod[contador]=Math.floor(distanciaobject/10);
-    console.log("muestra_mod: "+ muestra_mod[contador]);
     displayPathElevation(camino, elevator, dist);
   }
   else{
@@ -410,13 +409,12 @@ function Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje
 
 			tableRes = new google.visualization.Table(document.getElementById('result_table'));
 		}
-		//data_resultados.addRow([false,2,2,2,false,false]); //Acá empieza a recorrer el array
 		data_resultados.addRow([hayLOS,+perdidasFSL,+MargenFading,+AnguloTilt ,despeje80 ,despeje60]); //Acá empieza a recorrer el array
 		tableRes.draw(data_resultados, {showRowNumber: false, width: '100%', height: '100%'});
 	}
 }
 
-function AgregarTabla(){
+function AgregarTabla(objInterferente){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
 
@@ -432,7 +430,7 @@ function AgregarTabla(){
 
 			table = new google.visualization.Table(document.getElementById('table_div'));
 		}
-		data_detabla.addRow(['Arbol',+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
+		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
@@ -587,11 +585,25 @@ function plotElevation(elevations, status) {
     var distanciaobject = document.getElementById("distanciaobjeto").value;
     muestra_mod[contador] = Math.floor(distanciaobject/10);
 
+    if (muestra_mod[contador]==0 || muestra_mod[contador]==(cant_redondeo-1)){
+      alert("No se pueden colocar objetos interferentes en las antenas, corrija las distancias");
+      return;
+    }
+
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
-
     data.setValue(muestra_mod[contador], 1, valuetomodify);
-    AgregarTabla();
+
+    var objInterferente=parseInt(document.getElementById("objetointerferente").value);
+    if(objInterferente){
+      if (objInterferente==1)
+        objInterferente='Arbol';
+      else if (objInterferente==2)
+        objInterferente='Edificio';
+      AgregarTabla(objInterferente);
+    }
+    else
+      alert ("Ingrese un tipo de interferencia");
     flag = 0;
     }
 

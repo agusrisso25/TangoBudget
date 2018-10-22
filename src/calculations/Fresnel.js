@@ -18,7 +18,7 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
   var fresnel60= R1*0.6;
   var resultado80;
   var resultado60;
-
+  
   if (Pmax==0){
     resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
