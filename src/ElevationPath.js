@@ -44,15 +44,6 @@ function plotElevation(elevations, status) {
 
     Pmax1=altura.indexOf(h_Pmax1);
     Pmax2=altura.indexOf(h_Pmax2);
-
-    /*console.log("Coordenadas de cada punto: (" + coordenadas[0].lat() + ", " + coordenadas[0].lng() + ")" + " " + "(" + coordenadas[1].lat() + ", " + coordenadas[1].lng() + ")");
-    console.log("Altura Pmax: " + data.getDistinctValues(1)[elevations.length - 1]);
-    var a = altura.indexOf(data.getDistinctValues(1)[elevations.length - 1]);
-
-    console.log("Posición de Pmax: " + a);
-
-    var distancia = haversine(radius, latitud, longitud);*/
-  // Draw the chart using the data within its DIV.
   }
   else if (flag == 1) {//En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));

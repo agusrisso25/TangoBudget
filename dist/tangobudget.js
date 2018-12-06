@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-10-21 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-12-05 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -79,7 +79,7 @@ function addMarkersAndAll(location, map) {
 }
 
 function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
-  //Se procede a hallar el radio para hallar la zona de Fresnel
+  //Se procede a hallar el radio para calcular la zona de Fresnel
   var lambda;
 	var c= 3*10^8;
 	lambda = c/freq;
@@ -98,7 +98,7 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
   var fresnel60= R1*0.6;
   var resultado80;
   var resultado60;
-  
+
   if (Pmax==0){
     resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
@@ -114,7 +114,7 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
 
   if(resultado80>1)
     return 0; //Tengo despeje del 80%
-  else if(resultado60>1)
+  else if(resultado60>1 && resultado80<1)
     return 1; //Tengo despeje del 60%
   else
     return 2; //No tengo despeje de fresnel
@@ -361,35 +361,39 @@ function MF(distancia,A,B,freq,disp_canal) {
 }
 
 function ModifyHeight(){
-  //var alturaobject= document.getElementById("alturaobjeto").value; //en metros
-  distanciaobject= document.getElementById("distanciaobjeto").value; //en km
+  distanciaobject= document.getElementById("distanciaobjeto").value; //en metros
+  distanciatotal=haversine(radius, latitud, longitud);
   var cant_muestras = dist*100; // 100 muestras por km o distancia en metros
   var cant_redondeo= Math.floor(cant_muestras);
 
-  if (Math.floor(distanciaobject/10) ==0 || Math.floor(distanciaobject/10) == cant_redondeo){
+  if ((Math.floor(distanciaobject) ==0) || (Math.floor(distanciaobject) == (Math.floor(distanciatotal*100)))){
     alert ("No se pueden colocar objetos interferentes en las antenas");
-    return;
+    //return;
   }
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
-
-  if (0<distanciaobject<cant_muestras){
+  else if (0<distanciaobject<(distanciatotal*100)){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
     contador ++;
-
     muestra_mod[contador]=Math.floor(distanciaobject/10);
     displayPathElevation(camino, elevator, dist);
   }
-  else{
+  else if(distanciaobject>=distanciatotal)
     alert ("distancia excede el largo del camino");
-    return;
-    }
+  return;
 }
 
 function ModifyRxTx() {
 	var htx= document.getElementById("alturaantenatx").value;
 	var hrx= document.getElementById("alturaantenarx").value;
+	if(htx<=0 || hrx<=0){ //Si el usuario no ingresa un valor correcto, despliega error
+		alert("Altura incorrecta, intente de nuevo");
+		return;
+	}
 	flag=4;
 	displayPathElevation(camino,elevator,dist);
+	//deshabilita los campos despues de modificado
+	document.getElementById("alturaantenarx").disabled = true;
+	document.getElementById("alturaantenatx").disabled = true;
 	return;
 }
 
@@ -570,15 +574,6 @@ function plotElevation(elevations, status) {
 
     Pmax1=altura.indexOf(h_Pmax1);
     Pmax2=altura.indexOf(h_Pmax2);
-
-    /*console.log("Coordenadas de cada punto: (" + coordenadas[0].lat() + ", " + coordenadas[0].lng() + ")" + " " + "(" + coordenadas[1].lat() + ", " + coordenadas[1].lng() + ")");
-    console.log("Altura Pmax: " + data.getDistinctValues(1)[elevations.length - 1]);
-    var a = altura.indexOf(data.getDistinctValues(1)[elevations.length - 1]);
-
-    console.log("Posición de Pmax: " + a);
-
-    var distancia = haversine(radius, latitud, longitud);*/
-  // Draw the chart using the data within its DIV.
   }
   else if (flag == 1) {//En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));

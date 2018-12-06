@@ -1,5 +1,5 @@
 function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
-  //Se procede a hallar el radio para hallar la zona de Fresnel
+  //Se procede a hallar el radio para calcular la zona de Fresnel
   var lambda;
 	var c= 3*10^8;
 	lambda = c/freq;
@@ -18,7 +18,7 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
   var fresnel60= R1*0.6;
   var resultado80;
   var resultado60;
-  
+
   if (Pmax==0){
     resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
@@ -34,7 +34,7 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
 
   if(resultado80>1)
     return 0; //Tengo despeje del 80%
-  else if(resultado60>1)
+  else if(resultado60>1 && resultado80<1)
     return 1; //Tengo despeje del 60%
   else
     return 2; //No tengo despeje de fresnel
