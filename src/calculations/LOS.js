@@ -35,7 +35,6 @@ return function LOS(elevations,coordenadas) {
     chart2DrawCount++;
   }
 
-
   var pend1;
   var pend2;
   var posic_Pmax2;
@@ -44,7 +43,7 @@ return function LOS(elevations,coordenadas) {
   //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura del punto maximo.
   if(posic_Pmax != 0 && posic_Pmax != elevations.length-1){
   	//caso 1: Pmax mayor a ambas antenas
-  	console.log("Prueba: " +data.getDistinctValues(1)[elevations.length-1]);
+  	console.log("Prueba: " + data.getDistinctValues(1)[elevations.length-1]);
   	var Pmax= data.getDistinctValues(1)[elevations.length-1].toFixed(3); //calculo altura maxima
     if (Pmax>altura[elevations.length-1].toFixed(3) && Pmax>altura[0].toFixed(3)){
   		return 0; //NO TENGO LOS: return 0

@@ -94,4 +94,9 @@ function plotElevation(elevations, status) {
   });
 
   hayLOS = LOS(elevations, coordenadas);
+  if (hayLOS == 1) {
+    document.getElementById("Ldevista").innerHTML = "Si!";
+  }
+  else if (hayLOS == 0)
+    document.getElementById("Ldevista").innerHTML = "No!";
 }
