@@ -95,8 +95,8 @@ function plotElevation(elevations, status) {
 
   hayLOS = LOS(elevations, coordenadas);
   if (hayLOS == 1) {
-    document.getElementById("Ldevista").innerHTML = "Si!";
+    document.getElementById("Ldevista").innerHTML = "¡Hay línea de vista!";
   }
   else if (hayLOS == 0)
-    document.getElementById("Ldevista").innerHTML = "No!";
+    document.getElementById("Ldevista").innerHTML = "¡Cuidado! No hay línea de vista. Se sugiere aumentar las alturas de las antenas.";
 }
