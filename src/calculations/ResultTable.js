@@ -1,3 +1,5 @@
+/* Este bloque tiene como funcionalidad desplegar los resultados de los cálculos en forma de tabla dinámica */
+
 function Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje60){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(ResultTable);

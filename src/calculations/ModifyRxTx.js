@@ -1,3 +1,7 @@
+/* Este bloque tiene como funcionalidad modificar la altura de las antenas Tx y Rx
+NOTA: Se define que no se puede ingresar alturas negativas ni 0
+*/
+
 function ModifyRxTx() {
 	var htx= document.getElementById("alturaantenatx").value;
 	var hrx= document.getElementById("alturaantenarx").value;
@@ -7,7 +11,7 @@ function ModifyRxTx() {
 	}
 	flag=4;
 	displayPathElevation(camino,elevator,dist);
-	//deshabilita los campos despues de modificado
+	//deshabilita los campos despues de modificado su valor
 	document.getElementById("alturaantenarx").disabled = true;
 	document.getElementById("alturaantenatx").disabled = true;
 	return;

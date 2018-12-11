@@ -1,3 +1,9 @@
+/* Este bloque tiene como funcionalidad desplegar los resultados de colocar cada objeto interferente
+a lo largo del camino. Cada objeto interferente colocado reflejará el despeje de zona de fresnel
+El usuario deberá ingresar
+objInterferente: Se generan diferentes atenuaciones de los objetos interferentes. Por ejemplo 'Arbol', 'Edificio'
+ */
+
 function AgregarTabla(objInterferente){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
