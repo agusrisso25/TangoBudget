@@ -1,4 +1,5 @@
-/* Este bloque tiene como funcionalidad deshacer la el último objeto interferente modificado por el usuario */
+/* Este bloque tiene como funcionalidad deshacer la el último objeto interferente modificado por el usuario
+En caso que se hayan desecho todos los cambios, se desplegará una alerta*/
 
 function DeshacerAltura() {
 	if(contador>=0){

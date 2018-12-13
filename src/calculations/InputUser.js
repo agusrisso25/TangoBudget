@@ -43,15 +43,15 @@ function InputUser() {
 
     //Se calcula si hay línea de vista
     if (hayLOS == 1){
-      document.getElementById("Ldevista").innerHTML = "Si!";
+      document.getElementById("Ldevista").innerHTML = "¡Hay línea de vista!";
       hayLOS=true;
     }
     else if (hayLOS == 0){
       hayLOS=false;
-      document.getElementById("Ldevista").innerHTML = "No!";
+      document.getElementById("Ldevista").innerHTML = "¡Cuidado! No hay línea de vista. Se sugiere aumentar las alturas de las antenas.";
     }
     else
-      document.getElementById("Ldevista").innerHTML = "Indefinido";
+      return;
 
     //Se calcula si hay despeje de fresnel
     var hayDespeje1=Fresnel(freq,htx2,hrx2,Pmax1,h_Pmax1);

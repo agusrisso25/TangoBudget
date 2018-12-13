@@ -90,7 +90,7 @@
 
         <div class="col-4"><h6>Distancia objeto desde TX (m):</h6>
             <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la distancia al objeto interferente a ingresar en el
-                perfil, desde la antena transmisora. Por favor ingresar la distancia en km.</p>
+                perfil, desde la antena transmisora. Por favor ingresar la distancia en metros.</p>
         </div>
         <div class="col-4"><h6>Altura objeto desde suelo (m): </h6>
             <p class="alert alert-warning text-justify">En el siguiente campo se debe ingresar la altura del objeto interferente a ingresar en el
@@ -105,7 +105,7 @@
         <div class="col-4">
           <input id="alturaobjeto" type="text" class="form-control" size="40" value="0"></div>
         <div class="col-4">
-              <select name="objetointerferente" class="form-control">
+              <select name="objetointerferente" id= "objetointerferente" class="form-control" value="0">
                   <option value="Ninguno" disabled selected>**Elija una opcion**</option>
                   <option value="arbol">Arbol</option>
                   <option value="edificio">Edificio</option>
@@ -140,6 +140,7 @@
         <div class="col-12"><h3>Formulario cliente:</h3>
             <p class="alert alert-info text-justify">En el siguiente formulario se deberán de completar todos los datos obligatorios
                 para que el programa pueda realizar los cálculos del enlace de forma correcta.</p>
+            <div id="table_div"></div>
         </div>
 
         <div class="col-12" id="acordion">
@@ -211,6 +212,7 @@
         <div class="col-12"><h3>Resultados de cálculos:</h3>
             <p class="alert alert-info text-justify">En el siguiente sección se encuentran los resultados obtenidos a partir de los valores ingresados por
                 el usuario en el formulario. Es necesario haber "clickeado" en el botón de Calcular para que esta sección se visualice.</p>
+            <div id="result_table"></div>
             <p>SECCIÓN VACÍA</p>
         </div> <!--Cierre de Resultados de calculos-->
 

@@ -1,25 +1,25 @@
 // Los marcadores aparecen cuando el usuario hace click en el mapa:
 // Cada marcador se etiqueta con un letra alfabetica.
-var labels = "AB";
+var labels = "TR";
 var labelIndex = 0;
 var markers = []; // Los marcadores se almacenan en un array.
-var latitud = [];
-var longitud = [];
+var latitud = []; //las latitudes se almacenan en un array
+var longitud = []; //las longitudes se almacenan en un array
 var radius = 6371; // radio de la tierra
 var camino = [];
-var altura = [];
+var altura = []; //Array que tiene toda la información del perfil de elevación y sin errores
 var coordenadas = [];
 var posic_puntoMax=0;
 var valor_puntoMax=0;
-var flag=0; //defino este flag para testear si anteriormente se hizo el displayPathElevation
-var muestra_mod=[]; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
-var data;
+var flag=0; //defino este flag para testear caso de uso en displayPathElevation
+var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight
+var data; //Información almacenada sobre el perfil de elevación
 var chart;
 var distanciaobject_array=[]; // Nos indica la distancia desde el TX que queremos modificar
-var contador=0;
+var contador=0; //cuenta la cantidad de objetos interferentes agregados
 var elevator;
 var dist;
-var cant_redondeo;
+var cant_redondeo; //Cuenta la cantidad de muestras que tiene nuestro perfil de elevación
 var Pmax1; //Esta variable corresponde al punto mas alto
 var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var valuetomodify_array= [];
@@ -29,6 +29,8 @@ var data_resultados;
 var table;
 var tableRes;
 var hayLOS;
+var objInterferente;
+var resFresnel;
 var APP = {
 
 };

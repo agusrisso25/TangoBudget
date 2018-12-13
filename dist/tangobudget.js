@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-12-09 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-12-13 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -79,35 +79,35 @@ function addMarkersAndAll(location, map) {
 }
 
 function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
-  //Se procede a hallar el radio para calcular la zona de Fresnel
   var lambda;
 	var c= 3*10^8;
 	lambda = c/freq;
   var distancia = haversine(radius, latitud, longitud);
   tan_alpha=((htx-hrx)/distancia);
-  alpha=Math.atan(tan_alpha);
-  var pto_medio=distancia/2;
-  var d1=pto_medio/Math.cos(alpha);
-  var d2=pto_medio/Math.cos(alpha);
+  alpha=Math.atan(tan_alpha); //Se halla el ángulo de inclinación de las antenas. En caso que estén a la misma altura el ángulo es cero
+  var pto_medio=distancia/2; //Se halla el punto medio entre las antenas Tx y Rx
   var altura_puntomedio= altura[(cant_redondeo/2)];
   console.log("altura_puntomedio: " +altura_puntomedio);
 
-  R1=Math.sqrt((lambda*d1*d2)/(d1+d2));
+  var d1=pto_medio/Math.cos(alpha); //Se halla d1= distancia desde Tx al punto medio
+  var d2=pto_medio/Math.cos(alpha); // Se halla d2= distancia desde Rx al punto medio
+
+  R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
   var fresnel80= R1*0.8;
   var fresnel60= R1*0.6;
   var resultado80;
   var resultado60;
 
-  if (Pmax==0){
+  if (Pmax==0){ //Si el objeto interferente está en la antena Tx
     resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
   }
-  else if (Pmax==(cant_redondeo-1)*100){
+  else if (Pmax==distancia){ //Si el objeto interferente está en la antena Rx
     resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel60^2));
   }
-  else{
+  else{ //Si el objeto interferente está en el largo del camino y no en los extremos
     resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel60^2));
   }
@@ -125,13 +125,11 @@ function FSL(distancia,htx,hrx,freq) {
 	var lambda;
 	var c= 3*10^8;
 	lambda = c/freq;
-	//var dbreak = (4*htx*hrx)/(lambda);
-	var freespaceloss=((4*Math.PI*distancia)/(lambda));
+	var freespaceloss=((4*Math.PI*distancia)/(lambda)); //Definición de pérdidas de espacio libre
 	resultado= 20*(Math.log10(freespaceloss)); //El resultado esta en dB
 	return (resultado);
 }
 
-//Funcion para tomar los valores que ingresa el usuario
 function InputUser() {
     var Gtx=document.getElementById("gananciatx").value;
     var Grx=document.getElementById("gananciarx").value;
@@ -140,24 +138,25 @@ function InputUser() {
     var disp = document.getElementById("disponibilidad").value;
     var disp_canal=disp/100;
 
+    var cant_muestras=dist*100;
+    var cant_redondeo=Math.floor(cant_muestras);
+
     var htx=document.getElementById("alturaantenatx").value;
     var hrx=document.getElementById("alturaantenarx").value;
+    var htx2= (parseFloat(htx)+parseFloat(altura[0])); //Se suma la altura inicial a la altura definida por el usuario
+    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
+
     var distancia = haversine(radius, latitud, longitud);
     var perdidasConectores=document.getElementById("perdidasconectores").value;
     var perdidasOtras=document.getElementById("otrasperdidas").value;
     var A=document.getElementById("FactorRugosidad").value;
-    var B=0.25; //Dado que esto apunta a estudios de Uruguay, este valor no cambia
-    var cant_muestras=dist*100;
-    var cant_redondeo=Math.floor(cant_muestras);
+    var B=0.25; //Dado que esto apunta a estudios enfocados en Uruguay, este valor no cambia bajo ningún concepto
 
-
-    var htx2= (parseFloat(htx)+parseFloat(altura[0])); //Se suma la altura inicial a la altura definida por el usuario
-    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
-
-    var perdidasFSL = FSL(distancia,htx2,hrx2,freq);
-    var MargenFading = MF(distancia,A,B,freq,disp_canal);
-    var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras;
-    var AnguloTilt=Tilt(distancia,htx2,hrx2);
+    //Cálculos de algunas pérdidas
+    var perdidasFSL = FSL(distancia,htx2,hrx2,freq); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
+    var MargenFading = MF(distancia,A,B,freq,disp_canal); //Se calcula el margen de Fading por definición
+    var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras; //Se calcula la potencia de recepción
+    var AnguloTilt=Tilt(distancia,htx2,hrx2); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
     console.log("La frecuencia ingresada es: " +freq);
     console.log("perdidasFSL: " +perdidasFSL);
@@ -169,17 +168,20 @@ function InputUser() {
 
     //var sensRX=Prx-MargenFading;
     //var sensRXdeseada=parseFloat(document.getElementById("sensibilidadrx").value);
+
+    //Se calcula si hay línea de vista
     if (hayLOS == 1){
-      document.getElementById("Ldevista").innerHTML = "Si!";
+      document.getElementById("Ldevista").innerHTML = "¡Hay línea de vista!";
       hayLOS=true;
     }
     else if (hayLOS == 0){
       hayLOS=false;
-      document.getElementById("Ldevista").innerHTML = "No!";
+      document.getElementById("Ldevista").innerHTML = "¡Cuidado! No hay línea de vista. Se sugiere aumentar las alturas de las antenas.";
     }
     else
-      document.getElementById("Ldevista").innerHTML = "Indefinido";
+      return;
 
+    //Se calcula si hay despeje de fresnel
     var hayDespeje1=Fresnel(freq,htx2,hrx2,Pmax1,h_Pmax1);
     var despeje80;
     var despeje60;
@@ -198,7 +200,7 @@ function InputUser() {
       despeje80=false;
       despeje60=false;
     }
-
+    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
     Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje60);
     return;
 
@@ -280,7 +282,7 @@ return function LOS(elevations,coordenadas) {
   	return 1; }//tengo LOS: return 1
   }
 
-  //CASO B: La posicion máxima es el origen o el destino
+  //CASO B1: La posicion máxima es el origen o el destino
   else if(posic_Pmax == 0 || posic_Pmax == (elevations.length-1)){
 		posic_Pmax2= altura.indexOf(data.getDistinctValues(1)[elevations.length-2]);
 
@@ -316,50 +318,47 @@ return function LOS(elevations,coordenadas) {
 					console.log("testB4");
 					return 1;} //tengo LOS: return 1
      }
- // else{
-//		console.log("testB4a");
-//	 return 0;} //NO tengo LOS: return 0
-//}
- //CASO B2: Si Pmax 2 es la maxima altura en mi path... y no es extremo
-else {  
-	//caso 1: Pmax mayor a ambas antenas
-	var Pmax2 = data.getDistinctValues(1)[elevations.length-2].toFixed(1); //nos da el valor de altura mas alto
-  if (Pmax2 > altura[elevations.length-1].toFixed(3) && Pmax2>altura[0].toFixed(3)){
-		return 0; //NO TENGO LOS: return 0
-	}
-  //caso 2: Pmax mayor a la antena Tx y menor a la Rx
-	else if (altura[0].toFixed(3)<Pmax2<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
-		pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-		pend2= (Pmax2-altura[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-			if (pend1>=pend2){
-				console.log("testB22");
-				return 1; }//TENGO LOS: return 1
-			else
-				return 0; //NO TENGO LOS: return 0
-	}
 
-	//caso 3: Pmax mayor a la antena Rx y menor a la Tx
-	else if (altura[elevations.length-1].toFixed(1)<Pmax2<altura[0].toFixed(1)){ //el punto mas bajo es el de la posicion 0
-		pend1= ((altura[elevations.length-1].toFixed(1)-altura[0].toFixed(1))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-		pend2= (Pmax2-altura[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-		if (pend2<pend1){
-			console.log("testB23");
-			return 1; }//TENGO LOS: return 1
-		else
-			return 0; //NO TENGO LOS: return 0
-	}
-	//caso 4: Pmax menor a ambas antenas
-    else{
-			console.log("testB24");
-    	return 1; }//tengo LOS: return 1
-   	}
+ //CASO B2: Si Pmax 2 es la maxima altura en mi path... y no es extremo
+else {
+			//caso 1: Pmax2 mayor a ambas antenas
+			var Pmax2 = data.getDistinctValues(1)[elevations.length-2].toFixed(1); //nos da el valor de altura mas alto
+			if (Pmax2 > altura[elevations.length-1].toFixed(3) && Pmax2>altura[0].toFixed(3)){
+				return 0; //NO TENGO LOS: return 0
+			}
+			//caso 2: Pmax2 mayor a la antena Tx y menor a la Rx
+			else if (altura[0].toFixed(3)<Pmax2<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
+				pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+				pend2= (Pmax2-altura[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+					if (pend1>=pend2){
+						console.log("testB22");
+						return 1; }//TENGO LOS: return 1
+					else
+						return 0; //NO TENGO LOS: return 0
+			}
+
+			//caso 3: Pmax2 mayor a la antena Rx y menor a la Tx
+			else if (altura[elevations.length-1].toFixed(1)<Pmax2<altura[0].toFixed(1)){ //el punto mas bajo es el de la posicion 0
+				pend1= ((altura[elevations.length-1].toFixed(1)-altura[0].toFixed(1))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+				pend2= (Pmax2-altura[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+				if (pend2<pend1){
+					console.log("testB23");
+					return 1; }//TENGO LOS: return 1
+				else
+					return 0; //NO TENGO LOS: return 0
+			}
+			//caso 4: Pmax2 menor a ambas antenas
+				else{
+					console.log("testB24");
+					return 1; }//tengo LOS: return 1
+				}
 }};
 })();
 
 function MF(distancia,A,B,freq,disp_canal) {
 	var margen_fading;
 	var valueA;
-	if(A=="1")
+	if(A=="1") //Se analiza lo ingresado por el usuario y a raiz de eso, se ingresa en la ecuación del margen de fading
 		valueA=4;
 	else if(A=="2")
 		valueA=1;
@@ -371,23 +370,22 @@ function MF(distancia,A,B,freq,disp_canal) {
 }
 
 function ModifyHeight(){
-  distanciaobject= document.getElementById("distanciaobjeto").value; //en metros
-  distanciatotal=haversine(radius, latitud, longitud);
+  distanciaobject= document.getElementById("distanciaobjeto").value; //Distancia desde Tx al objeto interferente (En metros)
+  distanciatotal=(haversine(radius, latitud, longitud)*1000); //Largo del camino (en metros)
   var cant_muestras = dist*100; // 100 muestras por km o distancia en metros
-  var cant_redondeo= Math.floor(cant_muestras);
+  var cant_redondeo= Math.floor(cant_muestras); //Cantidad de muestras consideradas
 
-  if ((Math.floor(distanciaobject) ==0) || (Math.floor(distanciaobject) == (Math.floor(distanciatotal*100)))){
+  if ((Math.floor(distanciaobject) ==0) || (Math.floor(distanciaobject) == (cant_redondeo-1))){ //Si el objeto interferente que se desea colocar está en las antenas, sale error
     alert ("No se pueden colocar objetos interferentes en las antenas");
-    //return;
   }
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
-  else if (0<distanciaobject<(distanciatotal*100)){
+  else if (0<distanciaobject<distanciatotal && parseInt(document.getElementById("objetointerferente").value)!=null){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
-    contador ++;
-    muestra_mod[contador]=Math.floor(distanciaobject/10);
-    displayPathElevation(camino, elevator, dist);
+    contador ++; //Incrementa el contador de la cantidad de objetos interferentes ingresados
+    muestra_mod[contador]=Math.floor(distanciaobject/10); //muestra_mod es un array que contiene la información de la altura del objeto interferente
+    displayPathElevation(camino, elevator, dist); //Se modifica la altura
   }
-  else if(distanciaobject>=distanciatotal)
+  else //if(distanciaobject>distanciatotal || distanciaobject<0) //Cuando se desea colocar un objeto interferente por fuera del largo del camino
     alert ("distancia excede el largo del camino");
   return;
 }
@@ -401,7 +399,7 @@ function ModifyRxTx() {
 	}
 	flag=4;
 	displayPathElevation(camino,elevator,dist);
-	//deshabilita los campos despues de modificado
+	//deshabilita los campos despues de modificado su valor
 	document.getElementById("alturaantenarx").disabled = true;
 	document.getElementById("alturaantenatx").disabled = true;
 	return;
@@ -428,7 +426,7 @@ function Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje
 	}
 }
 
-function AgregarTabla(objInterferente){
+function AgregarTabla(objInterferente,resFresnel){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
 
@@ -444,7 +442,24 @@ function AgregarTabla(objInterferente){
 
 			table = new google.visualization.Table(document.getElementById('table_div'));
 		}
-		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
+
+		var resultado80;
+		var resultado60;
+
+		if(resFresnel==0){
+			resultado80=true;
+			resultado60=true;
+		}
+		else if(resFresnel==1){
+			resultado80=false;
+			resultado60=true;
+		}
+		else {
+			resultado80=false;
+			resultado60=false;
+		}
+
+		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado80 ,resultado60 ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
@@ -474,10 +489,6 @@ function DeshacerAltura() {
 	}
 }
 
-function ClickInput(){
-    var geocoder = new google.maps.Geocoder();
-    geocodeLatLng(geocoder, map);
-}
 //Aca debo de calcular las distancias a la posicion 0 y 255 desde el punto más alto != a los extremos:
 
 function DistanceToBorders (coordenadas, posic_Pmax){
@@ -599,17 +610,22 @@ function plotElevation(elevations, status) {
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
     data.setValue(muestra_mod[contador], 1, valuetomodify);
 
-    var objInterferente=parseInt(document.getElementById("objetointerferente").value);
-    if(objInterferente){
-      if (objInterferente==1)
-        objInterferente='Arbol';
-      else if (objInterferente==2)
-        objInterferente='Edificio';
-      AgregarTabla(objInterferente);
-    }
-    else
+    objInterferente=document.getElementById("objetointerferente").value;
+    if(!objInterferente){
       alert ("Ingrese un tipo de interferencia");
-    flag = 0;
+      flag=0;
+      return;
+    }
+    else{
+      if (objInterferente=="arbol")
+        objInterferente='Arbol';
+      else if (objInterferente=="edificio")
+        objInterferente='Edificio';
+
+      resFresnel=(document.getElementById("frecuencia").value,parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+      AgregarTabla(objInterferente,+resFresnel);
+      flag = 0;
+      }
     }
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
@@ -618,7 +634,7 @@ function plotElevation(elevations, status) {
     contador--; //y se decrementa el contador
     flag=0; //se resetea el flag en 0
   }
-  else if (flag==4){
+  else if (flag==4){ //Cuando se modifica la altura de las antenas
     data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+altura[0]);
     data.setValue(cant_redondeo-1,1,parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1]);
     altura[0]=altura[0]+parseFloat(document.getElementById("alturaantenatx").value);
@@ -656,53 +672,52 @@ function showCoordenadas(latitud, longitud) {
   }
 }
 
-        // Elimina todos los marcadores en el array removiendo las referencias a ellos y la polyline:
-        function deleteMarkersAndPath() {
-            markers[0].setMap(null); //elimino el marcador A
-            markers[1].setMap(null); //elimino el marcador B
-            //Vacío todos los arrays:
-            markers = [];
-            latitud = [];
-            longitud = [];
-            camino = []; // NO se borra la elevacion
-            elevator = [];
-            elevations=[];
-            altura = [];
-            data=0;
-            contador=0;
+function deleteMarkersAndPath() {
+    markers[0].setMap(null); //elimino el marcador A
+    markers[1].setMap(null); //elimino el marcador B
+    //Vacío todos los arrays:
+    markers = [];
+    latitud = [];
+    longitud = [];
+    camino = []; // NO se borra la elevacion
+    elevator = [];
+    elevations=[];
+    altura = [];
+    data=0;
+    contador=0;
 
-            path = poly.setPath([]);  // ELIMINA la poly
-            document.getElementById('transmisor').value = "";
-            document.getElementById('receptor').value = "";
-            document.getElementById('result3').innerHTML="";
-            document.getElementById("Ldevista").innerHTML= "";
+    path = poly.setPath([]);  // ELIMINA la poly
+    document.getElementById('transmisor').value = "";
+    document.getElementById('receptor').value = "";
+    document.getElementById('result3').innerHTML="";
+    document.getElementById("Ldevista").innerHTML= "";
 
-            document.getElementById('elevation_chart').innerHTML="";
-            document.getElementById('elevation_chart2').innerHTML="";
-        }
+    document.getElementById('elevation_chart').innerHTML="";
+    document.getElementById('elevation_chart2').innerHTML="";
+}
 
 // Los marcadores aparecen cuando el usuario hace click en el mapa:
 // Cada marcador se etiqueta con un letra alfabetica.
-var labels = "AB";
+var labels = "TR";
 var labelIndex = 0;
 var markers = []; // Los marcadores se almacenan en un array.
-var latitud = [];
-var longitud = [];
+var latitud = []; //las latitudes se almacenan en un array
+var longitud = []; //las longitudes se almacenan en un array
 var radius = 6371; // radio de la tierra
 var camino = [];
-var altura = [];
+var altura = []; //Array que tiene toda la información del perfil de elevación y sin errores
 var coordenadas = [];
 var posic_puntoMax=0;
 var valor_puntoMax=0;
-var flag=0; //defino este flag para testear si anteriormente se hizo el displayPathElevation
-var muestra_mod=[]; // Nos indica cual es el valor del array altura hay que modificar en ModifyHeight
-var data;
+var flag=0; //defino este flag para testear caso de uso en displayPathElevation
+var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight
+var data; //Información almacenada sobre el perfil de elevación
 var chart;
 var distanciaobject_array=[]; // Nos indica la distancia desde el TX que queremos modificar
-var contador=0;
+var contador=0; //cuenta la cantidad de objetos interferentes agregados
 var elevator;
 var dist;
-var cant_redondeo;
+var cant_redondeo; //Cuenta la cantidad de muestras que tiene nuestro perfil de elevación
 var Pmax1; //Esta variable corresponde al punto mas alto
 var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var valuetomodify_array= [];
@@ -712,6 +727,8 @@ var data_resultados;
 var table;
 var tableRes;
 var hayLOS;
+var objInterferente;
+var resFresnel;
 var APP = {
 
 };
@@ -742,35 +759,6 @@ function initMap() {
   });
 }
 
-function geocodeLatLng(geocoder, map) {
-    console.log("test2");
-    var input = document.getElementById('transmisor').value;
-    var latlngStr = input.split(',', 2);
-    var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
-
-    geocoder.geocode({'location': latlng}, function(results, status) {
-      if (status === 'OK') {
-        if (results[0]) {
-          var marker = new google.maps.Marker({
-            position: latlng,
-            map: map
-          });
-          
-          addMarkersAndAll(location, map); 
-          //markers.push(marker);
-         // latitud.push(marker.getPosition().lat()); //guardo en el array latitud la latitud de cada marcador
-          //longitud.push(marker.getPosition().lng()); //guardo en el array longitud la longitud de cada marcador
-          //coordenadas(marker, latitud, longitud);
-          
-        } else {
-          window.alert('No results found');
-        }
-      } else {
-        window.alert('Geocoder failed due to: ' + status);
-      }
-    });
-
-  }
         //Funcion para el cálculo de distancia entre dos puntos:
         function haversine(radius, latitud, longitud) {
           

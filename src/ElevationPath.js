@@ -1,3 +1,14 @@
+/* Este bloque es uno de los más importantes. Tiene varias funcionalidades y actúa según el valor del flag
+- Si flag=0: Calcula los dos puntos más altos
+- Si flag=1: El usuario desea colocar objetos interferentes
+- Si flag=2: Se actualiza el perfil de elevación en caso que se hayan movido los marcadores,
+o si es la primera vez que se desea solicitar el perfil de elevación y data no está definido
+- Si flag=3: El usuario desea deshacer la altura que modificó último
+- Si flag=4: El usuario desea agregar altura a las antenas Tx y Rx
+
+Finalmente, luego de todos los casos de uso, se actualiza la tabla y se calcula nuevamente si hay linea de vista
+*/
+
 function displayPathElevation(camino, elevator, dist) {
   var cant_muestras = dist * 100; // 100 muestras por km
   cant_redondeo = Math.floor(cant_muestras);
@@ -59,17 +70,22 @@ function plotElevation(elevations, status) {
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
     data.setValue(muestra_mod[contador], 1, valuetomodify);
 
-    var objInterferente=parseInt(document.getElementById("objetointerferente").value);
-    if(objInterferente){
-      if (objInterferente==1)
-        objInterferente='Arbol';
-      else if (objInterferente==2)
-        objInterferente='Edificio';
-      AgregarTabla(objInterferente);
-    }
-    else
+    objInterferente=document.getElementById("objetointerferente").value;
+    if(!objInterferente){
       alert ("Ingrese un tipo de interferencia");
-    flag = 0;
+      flag=0;
+      return;
+    }
+    else{
+      if (objInterferente=="arbol")
+        objInterferente='Arbol';
+      else if (objInterferente=="edificio")
+        objInterferente='Edificio';
+
+      resFresnel=(document.getElementById("frecuencia").value,parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+      AgregarTabla(objInterferente,+resFresnel);
+      flag = 0;
+      }
     }
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
@@ -78,7 +94,7 @@ function plotElevation(elevations, status) {
     contador--; //y se decrementa el contador
     flag=0; //se resetea el flag en 0
   }
-  else if (flag==4){
+  else if (flag==4){ //Cuando se modifica la altura de las antenas
     data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+altura[0]);
     data.setValue(cant_redondeo-1,1,parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1]);
     altura[0]=altura[0]+parseFloat(document.getElementById("alturaantenatx").value);

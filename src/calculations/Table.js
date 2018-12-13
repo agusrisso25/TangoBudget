@@ -4,7 +4,7 @@ El usuario deberá ingresar
 objInterferente: Se generan diferentes atenuaciones de los objetos interferentes. Por ejemplo 'Arbol', 'Edificio'
  */
 
-function AgregarTabla(objInterferente){
+function AgregarTabla(objInterferente,resFresnel){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
 
@@ -20,7 +20,24 @@ function AgregarTabla(objInterferente){
 
 			table = new google.visualization.Table(document.getElementById('table_div'));
 		}
-		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),true ,true ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
+
+		var resultado80;
+		var resultado60;
+
+		if(resFresnel==0){
+			resultado80=true;
+			resultado60=true;
+		}
+		else if(resFresnel==1){
+			resultado80=false;
+			resultado60=true;
+		}
+		else {
+			resultado80=false;
+			resultado60=false;
+		}
+
+		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado80 ,resultado60 ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
