@@ -27,7 +27,7 @@
     </div>
 
     <div class="row" id="panel-total">
-        <div class="col-12"> <h2>Panel de resultados</h2>
+        <div class="col-12" title="En este panel se pueden visualizar las coordenadas (lat, lng) de la antena transmisora y receptora respectivamente. Además, se indica la distancia entre ambas en km." data-toggle="tooltip"> <h2>Panel de resultados</h2>
         <p class="alert alert-info text-justify">En este panel se pueden visualizar las coordenadas (lat, lng) de la antena
             transmisora y receptora respectivamente. Además, se indica la distancia entre ambas en km.</p></div>
         <div class="col-6" value = "tx"><h3>Coordenadas Transmisor:</h3> </div>
@@ -229,8 +229,13 @@
     <footer>
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="bootstrap_js/jquery-3.3.1.slim.min.js" ></script>
-    <script src="bootstrap_js/popper.min.js"></script>
-    <script src="bootstrap_js/bootstrap.min.js" ></script>
+    <!--<script src="bootstrap_js/popper.min.js"></script>-->
+    <script src="bootstrap_js/bootstrap.bundle.min.js" ></script>
+    <script> // Bootstrap tooltip plugin initialization.
+    $(document).ready(function () {
+      console.log('Tooltip?', typeof $('[data-toggle="tooltip"]').tooltip);
+    });
+    </script>
     <!-- scripts de la librería de jsPDF para poder generar un PDF a partir del HTML en javascript
     <script src="jsPDF-1.3.2/jspdf.js" ></script>
 

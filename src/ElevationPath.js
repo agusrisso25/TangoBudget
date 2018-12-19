@@ -41,8 +41,8 @@ function plotElevation(elevations, status) {
     for (var i = 0; i < elevations.length; i++) {
       data.addRow(['', elevations[i].elevation]); //Acá empieza a recorrer el array
       if (data.getValue(i, 1) == 'undefined') {
-        coordenadas[i] = 0;
-        altura[i] = 0;
+        coordenadas[i] = NaN;
+        altura[i] = NaN;
       }
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
       coordenadas[i] = elevations[i].location;

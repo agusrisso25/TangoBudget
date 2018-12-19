@@ -2,6 +2,7 @@
 a lo largo del camino. Cada objeto interferente colocado reflejará el despeje de zona de fresnel
 El usuario deberá ingresar
 objInterferente: Se generan diferentes atenuaciones de los objetos interferentes. Por ejemplo 'Arbol', 'Edificio'
+resFresnel: Se debe pasar el valor del resultado calculado por Fresnel
  */
 
 function AgregarTabla(objInterferente,resFresnel){

@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2018-12-13 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2018-12-19 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -131,24 +131,24 @@ function FSL(distancia,htx,hrx,freq) {
 }
 
 function InputUser() {
-    var Gtx=document.getElementById("gananciatx").value;
-    var Grx=document.getElementById("gananciarx").value;
-    var Ptx=document.getElementById("potenciatx").value;
-    var freq=document.getElementById("frecuencia").value;
-    var disp = document.getElementById("disponibilidad").value;
+    var Gtx=parseNumber(document.getElementById("gananciatx").value);
+    var Grx=parseNumber(document.getElementById("gananciarx").value);
+    var Ptx=parseNumber(document.getElementById("potenciatx").value);
+    var freq=parseNumber(document.getElementById("frecuencia").value);
+    var disp = parseNumber(document.getElementById("disponibilidad").value);
     var disp_canal=disp/100;
 
     var cant_muestras=dist*100;
     var cant_redondeo=Math.floor(cant_muestras);
 
-    var htx=document.getElementById("alturaantenatx").value;
-    var hrx=document.getElementById("alturaantenarx").value;
+    var htx=parseNumber(document.getElementById("alturaantenatx").value);
+    var hrx=parseNumber(document.getElementById("alturaantenarx").value);
     var htx2= (parseFloat(htx)+parseFloat(altura[0])); //Se suma la altura inicial a la altura definida por el usuario
     var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
 
     var distancia = haversine(radius, latitud, longitud);
-    var perdidasConectores=document.getElementById("perdidasconectores").value;
-    var perdidasOtras=document.getElementById("otrasperdidas").value;
+    var perdidasConectores=parseNumber(document.getElementById("perdidasconectores").value);
+    var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
     var A=document.getElementById("FactorRugosidad").value;
     var B=0.25; //Dado que esto apunta a estudios enfocados en Uruguay, este valor no cambia bajo ningún concepto
 
@@ -246,7 +246,9 @@ return function LOS(elevations,coordenadas) {
   var pend1;
   var pend2;
   var posic_Pmax2;
-  var posic_Pmax= altura.indexOf(data.getDistinctValues(1)[elevations.length-1]); //calculo la posicion del array del punto mas alto
+  var posic_Pmax= altura.indexOf(data.getDistinctValues(1).filter(function (v) {
+      return !isNaN(v);
+    })[elevations.length - 1]); //calculo la posicion del array del punto mas alto
 
   //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura del punto maximo.
   if(posic_Pmax != 0 && posic_Pmax != elevations.length-1){
@@ -370,7 +372,7 @@ function MF(distancia,A,B,freq,disp_canal) {
 }
 
 function ModifyHeight(){
-  distanciaobject= document.getElementById("distanciaobjeto").value; //Distancia desde Tx al objeto interferente (En metros)
+  distanciaobject= parseNumber(document.getElementById("distanciaobjeto").value); //Distancia desde Tx al objeto interferente (En metros)
   distanciatotal=(haversine(radius, latitud, longitud)*1000); //Largo del camino (en metros)
   var cant_muestras = dist*100; // 100 muestras por km o distancia en metros
   var cant_redondeo= Math.floor(cant_muestras); //Cantidad de muestras consideradas
@@ -379,7 +381,7 @@ function ModifyHeight(){
     alert ("No se pueden colocar objetos interferentes en las antenas");
   }
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
-  else if (0<distanciaobject<distanciatotal && parseInt(document.getElementById("objetointerferente").value)!=null){
+  else if (0 < distanciaobject && distanciaobject < distanciatotal && parseInt(document.getElementById("objetointerferente").value)!=null){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
     contador ++; //Incrementa el contador de la cantidad de objetos interferentes ingresados
     muestra_mod[contador]=Math.floor(distanciaobject/10); //muestra_mod es un array que contiene la información de la altura del objeto interferente
@@ -391,8 +393,8 @@ function ModifyHeight(){
 }
 
 function ModifyRxTx() {
-	var htx= document.getElementById("alturaantenatx").value;
-	var hrx= document.getElementById("alturaantenarx").value;
+	var htx= parseNumber(document.getElementById("alturaantenatx").value);
+	var hrx= parseNumber(document.getElementById("alturaantenarx").value);
 	if(htx<=0 || hrx<=0){ //Si el usuario no ingresa un valor correcto, despliega error
 		alert("Altura incorrecta, intente de nuevo");
 		return;
@@ -581,8 +583,8 @@ function plotElevation(elevations, status) {
     for (var i = 0; i < elevations.length; i++) {
       data.addRow(['', elevations[i].elevation]); //Acá empieza a recorrer el array
       if (data.getValue(i, 1) == 'undefined') {
-        coordenadas[i] = 0;
-        altura[i] = 0;
+        coordenadas[i] = NaN;
+        altura[i] = NaN;
       }
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
       coordenadas[i] = elevations[i].location;
@@ -727,11 +729,11 @@ var data_resultados;
 var table;
 var tableRes;
 var hayLOS;
-var objInterferente;
+//var objInterferente;
 var resFresnel;
-var APP = {
-
-};
+var APP = { };
+APP.objInterferente = null;
+APP.prueba = [];
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });
@@ -812,6 +814,17 @@ doc.fromHTML(
 function toDegrees(radians){
 	return ((radians * 180) / Math.PI);
 }
+function parseNumber(numberString){
+  var reMatch = /^[+-]?(\d+)(?:[,.](\d+))?$/.exec(numberString);
+  if (!reMatch) {
+    return NaN;
+  } else if (!reMatch[2]) {
+    return +reMatch[1];
+  } else {
+    return +(reMatch[1] +'.'+ reMatch[2]);
+  }
+}
+
 //Funcion para grados a radianes (necesaria para el calculo de distancia):
 function ToRadians(degree) {
   return (degree * (Math.PI / 180));

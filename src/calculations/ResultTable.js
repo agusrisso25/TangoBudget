@@ -1,4 +1,12 @@
-/* Este bloque tiene como funcionalidad desplegar los resultados de los cálculos en forma de tabla dinámica */
+/* Este bloque tiene como funcionalidad desplegar los resultados de los cálculos en forma de tabla dinámica
+Se deben pasar los siguientes valores:
+hayLOS: Corresponde a saber si existe linea de vista entre la antena Tx y Rx
+perdidasFSL: Valor calculado de la pérdidas de espacio libre
+MargenFading: Valor calculado del Margen de fading
+AnguloTilt: Angulo de inclinación calculado
+despeje80: si existe despeje del 80% <true,false>
+despeje60: si existe despeje del 60% <true,false>
+*/
 
 function Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje60){
 	google.charts.load('current', {'packages':['table']});

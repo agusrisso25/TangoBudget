@@ -57,7 +57,9 @@ return function LOS(elevations,coordenadas) {
   var pend1;
   var pend2;
   var posic_Pmax2;
-  var posic_Pmax= altura.indexOf(data.getDistinctValues(1)[elevations.length-1]); //calculo la posicion del array del punto mas alto
+  var posic_Pmax= altura.indexOf(data.getDistinctValues(1).filter(function (v) {
+      return !isNaN(v);
+    })[elevations.length - 1]); //calculo la posicion del array del punto mas alto
 
   //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura del punto maximo.
   if(posic_Pmax != 0 && posic_Pmax != elevations.length-1){

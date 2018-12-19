@@ -3,24 +3,24 @@ hacer todos los cálculos necesarios para generar el reporte.
 Para ello, es necesario leer toda la información que ingresó el usuario en la plataforma
 */
 function InputUser() {
-    var Gtx=document.getElementById("gananciatx").value;
-    var Grx=document.getElementById("gananciarx").value;
-    var Ptx=document.getElementById("potenciatx").value;
-    var freq=document.getElementById("frecuencia").value;
-    var disp = document.getElementById("disponibilidad").value;
+    var Gtx=parseNumber(document.getElementById("gananciatx").value);
+    var Grx=parseNumber(document.getElementById("gananciarx").value);
+    var Ptx=parseNumber(document.getElementById("potenciatx").value);
+    var freq=parseNumber(document.getElementById("frecuencia").value);
+    var disp = parseNumber(document.getElementById("disponibilidad").value);
     var disp_canal=disp/100;
 
     var cant_muestras=dist*100;
     var cant_redondeo=Math.floor(cant_muestras);
 
-    var htx=document.getElementById("alturaantenatx").value;
-    var hrx=document.getElementById("alturaantenarx").value;
+    var htx=parseNumber(document.getElementById("alturaantenatx").value);
+    var hrx=parseNumber(document.getElementById("alturaantenarx").value);
     var htx2= (parseFloat(htx)+parseFloat(altura[0])); //Se suma la altura inicial a la altura definida por el usuario
     var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
 
     var distancia = haversine(radius, latitud, longitud);
-    var perdidasConectores=document.getElementById("perdidasconectores").value;
-    var perdidasOtras=document.getElementById("otrasperdidas").value;
+    var perdidasConectores=parseNumber(document.getElementById("perdidasconectores").value);
+    var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
     var A=document.getElementById("FactorRugosidad").value;
     var B=0.25; //Dado que esto apunta a estudios enfocados en Uruguay, este valor no cambia bajo ningún concepto
 

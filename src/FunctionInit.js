@@ -29,11 +29,11 @@ var data_resultados;
 var table;
 var tableRes;
 var hayLOS;
-var objInterferente;
+//var objInterferente;
 var resFresnel;
-var APP = {
-
-};
+var APP = { };
+APP.objInterferente = null;
+APP.prueba = [];
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });
