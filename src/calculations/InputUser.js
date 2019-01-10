@@ -29,6 +29,7 @@ function InputUser() {
     var MargenFading = MF(distancia,A,B,freq,disp_canal); //Se calcula el margen de Fading por definición
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras; //Se calcula la potencia de recepción
     var AnguloTilt=Tilt(distancia,htx2,hrx2); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+    var AttRain=AtenuacionLluvia();
 
     console.log("La frecuencia ingresada es: " +freq);
     console.log("perdidasFSL: " +perdidasFSL);
@@ -37,6 +38,7 @@ function InputUser() {
     console.log("La disponibildad del canal es: " +disp_canal);
     console.log("El valor de A es: "+A);
     console.log("El angulo del tilt es: " +AnguloTilt);
+    console.log("AtenuacionLluvia: " +AttRain);
 
     //var sensRX=Prx-MargenFading;
     //var sensRXdeseada=parseFloat(document.getElementById("sensibilidadrx").value);

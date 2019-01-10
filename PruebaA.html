@@ -152,12 +152,12 @@
                     <div class="card-body">
                         <!--hay que ver si usar action o no.. ver bien como funciona-->
                             <label for="frecuencia">Frecuencia (GHz) </label> <input type="number" id="frecuencia" class="form-control" value="">
-                            <label for="polarizacion" id="polarizacion">Polarización </label>
-                                <select name="polarizacion" class="form-control">
-                                    <option value="Ninguno" disabled selected>**Elija una opcion**</option>
-                                    <option value="vertical">Vertical</option>
-                                    <option value="horizontal">Horizontal</option>
-                                </select>
+                            <label for="polarizacion">Polarización </label>
+                            <select id="polarizacion" name="polarizacion" class="form-control" name="polarizacion">
+                                <option value="0" disabled selected>**Elija una opcion**</option>
+                                <option value="1">Vertical</option>
+                                <option value="2">Horizontal</option>
+                            </select>
                             <label for="perdidasconectores">Pérdidas de conectores (dB) </label> <input type="number" id="perdidasconectores" class="form-control" value="0">
                             <label for="otrasperdidas">Otras pérdidas (dB) </label> <input type="number" id="otrasperdidas" class="form-control" value="0">
                             <label for="disponibilidad">Disponibilidad del canal (%) </label> <input type="number" id="disponibilidad" class="form-control" value="">
@@ -192,12 +192,12 @@
                     <div id="cuatro" class="collapse">
                         <div class="card-body">
                                 <label for="FactorRugosidad">Factor de rugosidad del terreno </label>
-                                    <select id="FactorRugosidad" class="form-control" name="FactorRugosidad">
-                                        <option value="0" disabled selected>**Elija una opcion**</option>
-                                        <option value="1">Sobre agua o terreno muy liso </option>
-                                        <option value="2">Sobre un terreno promedio </option>
-                                        <option value="3">Sobre un terreno muy aspero y montañoso </option>
-                                    </select>
+                                <select id="FactorRugosidad" class="form-control" name="FactorRugosidad">
+                                    <option value="0" disabled selected>**Elija una opcion**</option>
+                                    <option value="1">Sobre agua o terreno muy liso </option>
+                                    <option value="2">Sobre un terreno promedio </option>
+                                    <option value="3">Sobre un terreno muy aspero y montañoso </option>
+                                </select>
                         </div><!--Cierre card body-->
                     </div> <!--Cierre de div "cuatro"-->
 
