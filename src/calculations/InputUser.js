@@ -19,7 +19,7 @@ function InputUser() {
     var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
 
     var distancia = haversine(radius, latitud, longitud);
-    var perdidasConectores=parseNumber(document.getElementById("perdidasconectores").value);
+    var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
     var A=document.getElementById("FactorRugosidad").value;
     var B=0.25; //Dado que esto apunta a estudios enfocados en Uruguay, este valor no cambia bajo ningún concepto
@@ -53,27 +53,47 @@ function InputUser() {
     else
       return;
 
-    //Se calcula si hay despeje de fresnel
-    var hayDespeje1=Fresnel(freq,htx2,hrx2,Pmax1,h_Pmax1);
-    var despeje80;
-    var despeje60;
-    if(hayDespeje1==0){ //Si hay despeje en el punto mas alto, entonces no calculo del segundo pmax
-      console.log("Existe el despeje del 80%");
-      despeje80=true;
+	var despeje60;
+  var despeje40;
+
+  //Se calcula si hay despeje de fresnel a lo largo del camino
+	var j=0;
+
+	for (i=0;i<altura.length; i++){
+		hayDespejeCamino[i]=Fresnel(freq,htx2,hrx2,i,altura[i]);
+//En caso que tenga un objeto interferente con despeje entre 60% y 40% necesito guardar la muestra y la altura del camino
+    if (hayDespejeCamino[i] == 1){
+			distanciaFresnel [j]= i;
+			alturaFresnel [j]= altura[i];
+			j++;
+		}
+	}
+    //luego debo saber en qué región de decisión está el despeje.
+    var resultadoFresnel60=hayDespejeCamino.filter(function(number) {
+      return (number=0);
+    }); //filtro todos los valores cero
+
+    var resultadoFresnel40=resultadoFresnel60.filter(function(number) {
+      return (number=1);
+    }); //filtro todos los valores uno
+
+    if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
+      console.log("Existe un despeje mayor al 60%");
       despeje60=true;
+      despeje40=true;
     }
-    else if (hayDespeje1==1){ //El punto mas alto tiene un despeje 60%
-      console.log("Existe el despeje del 60%");
-      despeje80=false;
-      despeje60=true;
+    else if(resultadoFresnel40.length==0){
+      console.log("Existe el despeje entre el 40% y 60%");
+		  despeje60=false;
+		  despeje40=true;
     }
     else{
-      console.log("No hay despeje de Fresnel");
-      despeje80=false;
-      despeje60=false;
-    }
-    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
-    Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje80,despeje60);
-    return;
+		  console.log("No hay despeje de Fresnel");
+		  despeje60=false;
+		  despeje40=false;
+		}
 
+    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
+    Resultados(hayLOS,perdidasFSL,MargenFading,AnguloTilt,despeje60,despeje40);
+    return;
 }

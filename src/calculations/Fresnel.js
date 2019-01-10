@@ -1,5 +1,5 @@
 /* Este bloque tiene como funcionalidad calcular el radio de fresnel y luego ver si el objeto interferente
-tiene un 60% u 80% de despeje
+tiene un 40% u 60% de despeje
 Se procede a hallar el radio para calcular la zona de Fresnel. Para ello el usuario deberá ingresar:
 freq: Frecuencia del canal
 htx: Altura de la antena transmisora
@@ -14,7 +14,7 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
 	lambda = c/freq;
   var distancia = haversine(radius, latitud, longitud);
   tan_alpha=((htx-hrx)/distancia);
-  alpha=Math.atan(tan_alpha); //Se halla el ángulo de inclinación de las antenas. En caso que estén a la misma altura el ángulo es cero
+  alpha=Math.atan(tan_alpha); //Se halla el ángulo de inclinación entre las dos antenas. En caso que estén a la misma altura el ángulo es cero
   var pto_medio=distancia/2; //Se halla el punto medio entre las antenas Tx y Rx
   var altura_puntomedio= altura[(cant_redondeo/2)];
   console.log("altura_puntomedio: " +altura_puntomedio);
@@ -24,28 +24,28 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
 
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
-  var fresnel80= R1*0.8;
   var fresnel60= R1*0.6;
-  var resultado80;
+  var fresnel40= R1*0.4;
   var resultado60;
+  var resultado40;
 
   if (Pmax==0){ //Si el objeto interferente está en la antena Tx
-    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
+    resultado40=((Pmax*100)-pto_medio)^2/((fresnel40^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel40^2));
   }
   else if (Pmax==distancia){ //Si el objeto interferente está en la antena Rx
-    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel60^2));
+    resultado40=((Pmax*100)-pto_medio)^2/((fresnel40^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel40^2));
   }
   else{ //Si el objeto interferente está en el largo del camino y no en los extremos
-    resultado80=((Pmax*100)-pto_medio)^2/((fresnel80^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel80^2));
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel60^2));
+    resultado40=((Pmax*100)-pto_medio)^2/((fresnel40^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel40^2));
   }
 
-  if(resultado80>1)
-    return 0; //Tengo despeje del 80%
-  else if(resultado60>1 && resultado80<1)
-    return 1; //Tengo despeje del 60%
+  if(resultado60>1)
+    return 0; //Tengo despeje del 60%
+  else if(resultado40>1 && resultado60<1)
+    return 1; //Tengo despeje del 40%
   else
     return 2; //No tengo despeje de fresnel
 }
