@@ -5,11 +5,11 @@ distancia: Largo del camino
 A: Factor de Rugosidad del terreno
 B:
 freq: Frecuencia de transmisión del canal
-disp_canal: Disponibilidad del canal (Se debe ingresar con . y no con ,)
+MargenFading: Margen de Fading
 */
 
-function MF(distancia,A,B,freq,disp_canal) {
-	var margen_fading;
+function DispCanal(distancia,A,B,freq,MargenFading) {
+	var disp_canal;
 	var valueA;
 	if(A=="1") //Se analiza lo ingresado por el usuario y a raiz de eso, se ingresa en la ecuación del margen de fading
 		valueA=4;
@@ -18,6 +18,6 @@ function MF(distancia,A,B,freq,disp_canal) {
 	else
 		valueA=0.25;
 
-	margen_fading= 30*(Math.log10(distancia))+10*(Math.log10(6*valueA*B*freq))-10*(Math.log10(1-disp_canal))-70;
-	return margen_fading;
+	disp_canal=1-((Math.pow(distancia,3)*6*valueA*B*freq)/(Math.pow(10,7+MargenFading/10)));
+	return disp_canal;
 }
