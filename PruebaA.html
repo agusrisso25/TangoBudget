@@ -160,7 +160,7 @@
                             </select>
                             <label for="perdidasconectores">Pérdidas de conectores (dB) </label> <input type="number" id="perdidasconectores" class="form-control" value="0">
                             <label for="otrasperdidas">Otras pérdidas (dB) </label> <input type="number" id="otrasperdidas" class="form-control" value="0">
-                            <label for="disponibilidad">Disponibilidad del canal (%) </label> <input type="number" id="disponibilidad" class="form-control" value="">
+                          <!--  <label for="disponibilidad">Disponibilidad del canal (%) </label> <input type="number" id="disponibilidad" class="form-control" value="">-->
                     </div><!--Cierre card body-->
                 </div> <!--Cierre de div "uno"-->
 
@@ -200,6 +200,34 @@
                                 </select>
                         </div><!--Cierre card body-->
                     </div> <!--Cierre de div "cuatro"-->
+
+                    <div class="card-header"><!--Datos extra-->
+                        <a href="#cinco" class="card-link" data-toggle="collapse" data-parent="#acordion">Pérdidas por lluvia</a>
+                    </div> <!--cierre card-header-->
+                    <div id="cinco" class="collapse">
+                        <div class="card-body">
+                                <label for="ZonaHidrometeorologica">Zona Hidrometeorológica </label>
+                                <select id="ZonaHidrometeorologica" class="form-control" name="ZonaHidrometeorologica">
+                                    <option value="0" disabled selected>**Elija una opcion**</option>
+                                    <option value="1">A</option>
+                                    <option value="2">B</option>
+                                    <option value="3">C</option>
+                                    <option value="1">D</option>
+                                    <option value="2">E</option>
+                                    <option value="3">F</option>
+                                    <option value="1">G</option>
+                                    <option value="2">H</option>
+                                    <option value="3">J</option>
+                                    <option value="1">K</option>
+                                    <option value="2">L</option>
+                                    <option value="3">M</option>     
+                                    <option value="1">N</option>
+                                    <option value="2">P</option>
+                                    <option value="3">Q</option>                               
+                                </select>
+                        </div><!--Cierre card body-->
+
+                    </div> <!--Cierre de div "cinco"-->
 
             </div><!--Cierre class="card"-->
         </div><!--div class id acordion-->

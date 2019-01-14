@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-12 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-01-13 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -489,7 +489,8 @@ function ModifyRxTx() {
 function AtenuacionLluvia() {
 	var freq=parseNumber(document.getElementById("frecuencia").value); //En caso que el usuario ingrese una coma, se pasa a punto
 	var pol=parseNumber(document.getElementById("polarizacion").value);
-	var R=42; // Se considera una intensidad de lluvia tipo "N"
+	var R;
+	var frecu;
 	var distancia=haversine(radius, latitud, longitud);
 
 	if(!freq){
@@ -505,12 +506,26 @@ function AtenuacionLluvia() {
 	var indice= arrayfrec.indexOf(freq);
 	if(indice== -1){
 		var i=0;
-		while (freq<=arrayfrec[i]){
+		while (freq<=arrayfrec[i]){ // redondeo para abajo
 			i++;
 		}
-		alert("Se aproximó dicho valor a" +i + "GHz para calcular la atenuación por lluvia");
+		frecu = arrayfrec[i];
+		alert("Se aproximó dicho valor a" + frecu + "GHz para calcular la atenuación por lluvia.");
 		indice=i;
 	}
+
+	var R0 = [0, 8, 12, 15, 19, 22, 28, 30, 32, 35, 42, 60, 63, 95, 145, 115];
+	var letra = [X, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q];
+
+	var R2 = document.getElementById("ZonaHidrometeorologica").value;
+	var u = letra.indexOf(R2);
+
+	if (u == -1){
+		alert("Por favor ingresar el zona hidrometeorológica para el cálculo de lluvia.");}
+	else {
+		R = R0[u];
+	}
+
 	var matrizkH=[0.0000259,	0.0000443,	0.0000847,	0.000132,	0.000139,	0.000116,	0.000107,	0.000134,	0.000216,	0.000391,
 								0.000706,	0.001915,	0.004115,	0.007535,	0.01217,	0.01772,	0.02386,	0.03041,	0.03738,	0.04481,
 								0.05282,	0.06146,	0.07078,	0.08084,	0.09164,	0.1032,	0.1155,	0.1286,	0.1425,	0.1571,	0.1724,
@@ -556,11 +571,11 @@ function AtenuacionLluvia() {
 
 	var k;
 	var alfa;
-	if(pol==1){
+	if(pol==1){ // polarización vertical
 		k = matrizkV[indice];
 		alfa = matrizalfaV[indice];
 	}
-	else if(pol==2){
+	else if(pol==2){ // polarización horizontal
 		k = matrizkH[indice];
 		alfa = matrizalfaH[indice];
 	}
@@ -573,11 +588,14 @@ function AtenuacionLluvia() {
 
 	var gamaR= k*Math.pow(R, alfa);
 	var d0=35*Math.exp(-0.015*R);
-	var r = 1/(1+distancia/d0);
+	//var r = 1/(1+distancia/d0);
+	var r = 1/(0.477*pow(distancia, 0.633)*pow(R, 0.073*alfa)*pow(frecu, 0.123) - 10.579*(1-exp(-0.024*distancia)));
 	var deff= distancia*r;
+	var A = gamaR*deff;
+	
+	console.log("Las pérdidas debido a lluvias son de: " + A + "dB.");
 
-	return(gamaR*deff);
-
+	return(A);
 }
 
 function Resultados(hayLOS,perdidasFSL,disp_canal,AnguloTilt,despeje60,despeje40){
