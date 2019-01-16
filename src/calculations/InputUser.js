@@ -47,18 +47,19 @@ function InputUser() {
 
     var despeje60;
     var despeje40;
+
     //Se calcula si hay despeje de fresnel a lo largo del camino
   	var j=0;
   	for (i=0;i<altura.length; i++){
   		hayDespejeCamino[i]=Fresnel(freq,htx2,hrx2,i,altura[i]);
-      //En caso que tenga un objeto interferente con despeje entre 60% y 40% necesito guardar la muestra y la altura del camino
+      //En caso que tenga un objeto interferente entre 60% y 40% necesito guardar la muestra y la altura del camino para pérdidas por Difracción
       if (hayDespejeCamino[i] == 1){
-  			distanciaFresnel [j]= i;
+  			distanciaFresnel [j]= i; // estas variables donde las definis?
   			alturaFresnel [j]= altura[i];
   			j++;
   		}
-  	}
-
+    }
+    
     //luego debo saber en qué región de decisión está el despeje.
     var resultadoFresnel60=hayDespejeCamino.filter(function(number) {
       return (number=0);
@@ -69,25 +70,25 @@ function InputUser() {
     }); //filtro todos los valores uno
 
     if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
-      console.log("Existe un despeje mayor al 60%");
+      console.log("Existe un despeje del 60% de Fresnel.");
       despeje60=true;
       despeje40=true;
     }
     else if(resultadoFresnel40.length==0){
-      console.log("Existe el despeje entre el 40% y 60%");
+      console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 		  despeje60=false;
 		  despeje40=true;
       //Bullington(htx2,hrx2,distancia);
     }
     else{
-		  console.log("No hay despeje de Fresnel");
+		  console.log("No hay despeje de Fresnel.");
 		  despeje60=false;
 		  despeje40=false;
 		}
 
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value);
     if(!sensRx){
-      alert("El campo de sensibilidad de recepción no puede quedar vacío");
+      alert("El campo de sensibilidad de recepción no puede quedar vacío.");
     }
     if(sensRX>=0){
       alert("La sensibilidad debe ser menor a cero");
