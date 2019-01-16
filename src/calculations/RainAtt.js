@@ -28,8 +28,8 @@ function AtenuacionLluvia() {
 		indice=i;
 	}
 
-	var R0 = [0, 8, 12, 15, 19, 22, 28, 30, 32, 35, 42, 60, 63, 95, 145, 115];
-	var letra = [X, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q];
+	var R0 = [8, 12, 15, 19, 22, 28, 30, 32, 35, 42, 60, 63, 95, 145, 115];
+	var letra = ["A","B","C","D","E","F","G","H","J","K","L","M","N","P","Q"];
 
 	var R2 = document.getElementById("ZonaHidrometeorologica").value;
 	var u = letra.indexOf(R2);
@@ -106,7 +106,7 @@ function AtenuacionLluvia() {
 	var r = 1/(0.477*Math.pow(distancia, 0.633)*Math.pow(R, 0.073*alfa)*Math.pow(frecu, 0.123) - 10.579*(1-Math.exp(-0.024*distancia)));
 	var deff= distancia*r;
 	var A = gamaR*deff;
-	
+
 	console.log("Las pérdidas debido a lluvias son de: " + A + "dB.");
 
 	return(A);

@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-15 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-01-16 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -91,6 +91,12 @@ function Bullington(htx2,hrx2,distancia) {
 		var ctemayorPendTx;
 		var mayorPendTx=0;
 		var mayorPendRx=0;
+		var d1;	//proyección ortogonal de distancia entre TX y OI
+		var d2; //proyección ortogonal de distancia entre OI y RX
+		var hq; //variable que surge de la interseccion de la altura del OI ficticio y LOS
+		var hp; //variable que surge de la interseccion de la altura del OI ficticio y LOS pero cuando las alturas de las antenas son distintas
+		var a1; //distancia entre TX y cuspide del OIficticio
+		var a2; //distancia entre RX y cuspide del OIficticio
 		//calculo las pendientes que generan entre un 40% y 60% de Despeje con la antena Tx
 		for(i=0;i<distanciaFresnel.length;i++){
 			Y1=((-htx2+alturaFresnel[i])/distanciaFresnel[i])*X1+htx2;
@@ -109,9 +115,33 @@ function Bullington(htx2,hrx2,distancia) {
 				ctemayorPendRx=cte2;
 		}
 		//Para la intersección de las dos rectas finales,
-		OIficticio=((ctemayorPendTx-ctemayorPendRx)/(mayorPendTx-mayorPendRx));
-		h_OIficticio=mayorPendTx*OIficticio+htx2;
-		return(OIficticio);
+		OIficticio=Math.floor((ctemayorPendTx-ctemayorPendRx)/(mayorPendTx-mayorPendRx)); //este valor sirve para tener una noción de donde estará el objeto interferente ficticio
+		h_OIficticio=mayorPendTx*OIficticio+htx2; //Esta será la altura del objeto ficticio
+		d1= OIficticio*100; //Calculo la distancia entre el transmisor y el OI ficticio
+		d2=(distancia-d1);
+		hq=htx-OIficticio*(htx-hrx)*0.5; //hallo la altura de intersección entre LOS y h_OIficticio
+
+		if(htx==hrx){
+		a1= Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hq,2));
+		a2= Math.sqrt(Math.pow(d2,2)+Math.pow(h_OIficticio-hq,2));
+		}
+		else{
+			if(htx<hrx){
+				hp=htx;
+		}
+		else{
+			hp=hrx;
+		}
+		a1=Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hp,2));
+		a2=Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hp,2));
+		}
+		v=(h_OIficticio-hq)*Math.sqrt(2/lambda*(1/a1+1/a2));
+		if(v<-0.78)
+			return(0);
+		else{
+			var J_v=6.9+20*Math.log10(Math.sqrt(Math.pow(v-0.1,2)+1)+v-0.1);
+			return(J_v);
+		}
 }
 
 function DispCanal(distancia,freq,MargenFading) {
@@ -218,18 +248,17 @@ function InputUser() {
     var distancia = haversine(radius, latitud, longitud);
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
-    
+
     //Cálculos de algunas pérdidas
     var perdidasFSL = FSL(distancia,htx2,hrx2,freq); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
-    var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-perdidasLluvia; //Se calcula la potencia de recepción
     var AnguloTilt=Tilt(distancia,htx2,hrx2); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
-
+    var diffBullington;
     console.log("La frecuencia ingresada es: " +freq);
     console.log("perdidasFSL: " +perdidasFSL);
     console.log("Prx es: " +Prx);
     console.log("El angulo del tilt es: " +AnguloTilt);
-    console.log("AtenuacionLluvia: " +AttRain);
+    console.log("AtenuacionLluvia: " +perdidasLluvia);
 
     var despeje60;
     var despeje40;
@@ -240,12 +269,12 @@ function InputUser() {
   		hayDespejeCamino[i]=Fresnel(freq,htx2,hrx2,i,altura[i]);
       //En caso que tenga un objeto interferente entre 60% y 40% necesito guardar la muestra y la altura del camino para pérdidas por Difracción
       if (hayDespejeCamino[i] == 1){
-  			distanciaFresnel [j]= i; 
+  			distanciaFresnel [j]= i;
   			alturaFresnel [j]= altura[i];
   			j++;
   		}
     }
-    
+
     //luego debo saber en qué región de decisión está el despeje.
     var resultadoFresnel60=hayDespejeCamino.filter(function(number) {
       return (number=0);
@@ -259,45 +288,46 @@ function InputUser() {
       console.log("Existe un despeje del 60% de Fresnel.");
       despeje60=true;
       despeje40=true;
+      diffBullington=0;
     }
     else if(resultadoFresnel40.length==0){
       console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 		  despeje60=false;
 		  despeje40=true;
-      //Bullington(htx2,hrx2,distancia);
+      diffBullington=Bullington(htx2,hrx2,distancia);
     }
     else{
 		  console.log("No hay despeje de Fresnel.");
 		  despeje60=false;
 		  despeje40=false;
+      diffBullington=0;
 		}
 
-    var sensRX=parseFloat(document.getElementById("sensibilidadrx").value);
-    if(!sensRx){
-      alert("El campo de sensibilidad de recepción no puede quedar vacío.");
-    }
+    var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-perdidasLluvia-diffBullington; //Se calcula la potencia de recepción
+    var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
+
     if(sensRX>=0){
       alert("La sensibilidad debe ser menor a cero");
       return;
     }
     if(Prx>sensRX){
-      MargenFading=(Prx-sensRX);
+      MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
       if(MargenFading>=30){
         disp_canal=DispCanal(distancia,freq,MargenFading);
         if(disp_canal>=0.99998)
           console.log("Enlace aceptable");
           //hay que seguir esta parte
         else
-          alert("Se debe mejorar la altura de las antenas o el perfil.");
+          alert("Se debe mejorar la altura de las antenas o datos del enlace.");
         return;
       }
       else {
-        alert("Se debe mejorar la altura de las antenas o el perfil.");
+        alert("Se debe mejorar la altura de las antenas o datos del enlace.");
         return;
       }
     }
     else{
-      alert("Se debe mejorar la altura de las antenas o el perfil.");
+      alert("Se debe mejorar la altura de las antenas o datos del enlace.");
       return;
     }
 
@@ -530,8 +560,8 @@ function AtenuacionLluvia() {
 		indice=i;
 	}
 
-	var R0 = [0, 8, 12, 15, 19, 22, 28, 30, 32, 35, 42, 60, 63, 95, 145, 115];
-	var letra = [X, A, B, C, D, E, F, G, H, J, K, L, M, N, P, Q];
+	var R0 = [8, 12, 15, 19, 22, 28, 30, 32, 35, 42, 60, 63, 95, 145, 115];
+	var letra = ["A","B","C","D","E","F","G","H","J","K","L","M","N","P","Q"];
 
 	var R2 = document.getElementById("ZonaHidrometeorologica").value;
 	var u = letra.indexOf(R2);
@@ -608,7 +638,7 @@ function AtenuacionLluvia() {
 	var r = 1/(0.477*Math.pow(distancia, 0.633)*Math.pow(R, 0.073*alfa)*Math.pow(frecu, 0.123) - 10.579*(1-Math.exp(-0.024*distancia)));
 	var deff= distancia*r;
 	var A = gamaR*deff;
-	
+
 	console.log("Las pérdidas debido a lluvias son de: " + A + "dB.");
 
 	return(A);
