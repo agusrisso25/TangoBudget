@@ -54,7 +54,7 @@ function InputUser() {
   		hayDespejeCamino[i]=Fresnel(freq,htx2,hrx2,i,altura[i]);
       //En caso que tenga un objeto interferente entre 60% y 40% necesito guardar la muestra y la altura del camino para pérdidas por Difracción
       if (hayDespejeCamino[i] == 1){
-  			distanciaFresnel [j]= i; // estas variables donde las definis?
+  			distanciaFresnel [j]= i; 
   			alturaFresnel [j]= altura[i];
   			j++;
   		}

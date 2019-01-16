@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-13 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-01-15 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -133,14 +133,14 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
 	var c= 3*10^8;
 	lambda = c/freq;
   var distancia = haversine(radius, latitud, longitud);
-  tan_alpha=((htx-hrx)/distancia);
-  alpha=Math.atan(tan_alpha); //Se halla el ángulo de inclinación entre las dos antenas. En caso que estén a la misma altura el ángulo es cero
+  tan_alpha = (htx-hrx)/distancia;
+  alpha = Math.atan(tan_alpha); //Se halla el ángulo de inclinación entre las dos antenas. En caso que estén a la misma altura el ángulo es cero
   var pto_medio=distancia/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var altura_puntomedio= altura[(cant_redondeo/2)];
+  var altura_puntomedio = altura[(cant_redondeo/2)];
   console.log("altura_puntomedio: " +altura_puntomedio);
 
-  var d1=pto_medio/Math.cos(alpha); //Se halla d1= distancia desde Tx al punto medio
-  var d2=pto_medio/Math.cos(alpha); // Se halla d2= distancia desde Rx al punto medio
+  var d1=Math.abs(pto_medio/Math.cos(alpha)); //Se halla d1= distancia desde Tx al punto medio
+  var d2=Math.abs(pto_medio/Math.cos(alpha)); // Se halla d2= distancia desde Rx al punto medio
 
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
@@ -153,21 +153,21 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
     resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel60^2));
     resultado40=((Pmax*100)-pto_medio)^2/((fresnel40^2+d2^2) + (htx-altura_puntomedio)^2/(fresnel40^2));
   }
-  else if (Pmax==distancia){ //Si el objeto interferente está en la antena Rx
-    resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel60^2));
-    resultado40=((Pmax*100)-pto_medio)^2/((fresnel40^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel40^2));
-  }
-  else{ //Si el objeto interferente está en el largo del camino y no en los extremos
-    resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel60^2));
-    resultado40=((Pmax*100)-pto_medio)^2/((fresnel40^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel40^2));
-  }
+      else if (Pmax==distancia){ //Si el objeto interferente está en la antena Rx
+        resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel60^2));
+        resultado40=((Pmax*100)-pto_medio)^2/((fresnel40^2+d2^2) + (hrx-altura_puntomedio)^2/(fresnel40^2));
+      }
+      else{ //Si el objeto interferente está en el largo del camino y no en los extremos
+        resultado60=((Pmax*100)-pto_medio)^2/((fresnel60^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel60^2));
+        resultado40=((Pmax*100)-pto_medio)^2/((fresnel40^2+d2^2) + (h_Pmax-altura_puntomedio)^2/(fresnel40^2));
+      }
 
   if(resultado60>1)
     return 0; //Tengo despeje del 60%
-  else if(resultado40>1 && resultado60<1)
-    return 1; //Tengo despeje del 40%
-  else
-    return 2; //No tengo despeje de fresnel
+      else if(resultado40>1 && resultado60<1)
+        return 1; //Tengo despeje del 40% --> Aca tendriamos que hacer Bullington
+      else
+        return 2; 
 }
 
 function FSL(distancia,htx,hrx,freq) {
@@ -218,18 +218,19 @@ function InputUser() {
 
     var despeje60;
     var despeje40;
+
     //Se calcula si hay despeje de fresnel a lo largo del camino
   	var j=0;
   	for (i=0;i<altura.length; i++){
   		hayDespejeCamino[i]=Fresnel(freq,htx2,hrx2,i,altura[i]);
-      //En caso que tenga un objeto interferente con despeje entre 60% y 40% necesito guardar la muestra y la altura del camino
+      //En caso que tenga un objeto interferente entre 60% y 40% necesito guardar la muestra y la altura del camino para pérdidas por Difracción
       if (hayDespejeCamino[i] == 1){
-  			distanciaFresnel [j]= i;
+  			distanciaFresnel [j]= i; 
   			alturaFresnel [j]= altura[i];
   			j++;
   		}
-  	}
-
+    }
+    
     //luego debo saber en qué región de decisión está el despeje.
     var resultadoFresnel60=hayDespejeCamino.filter(function(number) {
       return (number=0);
@@ -240,25 +241,25 @@ function InputUser() {
     }); //filtro todos los valores uno
 
     if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
-      console.log("Existe un despeje mayor al 60%");
+      console.log("Existe un despeje del 60% de Fresnel.");
       despeje60=true;
       despeje40=true;
     }
     else if(resultadoFresnel40.length==0){
-      console.log("Existe el despeje entre el 40% y 60%");
+      console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 		  despeje60=false;
 		  despeje40=true;
       //Bullington(htx2,hrx2,distancia);
     }
     else{
-		  console.log("No hay despeje de Fresnel");
+		  console.log("No hay despeje de Fresnel.");
 		  despeje60=false;
 		  despeje40=false;
 		}
 
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value);
     if(!sensRx){
-      alert("El campo de sensibilidad de recepción no puede quedar vacío");
+      alert("El campo de sensibilidad de recepción no puede quedar vacío.");
     }
     if(sensRX>=0){
       alert("La sensibilidad debe ser menor a cero");
@@ -589,7 +590,7 @@ function AtenuacionLluvia() {
 	var gamaR= k*Math.pow(R, alfa);
 	var d0=35*Math.exp(-0.015*R);
 	//var r = 1/(1+distancia/d0);
-	var r = 1/(0.477*pow(distancia, 0.633)*pow(R, 0.073*alfa)*pow(frecu, 0.123) - 10.579*(1-exp(-0.024*distancia)));
+	var r = 1/(0.477*Math.pow(distancia, 0.633)*Math.pow(R, 0.073*alfa)*Math.pow(frecu, 0.123) - 10.579*(1-Math.exp(-0.024*distancia)));
 	var deff= distancia*r;
 	var A = gamaR*deff;
 	

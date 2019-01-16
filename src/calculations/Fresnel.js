@@ -13,14 +13,14 @@ function Fresnel(freq,htx,hrx,Pmax,h_Pmax){
 	var c= 3*10^8;
 	lambda = c/freq;
   var distancia = haversine(radius, latitud, longitud);
-  tan_alpha = Math.abs(htx-hrx)/distancia;
+  tan_alpha = (htx-hrx)/distancia;
   alpha = Math.atan(tan_alpha); //Se halla el ángulo de inclinación entre las dos antenas. En caso que estén a la misma altura el ángulo es cero
   var pto_medio=distancia/2; //Se halla el punto medio entre las antenas Tx y Rx
   var altura_puntomedio = altura[(cant_redondeo/2)];
   console.log("altura_puntomedio: " +altura_puntomedio);
 
-  var d1=pto_medio/Math.cos(alpha); //Se halla d1= distancia desde Tx al punto medio
-  var d2=pto_medio/Math.cos(alpha); // Se halla d2= distancia desde Rx al punto medio
+  var d1=Math.abs(pto_medio/Math.cos(alpha)); //Se halla d1= distancia desde Tx al punto medio
+  var d2=Math.abs(pto_medio/Math.cos(alpha)); // Se halla d2= distancia desde Rx al punto medio
 
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
