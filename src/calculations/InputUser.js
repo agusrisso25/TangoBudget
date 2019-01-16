@@ -30,9 +30,7 @@ function InputUser() {
     var distancia = haversine(radius, latitud, longitud);
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
-    var A=document.getElementById("FactorRugosidad").value;
-    var B=0.25; //Dado que esto apunta a estudios enfocados en Uruguay, este valor no cambia bajo ningún concepto
-
+    
     //Cálculos de algunas pérdidas
     var perdidasFSL = FSL(distancia,htx2,hrx2,freq); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
@@ -97,7 +95,7 @@ function InputUser() {
     if(Prx>sensRX){
       MargenFading=(Prx-sensRX);
       if(MargenFading>=30){
-        disp_canal=DispCanal(distancia,A,B,freq,MargenFading);
+        disp_canal=DispCanal(distancia,freq,MargenFading);
         if(disp_canal>=0.99998)
           console.log("Enlace aceptable");
           //hay que seguir esta parte

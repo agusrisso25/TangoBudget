@@ -114,17 +114,34 @@ function Bullington(htx2,hrx2,distancia) {
 		return(OIficticio);
 }
 
-function DispCanal(distancia,A,B,freq,MargenFading) {
+function DispCanal(distancia,freq,MargenFading) {
 	var disp_canal;
 	var valueA;
-	if(A=="1") //Se analiza lo ingresado por el usuario y a raiz de eso, se ingresa en la ecuación del margen de fading
-		valueA=4;
-	else if(A=="2")
-		valueA=1;
-	else
-		valueA=0.25;
+	var valueB;
 
-	disp_canal=1-((Math.pow(distancia,3)*6*valueA*B*freq)/(Math.pow(10,7+MargenFading/10)));
+	var A = document.getElementById("FactorRugosidad").value;
+	var B = document.getElementById("FactorClima").value;
+	
+	var arrayA= [0, 4, 1, 1/4];
+	var arrayB= [0, 1, 0.5, 0.25, 0.125];
+
+	if (A == "0"){
+		alert("Favor de completar el factor de rugosidad.");
+		return;
+	}
+	else {
+		valueA = arrayA [A];
+	}
+		
+	if (B == "0"){
+		alert("Favor de completar el Factor Clima.");
+		return;
+	}
+	else {
+		valueB = arrayB [B];
+	}
+
+	disp_canal = 1-((Math.pow(distancia,3)*6*valueA*valueB*freq)/(Math.pow(10,7+MargenFading/10)));
 	return disp_canal;
 }
 
@@ -201,9 +218,7 @@ function InputUser() {
     var distancia = haversine(radius, latitud, longitud);
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
-    var A=document.getElementById("FactorRugosidad").value;
-    var B=0.25; //Dado que esto apunta a estudios enfocados en Uruguay, este valor no cambia bajo ningún concepto
-
+    
     //Cálculos de algunas pérdidas
     var perdidasFSL = FSL(distancia,htx2,hrx2,freq); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
@@ -268,7 +283,7 @@ function InputUser() {
     if(Prx>sensRX){
       MargenFading=(Prx-sensRX);
       if(MargenFading>=30){
-        disp_canal=DispCanal(distancia,A,B,freq,MargenFading);
+        disp_canal=DispCanal(distancia,freq,MargenFading);
         if(disp_canal>=0.99998)
           console.log("Enlace aceptable");
           //hay que seguir esta parte
