@@ -15,21 +15,16 @@ function displayPathElevation(camino, elevator, dist) {
   console.log("Cantidad de muestras por km: " + cant_muestras);
   console.log("Redondeo de muestras: " + cant_redondeo);
 
-  // Create a PathElevationRequest object using this array.
-  // Initiate the path request.
   elevator.getElevationAlongPath({
     'path': camino,
     'samples': cant_redondeo
   }, plotElevation);
 }
 
-// Takes an array of ElevationResult objects, draws the path on the map
-// and plots the elevation profile on a Visualization API ColumnChart.
 function plotElevation(elevations, status) {
   var chartDiv = document.getElementById('elevation_chart');
   if (status !== 'OK') {
-    // Show the error code inside the chartDiv.
-    chartDiv.innerHTML = 'Cannot show elevation: request failed because ' + status;
+    chartDiv.innerHTML = 'No se pudo calcular el perfil de elevación porque: ' + status;
     return;
   }
 
@@ -56,11 +51,12 @@ function plotElevation(elevations, status) {
     Pmax1=altura.indexOf(h_Pmax1);
     Pmax2=altura.indexOf(h_Pmax2);
   }
-  else if (flag == 1) {//En caso que el flag sea 1, se modifica la altura
+  else if (flag == 1) { //En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
     muestra_mod[contador] = Math.floor(distanciaobject/10);
 
+    //Si la muestra que se desea modificar está en el origen o destino, se alertará
     if (muestra_mod[contador]==0 || muestra_mod[contador]==(cant_redondeo-1)){
       alert("No se pueden colocar objetos interferentes en las antenas, corrija las distancias");
       return;
@@ -68,9 +64,10 @@ function plotElevation(elevations, status) {
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
-    data.setValue(muestra_mod[contador], 1, valuetomodify);
+    data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva
 
     objInterferente=document.getElementById("objetointerferente").value;
+
     if(!objInterferente){
       alert ("Ingrese un tipo de interferencia");
       flag=0;
@@ -82,11 +79,16 @@ function plotElevation(elevations, status) {
       else if (objInterferente=="edificio")
         objInterferente='Edificio';
 
-      resFresnel=(document.getElementById("frecuencia").value,parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
-      AgregarTabla(objInterferente,+resFresnel);
-      flag = 0;
-      }
+    var despeje=Fresnel(document.getElementById("frecuencia").value,parseFloat(document.getElementById("alturaantenatx").value),parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+    if(despeje==1){
+    //tengo que hacer bullington
     }
+
+    resFresnel=(document.getElementById("frecuencia").value,parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+    AgregarTabla(objInterferente,+resFresnel,+despeje);
+    flag = 0;
+    }
+  }
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]); //Se modifica al valor anterior

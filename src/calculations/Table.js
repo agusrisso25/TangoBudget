@@ -5,7 +5,7 @@ objInterferente: Se generan diferentes atenuaciones de los objetos interferentes
 resFresnel: Se debe pasar el valor del resultado calculado por Fresnel
  */
 
-function AgregarTabla(objInterferente,resFresnel){
+function AgregarTabla(objInterferente,resFresnel,despeje){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
 
@@ -25,11 +25,11 @@ function AgregarTabla(objInterferente,resFresnel){
 		var resultado60;
 		var resultado40;
 
-		if(resFresnel==0){
+		if(despeje==0){
 			resultado60=true;
 			resultado40=true;
 		}
-		else if(resFresnel==1){
+		else if(despeje==1){
 			resultado60=false;
 			resultado40=true;
 		}

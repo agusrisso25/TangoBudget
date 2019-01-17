@@ -3,7 +3,7 @@ el margen de fading.
 Para ello, es necesario leer toda la información que ingresó el usuario en la plataforma:
 distancia: Largo del camino
 A: Factor de Rugosidad del terreno
-B:
+B: Factor del clima
 freq: Frecuencia de transmisión del canal
 MargenFading: Margen de Fading
 */
@@ -15,8 +15,8 @@ function DispCanal(distancia,freq,MargenFading) {
 
 	var A = document.getElementById("FactorRugosidad").value;
 	var B = document.getElementById("FactorClima").value;
-	
-	var arrayA= [0, 4, 1, 1/4];
+
+	var arrayA= [0, 4, 1, 0.25];
 	var arrayB= [0, 1, 0.5, 0.25, 0.125];
 
 	if (A == "0"){
@@ -26,7 +26,7 @@ function DispCanal(distancia,freq,MargenFading) {
 	else {
 		valueA = arrayA [A];
 	}
-		
+
 	if (B == "0"){
 		alert("Favor de completar el Factor Clima.");
 		return;

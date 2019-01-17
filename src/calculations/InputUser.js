@@ -76,7 +76,7 @@ function InputUser() {
       console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 		  despeje60=false;
 		  despeje40=true;
-      diffBullington=Bullington(htx2,hrx2,distancia);
+      diffBullington=Bullington(htx2,hrx2,distancia,freq);
     }
     else{
 		  console.log("No hay despeje de Fresnel.");
@@ -86,8 +86,8 @@ function InputUser() {
 		}
 
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-perdidasLluvia-diffBullington; //Se calcula la potencia de recepción
-    var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
 
+    var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
     if(sensRX>=0){
       alert("La sensibilidad debe ser menor a cero");
       return;
@@ -104,12 +104,12 @@ function InputUser() {
         return;
       }
       else {
-        alert("Se debe mejorar la altura de las antenas o datos del enlace.");
+        alert("Se debe mejorar la altura de las antenas o los datos del enlace.");
         return;
       }
     }
     else{
-      alert("Se debe mejorar la altura de las antenas o datos del enlace.");
+      alert("Se debe mejorar la potencia de transmisión.");
       return;
     }
 
