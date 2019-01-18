@@ -39,6 +39,15 @@ function plotElevation(elevations, status) {
         coordenadas[i] = NaN;
         altura[i] = NaN;
       }
+      var valoresreales=altura.filter(function(number) {
+        return (number!=isNaN);
+      });
+      var infoPerdida=(valoresreales.length)/(altura.length); //Creo una variable que me declarará el % de pérdida de info
+      if(infoPerdida<0.8){
+        alert("Vuelva a recargar la página, hay pérdida de información en el perfil de elevación.");
+        return;
+      }
+
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
       coordenadas[i] = elevations[i].location;
     }

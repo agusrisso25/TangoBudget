@@ -1,13 +1,12 @@
 /*Este bloque calcula la atenuación por lluvia*/
 
 function AtenuacionLluvia() {
-	var freq=parseNumber(document.getElementById("frecuencia").value); //En caso que el usuario ingrese una coma, se pasa a punto
 	var pol=parseNumber(document.getElementById("polarizacion").value);
 	var R;
 	var frecu;
 	var distancia=haversine(radius, latitud, longitud);
 
-	if(!freq){
+	if(!Inputfreq){
 		alert ("Ingrese una frecuencia");
 		return;
 	}
@@ -17,10 +16,10 @@ function AtenuacionLluvia() {
 									62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,
 									94,95,96,97,98,99,100,120,150,200,300,400,500,600,700,800,900,1000];
 
-	var indice= arrayfrec.indexOf(freq);
+	var indice= arrayfrec.indexOf(Inputfreq);
 	if(indice== -1){
 		var i=0;
-		while (freq<=arrayfrec[i]){ // redondeo para abajo
+		while (Inputfreq<=arrayfrec[i]){ // redondeo para abajo
 			i++;
 		}
 		frecu = arrayfrec[i];

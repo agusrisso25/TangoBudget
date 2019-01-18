@@ -1,13 +1,13 @@
 /*Se calculan las pérdidas por difracción cuando hay un obstáculo que genera interferencia entre el 40% y 60% de Fresnel
 */
-function Bullington(htx2,hrx2,distancia,freq) {
+function Bullington(htx2,hrx2,distancia) {
 		var X1;
 		var Y1;
 		var X2;
 		var Y2;
 		var lambda;
 		var c= 3*10^8;
-		lambda = c/freq;
+		lambda = c/Inputfreq;
 		var pend1;
 		var pend2;
 		var cte1;

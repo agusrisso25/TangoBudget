@@ -67,22 +67,31 @@
 
     <div class="row" id="profilebuttons"><!--Botones para modificar perfil de elevación-->
 
-      <div class="col-6"><h6>Altura de antena Tx (m):</h6>
+      <div class="col-4"><h6>Altura de antena Tx (m):</h6>
           <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la altura de la antena transmisora en [m].</p>
       </div>
-      <div class="col-6"><h6>Altura de antena Rx(m):</h6>
+      <div class="col-4"><h6>Altura de antena Rx (m):</h6>
           <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la altura de la antena receptora en [m].</p>
       </div>
-      <div class="col-6">
+      <div class="col-4"><h6>Frecuencia (GHz):</h6>
+          <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la frecuencia de transmisión.</p>
+      </div>
+      <div class="col-4">
         <input id="alturaantenatx" type="number" class="form-control" size="40" value="0"></div>
-      <div class="col-6">
+      <div class="col-4">
         <input id="alturaantenarx" type="number" class="form-control" size="40" value="0"></div>
+      <div class="col-4">
+        <input id="frecuencia" type="number" class="form-control" size="40" value="0"></div>
+
 
       <div class="col-12"></div>
       <div class="col-12"></div>
 
-      <div class="col-12">
+      <div class="col-8">
         <button class = "btn btn-info btn-block"  id="ModificarRxTx" onclick="ModifyRxTx();">Insertar alturas</button>
+      </div>
+      <div class="col-4">
+        <button class = "btn btn-info btn-block"  id="Insertarfreq" onclick="getFreq();">Asignar frecuencia</button>
       </div>
 
       <div class="col-12"></div>
@@ -151,7 +160,7 @@
                 <div id="uno" class="collapse">
                     <div class="card-body">
                         <!--hay que ver si usar action o no.. ver bien como funciona-->
-                            <label for="frecuencia">Frecuencia (GHz) </label> <input type="number" id="frecuencia" class="form-control" value="">
+                            <!--<label for="frecuencia">Frecuencia (GHz) </label> <input type="number" id="frecuencia" class="form-control" value="">-->
                             <label for="polarizacion">Polarización </label>
                             <select id="polarizacion" name="polarizacion" class="form-control" name="polarizacion">
                                 <option value="0" disabled selected>**Elija una opcion**</option>

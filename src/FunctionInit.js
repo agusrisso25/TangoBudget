@@ -34,6 +34,8 @@ var distanciaFresnel=[];
 var alturaFresnel=[];
 var resFresnel;
 var hayDespejeCamino=[];
+var Inputfreq; //Frecuencia que ingresó el usuario en la plataforma
+var diffBullington; //difracción por bullington
 
 var APP = { };
 APP.objInterferente = null;
