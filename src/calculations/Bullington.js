@@ -1,12 +1,8 @@
 /*Se calculan las pérdidas por difracción cuando hay un obstáculo que genera interferencia entre el 40% y 60% de Fresnel
 */
 function Bullington(htx2,hrx2,distancia) {
-		var X1;
-		var Y1;
-		var X2;
-		var Y2;
 		var lambda;
-		var c= 3*10^8;
+		var c= 3*Math.pow(10,8);
 		lambda = c/Inputfreq;
 		var pend1;
 		var pend2;
@@ -18,93 +14,58 @@ function Bullington(htx2,hrx2,distancia) {
 		var mayorPendRx=0;
 		var d1;
 		var d2;
-		var hq; //variable que surge de la interseccion de la altura del OI ficticio y LOS
-		var hp; //variable que surge de la interseccion de la altura del OI ficticio y LOS pero cuando las alturas de las antenas son distintas
 		var a1;
 		var a2;
 
-		//CASO 1: Entro a la función para calcular la difraccion del camino
-		if (diffEntrance==1){
-			/*calculo las pendientes que generan entre un 40% y 60% de Despeje con la antena Tx
-			Para ello es necesario recorrer el array donde guardé toda la información de los objetos que obstruyen
-			entre el 40% y 60% de Fresnel
-			Luego de recorrer el array, se guarda la mayor pendiente en mayorPendTx y mayorPendRx y las ctes que
-			constituyen la ecuación de la recta
-			*/
-			for(i=0;i<distanciaFresnel.length;i++){
-				Y1=((-htx2+alturaFresnel[i])/distanciaFresnel[i])*X1+htx2;
-				pend1=((-htx2+alturaFresnel[i])/distanciaFresnel[i]);
-				cte1=htx2;
-				if (Math.abs(mayorPendTx)<Math.abs(pend1))
-					mayorPendTx=pend1;
-					ctemayorPendTx=cte1;
-			}
-
-			for(j=0;j<distanciaFresnel.length;j++){
-				Y2=((alturaFresnel[i]-htx2)/(distanciaFresnel[i]-distancia))*X2+((distanciaFresnel[i]*hrx2-distancia*alturaFresnel[i])/(distanciaFresnel[i]-alturaFresnel[i]));
-				pend2=((alturaFresnel[i]-htx2)/(distanciaFresnel[i]-distancia));
-				cte2=((distanciaFresnel[i]*hrx2-distancia*alturaFresnel[i])/(distanciaFresnel[i]-alturaFresnel[i]));
-				if(Math.abs(mayorPendRx)<Math.abs(pend2))
-					mayorPendRx=pend2;
-					ctemayorPendRx=cte2;
-
-			}
+		/*calculo las pendientes que generan entre un 40% y 60% de Despeje con la antena Tx
+		Para ello es necesario recorrer el array donde guardé toda la información de los objetos que obstruyen
+		entre el 40% y 60% de Fresnel
+		Luego de recorrer el array, se guarda la mayor pendiente en mayorPendTx y mayorPendRx y las ctes que
+		constituyen la ecuación de la recta
+		*/
+		for(i=0;i<distanciaFresnel.length;i++){
+			pend1=((alturaFresnel[i]-htx2)/distanciaFresnel[i]);
+			cte1=htx2;
+			if (mayorPendTx<pend1)
+				mayorPendTx=pend1;
+			ctemayorPendTx=cte1;
 		}
-		//CASO 2: Entro a la función para calcular la difracción del OI
-		else if(diffEntrance==2){
-				Y1=((-htx2+valuetomodify_array[contador])/distanciaobject_array[contador])*X1+htx2;
-				mayorPendTx=((-htx2+valuetomodify_array[contador])/distanciaobject_array[contador]);
-				ctemayorPendTx=htx2;
 
-				Y2=((valuetomodify_array[contador]-htx2)/(distanciaobject_array[contador]-distancia))*X2+((distanciaobject_array[contador]*hrx2-distancia*valuetomodify_array[contador])/(distanciaobject_array[contador]-valuetomodify_array[contador]));
-				mayorPendRx=((valuetomodify_array[contador]-htx2)/(distanciaobject_array[contador]-distancia));
-				ctemayorPendRx=((distanciaobject_array[contador]*hrx2-distancia*valuetomodify_array[contador])/(distanciaobject_array[contador]-valuetomodify_array[contador]));
+		for(j=0;j<distanciaFresnel.length;j++){
+			pend2=((hrx2-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
+			cte2=hrx-distancia*((hrx2-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
+			if(mayorPendRx>pend2){
+				mayorPendRx=pend2;
+				ctemayorPendRx=cte2;
+				}
 		}
+
 		/* Luego, se debe intersectar las dos rectas con mayor pendiente para encontrar la distancia y altura del
 		objeto interferente ficticio. Se guardan esos valores en OIficticio y h_OIficticio.
 		Además, se halla:
-		d1: Distancia entre el transmisor y OIficticio
-		d2: Distancia entre el OIficticio y el receptor
-		hq: Corresponde a la intersección entre la línea de vista el OIficticio
+		a1: Distancia entre el transmisor y OIficticio
+		a2: Distancia entre el OIficticio y el receptor
+		d1:
+		d2:
 		*/
-		OIficticio=Math.floor((ctemayorPendTx-ctemayorPendRx)/(mayorPendTx-mayorPendRx)); //este valor sirve para tener una noción de donde estará el objeto interferente ficticio
-		h_OIficticio=mayorPendTx*OIficticio+htx2; //Esta será la altura del objeto ficticio
-		d1= OIficticio*100;
-		d2=(distancia-d1);
-		hq=htx2-OIficticio*(htx2-hrx2)*0.5; //hallo la altura de intersección entre LOS y h_OIficticio
+		OIficticio=Math.floor((ctemayorPendRx-ctemayorPendTx)/(mayorPendTx-mayorPendRx)); //este valor sirve para tener una noción de donde estará el objeto interferente ficticio
+		h_OIficticio=mayorPendTx*OIficticio+ctemayorPendTx; //Esta será la altura del objeto ficticio
+		a1= OIficticio*100;
+		a2=(distancia-a1);
 
-		/* Para aplicar la definición de v, es necesario estudiar dos casos:
-			CASO 1: htx2=hrx2 por lo que a1 y a2 (que corresponden a la distancia entre el transmisor y h_OIficticio
-			se obtienen de forma inmediata aplicando pitágoras.
-			CASO 2: htx2!=hrx2 por lo que es necesario hallar la proyección ortogonal sobre la horizontal y luego
-			aplicar pitágoras.
-			*/
-		if(htx2==hrx2){
-		a1= Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hq,2));
-		a2= Math.sqrt(Math.pow(d2,2)+Math.pow(h_OIficticio-hq,2));
-		}
-		else{
-			if(htx2<hrx2){
-				hp=htx2;
-		}
-		else{
-			hp=hrx2;
-		}
-		a1=Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hp,2));
-		a2=Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hp,2));
-		}
+		d1=Math.abs(a1/Math.cos(mayorPendTx));
+		d2=Math.abs(a2/Math.cos(mayorPendRx));
 
 		/* Una vez obtenido el valor de a1 y a2, se aplica la definición de v. En caso que sea menor a -0.78
 		la atenuación por difracción será cero.
 		En el otro caso, se utiliza una aproximación lineal
 		 */
-		v=(h_OIficticio-hq)*Math.sqrt(2/lambda*(1/a1+1/a2));
+		v=h_OIficticio*Math.sqrt(2/lambda*(1/d1+1/d2));
 		if(v<-0.78)
 			return(0);
 		else{
 			var J_v=6.9+20*Math.log10(Math.sqrt(Math.pow(v-0.1,2)+1)+v-0.1);
+			console.log("Las perdidas de difracción son: " +J_v);
 			return(J_v);
 		}
-		diffEntrance=0;
-
 }

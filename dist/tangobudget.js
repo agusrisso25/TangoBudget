@@ -25,7 +25,7 @@ function addMarkersAndAll(location, map) {
   google.maps.event.addListener(marker, "drag", function(evt) {
     //muevo la linea cuando muevo los marcadores y creo una nueva:
     var etiqueta = marker.getLabel();
-    if (etiqueta == "B") {
+    if (etiqueta == "R") {
       //Si el marcador que muevo es el B
       path.pop(); //saco el ulimo elemento de path porque es el relacionado con B
       path.push(evt.latLng); // hago un push del nuevo lugar del marcador al array
@@ -79,12 +79,8 @@ function addMarkersAndAll(location, map) {
 }
 
 function Bullington(htx2,hrx2,distancia) {
-		var X1;
-		var Y1;
-		var X2;
-		var Y2;
 		var lambda;
-		var c= 3*10^8;
+		var c= 3*Math.pow(10,8);
 		lambda = c/Inputfreq;
 		var pend1;
 		var pend2;
@@ -96,95 +92,60 @@ function Bullington(htx2,hrx2,distancia) {
 		var mayorPendRx=0;
 		var d1;
 		var d2;
-		var hq; //variable que surge de la interseccion de la altura del OI ficticio y LOS
-		var hp; //variable que surge de la interseccion de la altura del OI ficticio y LOS pero cuando las alturas de las antenas son distintas
 		var a1;
 		var a2;
 
-		//CASO 1: Entro a la función para calcular la difraccion del camino
-		if (diffEntrance==1){
-			/*calculo las pendientes que generan entre un 40% y 60% de Despeje con la antena Tx
-			Para ello es necesario recorrer el array donde guardé toda la información de los objetos que obstruyen
-			entre el 40% y 60% de Fresnel
-			Luego de recorrer el array, se guarda la mayor pendiente en mayorPendTx y mayorPendRx y las ctes que
-			constituyen la ecuación de la recta
-			*/
-			for(i=0;i<distanciaFresnel.length;i++){
-				Y1=((-htx2+alturaFresnel[i])/distanciaFresnel[i])*X1+htx2;
-				pend1=((-htx2+alturaFresnel[i])/distanciaFresnel[i]);
-				cte1=htx2;
-				if (Math.abs(mayorPendTx)<Math.abs(pend1))
-					mayorPendTx=pend1;
-					ctemayorPendTx=cte1;
-			}
-
-			for(j=0;j<distanciaFresnel.length;j++){
-				Y2=((alturaFresnel[i]-htx2)/(distanciaFresnel[i]-distancia))*X2+((distanciaFresnel[i]*hrx2-distancia*alturaFresnel[i])/(distanciaFresnel[i]-alturaFresnel[i]));
-				pend2=((alturaFresnel[i]-htx2)/(distanciaFresnel[i]-distancia));
-				cte2=((distanciaFresnel[i]*hrx2-distancia*alturaFresnel[i])/(distanciaFresnel[i]-alturaFresnel[i]));
-				if(Math.abs(mayorPendRx)<Math.abs(pend2))
-					mayorPendRx=pend2;
-					ctemayorPendRx=cte2;
-
-			}
+		/*calculo las pendientes que generan entre un 40% y 60% de Despeje con la antena Tx
+		Para ello es necesario recorrer el array donde guardé toda la información de los objetos que obstruyen
+		entre el 40% y 60% de Fresnel
+		Luego de recorrer el array, se guarda la mayor pendiente en mayorPendTx y mayorPendRx y las ctes que
+		constituyen la ecuación de la recta
+		*/
+		for(i=0;i<distanciaFresnel.length;i++){
+			pend1=((alturaFresnel[i]-htx2)/distanciaFresnel[i]);
+			cte1=htx2;
+			if (mayorPendTx<pend1)
+				mayorPendTx=pend1;
+			ctemayorPendTx=cte1;
 		}
-		//CASO 2: Entro a la función para calcular la difracción del OI
-		else if(diffEntrance==2){
-				Y1=((-htx2+valuetomodify_array[contador])/distanciaobject_array[contador])*X1+htx2;
-				mayorPendTx=((-htx2+valuetomodify_array[contador])/distanciaobject_array[contador]);
-				ctemayorPendTx=htx2;
 
-				Y2=((valuetomodify_array[contador]-htx2)/(distanciaobject_array[contador]-distancia))*X2+((distanciaobject_array[contador]*hrx2-distancia*valuetomodify_array[contador])/(distanciaobject_array[contador]-valuetomodify_array[contador]));
-				mayorPendRx=((valuetomodify_array[contador]-htx2)/(distanciaobject_array[contador]-distancia));
-				ctemayorPendRx=((distanciaobject_array[contador]*hrx2-distancia*valuetomodify_array[contador])/(distanciaobject_array[contador]-valuetomodify_array[contador]));
+		for(j=0;j<distanciaFresnel.length;j++){
+			pend2=((hrx2-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
+			cte2=hrx-distancia*((hrx2-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
+			if(mayorPendRx>pend2){
+				mayorPendRx=pend2;
+				ctemayorPendRx=cte2;
+				}
 		}
+
 		/* Luego, se debe intersectar las dos rectas con mayor pendiente para encontrar la distancia y altura del
 		objeto interferente ficticio. Se guardan esos valores en OIficticio y h_OIficticio.
 		Además, se halla:
-		d1: Distancia entre el transmisor y OIficticio
-		d2: Distancia entre el OIficticio y el receptor
-		hq: Corresponde a la intersección entre la línea de vista el OIficticio
+		a1: Distancia entre el transmisor y OIficticio
+		a2: Distancia entre el OIficticio y el receptor
+		d1:
+		d2:
 		*/
-		OIficticio=Math.floor((ctemayorPendTx-ctemayorPendRx)/(mayorPendTx-mayorPendRx)); //este valor sirve para tener una noción de donde estará el objeto interferente ficticio
-		h_OIficticio=mayorPendTx*OIficticio+htx2; //Esta será la altura del objeto ficticio
-		d1= OIficticio*100;
-		d2=(distancia-d1);
-		hq=htx2-OIficticio*(htx2-hrx2)*0.5; //hallo la altura de intersección entre LOS y h_OIficticio
+		OIficticio=Math.floor((ctemayorPendRx-ctemayorPendTx)/(mayorPendTx-mayorPendRx)); //este valor sirve para tener una noción de donde estará el objeto interferente ficticio
+		h_OIficticio=mayorPendTx*OIficticio+ctemayorPendTx; //Esta será la altura del objeto ficticio
+		a1= OIficticio*100;
+		a2=(distancia-a1);
 
-		/* Para aplicar la definición de v, es necesario estudiar dos casos:
-			CASO 1: htx2=hrx2 por lo que a1 y a2 (que corresponden a la distancia entre el transmisor y h_OIficticio
-			se obtienen de forma inmediata aplicando pitágoras.
-			CASO 2: htx2!=hrx2 por lo que es necesario hallar la proyección ortogonal sobre la horizontal y luego
-			aplicar pitágoras.
-			*/
-		if(htx2==hrx2){
-		a1= Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hq,2));
-		a2= Math.sqrt(Math.pow(d2,2)+Math.pow(h_OIficticio-hq,2));
-		}
-		else{
-			if(htx2<hrx2){
-				hp=htx2;
-		}
-		else{
-			hp=hrx2;
-		}
-		a1=Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hp,2));
-		a2=Math.sqrt(Math.pow(d1,2)+Math.pow(h_OIficticio-hp,2));
-		}
+		d1=Math.abs(a1/Math.cos(mayorPendTx));
+		d2=Math.abs(a2/Math.cos(mayorPendRx));
 
 		/* Una vez obtenido el valor de a1 y a2, se aplica la definición de v. En caso que sea menor a -0.78
 		la atenuación por difracción será cero.
 		En el otro caso, se utiliza una aproximación lineal
 		 */
-		v=(h_OIficticio-hq)*Math.sqrt(2/lambda*(1/a1+1/a2));
+		v=h_OIficticio*Math.sqrt(2/lambda*(1/d1+1/d2));
 		if(v<-0.78)
 			return(0);
 		else{
 			var J_v=6.9+20*Math.log10(Math.sqrt(Math.pow(v-0.1,2)+1)+v-0.1);
+			console.log("Las perdidas de difracción son: " +J_v);
 			return(J_v);
 		}
-		diffEntrance=0;
-
 }
 
 function DispCanal(distancia,MargenFading) {
@@ -220,26 +181,36 @@ function DispCanal(distancia,MargenFading) {
 
 function Fresnel(htx,hrx,Pmax,h_Pmax){
   var lambda;
+  var c= 2.998*Math.pow(10,8);
   if(!Inputfreq){
     alert("Ingrese una frecuencia");
     return;
   }
-	var c= 3*Math.pow(10,8);
-	lambda = c/Inputfreq;
+	lambda = c/(Inputfreq*Math.pow(10,9));
 
-  var distancia = haversine(radius, latitud, longitud);
+  var distancia = (haversine(radius, latitud, longitud))*1000;
   tan_alpha = (htx-hrx)/distancia;
   alpha = Math.atan(tan_alpha); //Se halla el ángulo de inclinación entre las dos antenas. En caso que estén a la misma altura el ángulo es cero
-  var pto_medio=(distancia*100)/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var altura_puntomedio = altura[Math.floor(distancia*100/2)];
+  var pto_medio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
+  var altura_puntomedio = altura[(cant_redondeo-1)/2];
 
-  var d1=(Math.abs(pto_medio/Math.cos(alpha)))/100; //Se halla d1= distancia desde Tx al punto medio
-  var d2=(Math.abs(pto_medio/Math.cos(alpha)))/100; // Se halla d2= distancia desde Rx al punto medio
+  var d1=Math.abs(pto_medio/Math.cos(alpha)); //Se halla d1= distancia desde Tx al punto medio
+  var d2=(Math.abs(pto_medio/Math.cos(alpha))); // Se halla d2= distancia desde Rx al punto medio
+
+  console.log("d1: "+d1);
+  console.log("d2: "+d2);
 
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
+  console.log("R1: "+R1);
+  console.log("pto_medio: "+pto_medio);
+  console.log("altura_ptomedio: "+altura_puntomedio);
+
   var fresnel60= R1*0.6;
   var fresnel40= R1*0.4;
+
+  console.log("fresnel60: "+fresnel60);
+  console.log("fresnel40: "+fresnel40);
 
   var resultado60;
   var resultado40;
@@ -248,7 +219,7 @@ function Fresnel(htx,hrx,Pmax,h_Pmax){
     resultado60=((Math.pow((Pmax*100)-pto_medio,2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))) + (Math.pow(htx-altura_puntomedio,2)/Math.pow(fresnel60,2)));
     resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+ Math.pow((htx-altura_puntomedio),2)/Math.pow(fresnel40,2));
   }
-  else if (Pmax==distancia){ //Si el objeto interferente está en la antena Rx
+  else if ((Pmax*100)==distancia){ //Si el objeto interferente está en la antena Rx
     resultado60=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))+Math.pow((hrx-altura_puntomedio),2)/Math.pow(fresnel60,2));
     resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+Math.pow((hrx-altura_puntomedio),2)/Math.pow(fresnel40,2));
   }
@@ -260,7 +231,7 @@ function Fresnel(htx,hrx,Pmax,h_Pmax){
   console.log("resultado60: "+resultado60);
   console.log("resultado40: "+resultado40);
 
-  if(resultado60<=1)
+  if(resultado60>=1)
     return 0; //Tengo despeje del 60%
   else if(resultado40>=1 && resultado60<1)
     return 1; //Tengo despeje del 40% --> Aca se sugiere hacer Bullington
@@ -312,21 +283,15 @@ function getFreq() {
 
 	if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
 		console.log("Existe un despeje del 60% de Fresnel.");
-		despeje60=true;
-		despeje40=true;
-		diffBullington=0;
+		fresnelGlobal=0;
 	}
 	else if(resultadoFresnel40.length==0){
 		console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
-		despeje60=false;
-		despeje40=true;
-		diffBullington=Bullington(htx2,hrx2,distancia);
+		fresnelGlobal=1;
 	}
 	else{
 		console.log("No hay despeje de Fresnel.");
-		despeje60=false;
-		despeje40=false;
-		diffBullington=0;
+		fresnelGlobal=2;
 	}
 
 	return;
@@ -355,6 +320,33 @@ function InputUser() {
     var perdidasFSL = FSL(distancia,htx2,hrx2); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
     var AnguloTilt=Tilt(distancia,htx2,hrx2); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+
+    var resultadoFresnel60=despeje.filter(function(number) {
+      return (number=0);
+    }); //filtro todos los valores cero
+
+    var resultadoFresnel40=resultadoFresnel60.filter(function(number) {
+      return (number=1);
+    }); //filtro todos los valores uno
+
+
+    if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
+      fresnelGlobal=0;
+    }
+    else if(resultadoFresnel40.length==0){
+      fresnelGlobal=1;
+    }
+    else{
+      fresnelGlobal=2;
+    }
+
+    var diffBullington;
+    if(fresnelGlobal==1)
+      diffBullington=Bullington(htx2,hrx2,distancia);
+    else if(fresnelGlobal==0)
+      diffBullington=0;
+    else
+      alert("No se puede calcular la difracción de Bullington, reconsiderar información ingresada");
 
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-perdidasLluvia-diffBullington; //Se calcula la potencia de recepción
 
@@ -402,7 +394,7 @@ var LOS = (function () {
   var chart2DrawCount = 0;
 
 return function LOS(elevations,coordenadas) {
-//El data2 se va a borrar mas adelante.
+/*//El data2 se va a borrar mas adelante.
   var data2 = new google.visualization.DataTable();
   data2.addColumn('string', 'Muestras');
   data2.addColumn('number', 'Elevacion');
@@ -433,7 +425,7 @@ return function LOS(elevations,coordenadas) {
 
     chart2.draw(view, options);
     chart2DrawCount++;
-  }
+  }*/
 
   var pend1;
   var pend2;
@@ -717,7 +709,7 @@ function Resultados(hayLOS,perdidasFSL,disp_canal,AnguloTilt,despeje60,despeje40
 	}
 }
 
-function AgregarTabla(objInterferente,resFresnel,despeje,diffOI){
+function AgregarTabla(objInterferente,resFresnel){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
 
@@ -730,7 +722,6 @@ function AgregarTabla(objInterferente,resFresnel,despeje,diffOI){
 			data_detabla.addColumn('boolean', 'Despeje 60%?');
 			data_detabla.addColumn('boolean', 'Despeje 40%?');
 			data_detabla.addColumn('number', 'Muestra Modificada');
-			data_detabla.addColumn('number', 'Atenuación del objeto interferente (dB)');
 
 			table = new google.visualization.Table(document.getElementById('table_div'));
 		}
@@ -738,11 +729,11 @@ function AgregarTabla(objInterferente,resFresnel,despeje,diffOI){
 		var resultado60;
 		var resultado40;
 
-		if(despeje==0){
+		if(despeje[contador]==0){
 			resultado60=true;
 			resultado40=true;
 		}
-		else if(despeje==1){
+		else if(despeje[contador]==1){
 			resultado60=false;
 			resultado40=true;
 		}
@@ -751,7 +742,7 @@ function AgregarTabla(objInterferente,resFresnel,despeje,diffOI){
 			resultado40=false;
 		}
 
-		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador],diffOI]); //Acá empieza a recorrer el array
+		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
@@ -905,10 +896,16 @@ function plotElevation(elevations, status) {
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
+    despeje[contador]= Fresnel(parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+    if (despeje[contador]==1){
+      var largoarray=(distanciaFresnel.length-1);
+      distanciaFresnel[largoarray]=muestra_mod[contador];
+      alturaFresnel[largoarray]=valuetomodify;
+    }
+
     data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva
 
     objInterferente=document.getElementById("objetointerferente").value;
-
     if(!objInterferente){
       alert ("Ingrese un tipo de interferencia");
       flag=0;
@@ -920,19 +917,8 @@ function plotElevation(elevations, status) {
       else if (objInterferente=="edificio")
         objInterferente='Edificio';
 
-    var diffOI;
-    var despeje=Fresnel(parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
-    var htx2=parseFloat(document.getElementById("alturaantenatx").value)+altura[0];
-    var hrx2=parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1];
-    if(despeje==1){
-      diffEntrance=2;
-      diffOI= Bullington(htx2,hrx2,distancia);
-    }
-    else{
-      diffOI=0;
-    }
-    resFresnel=(document.getElementById("frecuencia").value,parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
-    AgregarTabla(objInterferente,+resFresnel,+despeje,+diffOI);
+    resFresnel=(parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+    AgregarTabla(objInterferente,+resFresnel);
     flag = 0;
     }
   }
@@ -1042,12 +1028,13 @@ var alturaFresnel=[];
 var resFresnel;
 var hayDespejeCamino=[];
 var Inputfreq; //Frecuencia que ingresó el usuario en la plataforma
-var diffBullington; //difracción por bullington
-var diffEntrance=0;
+//var diffBullington; //difracción por bullington
+var fresnelCamino;
+var fresnelOI;
+var despeje=[];
 
 var APP = { };
 APP.objInterferente = null;
-APP.prueba = [];
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });

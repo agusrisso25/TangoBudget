@@ -21,7 +21,7 @@ var LOS = (function () {
   var chart2DrawCount = 0;
 
 return function LOS(elevations,coordenadas) {
-//El data2 se va a borrar mas adelante.
+/*//El data2 se va a borrar mas adelante.
   var data2 = new google.visualization.DataTable();
   data2.addColumn('string', 'Muestras');
   data2.addColumn('number', 'Elevacion');
@@ -52,7 +52,7 @@ return function LOS(elevations,coordenadas) {
 
     chart2.draw(view, options);
     chart2DrawCount++;
-  }
+  }*/
 
   var pend1;
   var pend2;

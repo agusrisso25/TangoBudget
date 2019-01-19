@@ -35,12 +35,13 @@ var alturaFresnel=[];
 var resFresnel;
 var hayDespejeCamino=[];
 var Inputfreq; //Frecuencia que ingresó el usuario en la plataforma
-var diffBullington; //difracción por bullington
-var diffEntrance=0;
+//var diffBullington; //difracción por bullington
+var fresnelCamino;
+var fresnelOI;
+var despeje=[];
 
 var APP = { };
 APP.objInterferente = null;
-APP.prueba = [];
 
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });

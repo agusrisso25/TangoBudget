@@ -25,7 +25,7 @@ function addMarkersAndAll(location, map) {
   google.maps.event.addListener(marker, "drag", function(evt) {
     //muevo la linea cuando muevo los marcadores y creo una nueva:
     var etiqueta = marker.getLabel();
-    if (etiqueta == "B") {
+    if (etiqueta == "R") {
       //Si el marcador que muevo es el B
       path.pop(); //saco el ulimo elemento de path porque es el relacionado con B
       path.push(evt.latLng); // hago un push del nuevo lugar del marcador al array

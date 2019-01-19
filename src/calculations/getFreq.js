@@ -34,21 +34,15 @@ function getFreq() {
 
 	if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
 		console.log("Existe un despeje del 60% de Fresnel.");
-		despeje60=true;
-		despeje40=true;
-		diffBullington=0;
+		fresnelGlobal=0;
 	}
 	else if(resultadoFresnel40.length==0){
 		console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
-		despeje60=false;
-		despeje40=true;
-		diffBullington=Bullington(htx2,hrx2,distancia);
+		fresnelGlobal=1;
 	}
 	else{
 		console.log("No hay despeje de Fresnel.");
-		despeje60=false;
-		despeje40=false;
-		diffBullington=0;
+		fresnelGlobal=2;
 	}
 
 	return;
