@@ -23,30 +23,43 @@ function Bullington(htx2,hrx2,distancia) {
 		var a1;
 		var a2;
 
-		/*calculo las pendientes que generan entre un 40% y 60% de Despeje con la antena Tx
-		Para ello es necesario recorrer el array donde guardé toda la información de los objetos que obstruyen
-		entre el 40% y 60% de Fresnel
-		Luego de recorrer el array, se guarda la mayor pendiente en mayorPendTx y mayorPendRx y las ctes que
-		constituyen la ecuación de la recta
-		*/
-		for(i=0;i<distanciaFresnel.length;i++){
-			Y1=((-htx2+alturaFresnel[i])/distanciaFresnel[i])*X1+htx2;
-			pend1=((-htx2+alturaFresnel[i])/distanciaFresnel[i]);
-			cte1=htx2;
-			if (Math.abs(mayorPendTx)<Math.abs(pend1))
-				mayorPendTx=pend1;
-				ctemayorPendTx=cte1;
-		}
+		//CASO 1: Entro a la función para calcular la difraccion del camino
+		if (diffEntrance==1){
+			/*calculo las pendientes que generan entre un 40% y 60% de Despeje con la antena Tx
+			Para ello es necesario recorrer el array donde guardé toda la información de los objetos que obstruyen
+			entre el 40% y 60% de Fresnel
+			Luego de recorrer el array, se guarda la mayor pendiente en mayorPendTx y mayorPendRx y las ctes que
+			constituyen la ecuación de la recta
+			*/
+			for(i=0;i<distanciaFresnel.length;i++){
+				Y1=((-htx2+alturaFresnel[i])/distanciaFresnel[i])*X1+htx2;
+				pend1=((-htx2+alturaFresnel[i])/distanciaFresnel[i]);
+				cte1=htx2;
+				if (Math.abs(mayorPendTx)<Math.abs(pend1))
+					mayorPendTx=pend1;
+					ctemayorPendTx=cte1;
+			}
 
-		for(j=0;j<distanciaFresnel.length;j++){
-			Y2=((alturaFresnel[i]-htx2)/(distanciaFresnel[i]-distancia))*X2+((distanciaFresnel[i]*hrx2-distancia*alturaFresnel[i])/(distanciaFresnel[i]-alturaFresnel[i]));
-			pend2=((alturaFresnel[i]-htx2)/(distanciaFresnel[i]-distancia));
-			cte2=((distanciaFresnel[i]*hrx2-distancia*alturaFresnel[i])/(distanciaFresnel[i]-alturaFresnel[i]));
-			if(Math.abs(mayorPendRx)<Math.abs(pend2))
-				mayorPendRx=pend2;
-				ctemayorPendRx=cte2;
-		}
+			for(j=0;j<distanciaFresnel.length;j++){
+				Y2=((alturaFresnel[i]-htx2)/(distanciaFresnel[i]-distancia))*X2+((distanciaFresnel[i]*hrx2-distancia*alturaFresnel[i])/(distanciaFresnel[i]-alturaFresnel[i]));
+				pend2=((alturaFresnel[i]-htx2)/(distanciaFresnel[i]-distancia));
+				cte2=((distanciaFresnel[i]*hrx2-distancia*alturaFresnel[i])/(distanciaFresnel[i]-alturaFresnel[i]));
+				if(Math.abs(mayorPendRx)<Math.abs(pend2))
+					mayorPendRx=pend2;
+					ctemayorPendRx=cte2;
 
+			}
+		}
+		//CASO 2: Entro a la función para calcular la difracción del OI
+		else if(diffEntrance==2){
+				Y1=((-htx2+valuetomodify_array[contador])/distanciaobject_array[contador])*X1+htx2;
+				mayorPendTx=((-htx2+valuetomodify_array[contador])/distanciaobject_array[contador]);
+				ctemayorPendTx=htx2;
+
+				Y2=((valuetomodify_array[contador]-htx2)/(distanciaobject_array[contador]-distancia))*X2+((distanciaobject_array[contador]*hrx2-distancia*valuetomodify_array[contador])/(distanciaobject_array[contador]-valuetomodify_array[contador]));
+				mayorPendRx=((valuetomodify_array[contador]-htx2)/(distanciaobject_array[contador]-distancia));
+				ctemayorPendRx=((distanciaobject_array[contador]*hrx2-distancia*valuetomodify_array[contador])/(distanciaobject_array[contador]-valuetomodify_array[contador]));
+		}
 		/* Luego, se debe intersectar las dos rectas con mayor pendiente para encontrar la distancia y altura del
 		objeto interferente ficticio. Se guardan esos valores en OIficticio y h_OIficticio.
 		Además, se halla:
@@ -92,4 +105,6 @@ function Bullington(htx2,hrx2,distancia) {
 			var J_v=6.9+20*Math.log10(Math.sqrt(Math.pow(v-0.1,2)+1)+v-0.1);
 			return(J_v);
 		}
+		diffEntrance=0;
+
 }

@@ -46,9 +46,12 @@ function Fresnel(htx,hrx,Pmax,h_Pmax){
     resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2)+Math.pow(h_Pmax-altura_puntomedio,2)/Math.pow(fresnel40,2)));
   }
 
-  if(resultado60>1)
+  console.log("resultado60: "+resultado60);
+  console.log("resultado40: "+resultado40);
+
+  if(resultado60<=1)
     return 0; //Tengo despeje del 60%
-  else if(resultado40>1 && resultado60<1)
+  else if(resultado40>=1 && resultado60<1)
     return 1; //Tengo despeje del 40% --> Aca se sugiere hacer Bullington
   else
     return 2;

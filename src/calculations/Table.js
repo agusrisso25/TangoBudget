@@ -5,7 +5,7 @@ objInterferente: Se generan diferentes atenuaciones de los objetos interferentes
 resFresnel: Se debe pasar el valor del resultado calculado por Fresnel
  */
 
-function AgregarTabla(objInterferente,resFresnel,despeje){
+function AgregarTabla(objInterferente,resFresnel,despeje,diffOI){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
 
@@ -18,6 +18,7 @@ function AgregarTabla(objInterferente,resFresnel,despeje){
 			data_detabla.addColumn('boolean', 'Despeje 60%?');
 			data_detabla.addColumn('boolean', 'Despeje 40%?');
 			data_detabla.addColumn('number', 'Muestra Modificada');
+			data_detabla.addColumn('number', 'Atenuación del objeto interferente (dB)');
 
 			table = new google.visualization.Table(document.getElementById('table_div'));
 		}
@@ -38,7 +39,7 @@ function AgregarTabla(objInterferente,resFresnel,despeje){
 			resultado40=false;
 		}
 
-		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
+		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador],diffOI]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";

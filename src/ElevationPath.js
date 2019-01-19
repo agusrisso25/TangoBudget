@@ -88,13 +88,19 @@ function plotElevation(elevations, status) {
       else if (objInterferente=="edificio")
         objInterferente='Edificio';
 
-    var despeje=Fresnel(document.getElementById("frecuencia").value,parseFloat(document.getElementById("alturaantenatx").value),parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+    var diffOI;
+    var despeje=Fresnel(parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+    var htx2=parseFloat(document.getElementById("alturaantenatx").value)+altura[0];
+    var hrx2=parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1];
     if(despeje==1){
-    //tengo que hacer bullington
+      diffEntrance=2;
+      diffOI= Bullington(htx2,hrx2,distancia);
     }
-
+    else{
+      diffOI=0;
+    }
     resFresnel=(document.getElementById("frecuencia").value,parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
-    AgregarTabla(objInterferente,+resFresnel,+despeje);
+    AgregarTabla(objInterferente,+resFresnel,+despeje,+diffOI);
     flag = 0;
     }
   }
