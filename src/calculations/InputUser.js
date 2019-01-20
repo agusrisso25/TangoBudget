@@ -70,7 +70,9 @@ function InputUser() {
     if(Prx>sensRX){
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
       if(MargenFading>=30){
-        disp_canal=DispCanal(distancia,MargenFading);
+        disp_canal = DispCanal(distancia,MargenFading);
+        // disp_canal = DisponibilidadCanal (distancia, MargenFading);
+
         if(disp_canal>=0.99998)
           console.log("Enlace aceptable");
           //hay que seguir esta parte

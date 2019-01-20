@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-19 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-01-20 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -179,6 +179,36 @@ function DispCanal(distancia,MargenFading) {
 	return disp_canal;
 }
 
+function DisponibilidadCanal (distancia, MargenFading) {
+    
+    var dN1 = -400;
+    var rugosidad;
+    
+    var htx; //hay que importar los valores de htx, hrx y frecuencia
+    var hrx;
+    var frec;
+    var alturaantena; // aqui se debe guardar la altura de la antena más baja
+    
+    var A = document.getElementById("FactorRugosidad").value;
+    var arrayA= [0, 4, 1, 0.25];
+
+	if (A == "0"){
+		alert("Favor de completar el factor de rugosidad.");
+		return;
+	}
+	else {
+		rugosidad = arrayA [A];
+	    }
+    
+
+var k = Math.pow(10, -4.4-0.0027*dN1)*Math.pow(10 + rugosidad, -0.46);
+var epsilon = Math.abs(htx-hrx)/distancia;
+
+var Pw = k*Math.pow(1 + epsilon, -1.03)*Math.pow(frec, 0.8)*Math.pow(10, -0.00076*alturaantena*MargenFading/10);
+
+return Pw;
+
+}
 function Fresnel(htx,hrx,Pmax,h_Pmax){
   var lambda;
   var c= 2.998*Math.pow(10,8);
@@ -358,7 +388,9 @@ function InputUser() {
     if(Prx>sensRX){
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
       if(MargenFading>=30){
-        disp_canal=DispCanal(distancia,MargenFading);
+        disp_canal = DispCanal(distancia,MargenFading);
+        // disp_canal = DisponibilidadCanal (distancia, MargenFading);
+
         if(disp_canal>=0.99998)
           console.log("Enlace aceptable");
           //hay que seguir esta parte
