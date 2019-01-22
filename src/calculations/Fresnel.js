@@ -9,60 +9,64 @@ h_Pmax: Altura del objeto interferente
 
 function Fresnel(htx,hrx,Pmax,h_Pmax){
   var lambda;
-  var c= 2.998*Math.pow(10,8);
   if(!Inputfreq){
     alert("Ingrese una frecuencia");
     return;
   }
-	lambda = c/(Inputfreq*Math.pow(10,9));
+
+	lambda = (2.998*Math.pow(10,8))/(Inputfreq*Math.pow(10,9));//c/(Inputfreq*Math.pow(10,9));
 
   var distancia = (haversine(radius, latitud, longitud))*1000;
-  tan_alpha = (htx-hrx)/distancia;
-  alpha = Math.atan(tan_alpha); //Se halla el ángulo de inclinación entre las dos antenas. En caso que estén a la misma altura el ángulo es cero
-  var pto_medio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var altura_puntomedio = altura[(cant_redondeo-1)/2];
+  var pmedio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
+  var h_pmedio = altura[Math.floor((cant_redondeo-1)/2)];
 
-  var d1=Math.abs(pto_medio/Math.cos(alpha)); //Se halla d1= distancia desde Tx al punto medio
-  var d2=(Math.abs(pto_medio/Math.cos(alpha))); // Se halla d2= distancia desde Rx al punto medio
-
+  var d1=pmedio/Math.cos(((-2/distancia)*(htx-h_pmedio))/distancia);
+  var d2=pmedio/Math.cos(((-2/distancia)*(hrx-h_pmedio))/distancia);
   console.log("d1: "+d1);
   console.log("d2: "+d2);
+  console.log("lambda: "+lambda);
 
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
   console.log("R1: "+R1);
-  console.log("pto_medio: "+pto_medio);
-  console.log("altura_ptomedio: "+altura_puntomedio);
+  console.log("pto_medio: "+pmedio);
+  console.log("altura_ptomedio: "+h_pmedio);
 
   var fresnel60= R1*0.6;
   var fresnel40= R1*0.4;
 
   console.log("fresnel60: "+fresnel60);
   console.log("fresnel40: "+fresnel40);
+  console.log("Pmax: "+Pmax);
+  console.log("h_Pmax: "+h_Pmax);
 
-  var resultado60;
-  var resultado40;
+  pendLOS=((-htx+hrx)/distancia)*(distancia/2)+htx;
+  var resultadofresnelTOT;
 
-  if (Pmax==0){ //Si el objeto interferente está en la antena Tx
-    resultado60=((Math.pow((Pmax*100)-pto_medio,2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))) + (Math.pow(htx-altura_puntomedio,2)/Math.pow(fresnel60,2)));
-    resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+ Math.pow((htx-altura_puntomedio),2)/Math.pow(fresnel40,2));
-  }
-  else if ((Pmax*100)==distancia){ //Si el objeto interferente está en la antena Rx
-    resultado60=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))+Math.pow((hrx-altura_puntomedio),2)/Math.pow(fresnel60,2));
-    resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+Math.pow((hrx-altura_puntomedio),2)/Math.pow(fresnel40,2));
-  }
-  else{ //Si el objeto interferente está en el largo del camino y no en los extremos
-    resultado60=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2)+Math.pow(h_Pmax-altura_puntomedio,2)/Math.pow(fresnel60,2)));
-    resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2)+Math.pow(h_Pmax-altura_puntomedio,2)/Math.pow(fresnel40,2)));
-  }
+  switch(h_Pmax>pendLOS) {
+  case true:{
+    resultadofresnelTOT=2;
+    break;
+    }
+  case false:{
+    var resultado60=Math.pow((Pmax-distancia*0.5),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))+Math.pow((h_Pmax-h_pmedio),2)/(Math.pow(fresnel60,2));
+    var resultado40=Math.pow((Pmax-distancia*0.5),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+Math.pow((h_Pmax-h_pmedio),2)/(Math.pow(fresnel40,2));
 
-  console.log("resultado60: "+resultado60);
-  console.log("resultado40: "+resultado40);
+    console.log("resultado60: "+resultado60);
+    console.log("resultado40: "+resultado40);
 
-  if(resultado60>=1)
-    return 0; //Tengo despeje del 60%
-  else if(resultado40>=1 && resultado60<1)
-    return 1; //Tengo despeje del 40% --> Aca se sugiere hacer Bullington
-  else
-    return 2;
+    if(resultado40<1 && resultado40>0)
+      resultadofresnelTOT=2; //Tengo despeje menor a 40%
+    else if(resultado40>=1 && resultado60<1)
+      resultadofresnelTOT=1; //Tengo despeje del 40%
+    else
+      resultadofresnelTOT=0; //Tengo despeje del 60%
+      break;
+      }
+  default:{
+    alert("No se pudo analizar");
+    resultadofresnelTOT=-1;
+    }
+}
+  return resultadofresnelTOT;
 }

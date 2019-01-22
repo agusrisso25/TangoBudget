@@ -13,7 +13,7 @@ function getFreq() {
 
 	//Se calcula si hay despeje de fresnel a lo largo del camino
 	var j=0;
-	for (i=0;i<altura.length; i++){
+	for (i=1;i<(altura.length-1); i++){
 		hayDespejeCamino[i]=Fresnel(htx2,hrx2,i,altura[i]);
 		//En caso que tenga un objeto interferente entre 60% y 40% necesito guardar la muestra y la altura del camino para pérdidas por Difracción
 		if (hayDespejeCamino[i] == 1){
