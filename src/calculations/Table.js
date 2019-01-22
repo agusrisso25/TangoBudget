@@ -41,17 +41,10 @@ function AgregarTabla(objInterferente,resFresnel){
 			resultado40=false;
 		}
 
-		//luego debo saber en qué región de decisión está el despeje.
-		var resultadoFresnel60=despeje.filter(function(number) {
-			return (number=0);
-		}); //filtro todos los valores cero
-
-		var resultadoFresnel40=despeje.filter(function(number) {
-			return (number=1);
-		}); //filtro todos los valores uno
-		if(resultadoFresnel60.length==0)
+		var resultadoFresnel=despeje.sort();
+		if(resultadoFresnel[despeje.length-1]==0)
 			fresnelGlobal=0;
-		else if (resultadoFresnel40.length==0)
+		else if (resultadoFresnel[despeje.length-1]==1)
 			fresnelGlobal=1;
 		else
 			fresnelGlobal=2;

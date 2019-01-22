@@ -24,19 +24,13 @@ function getFreq() {
 	}
 
 	//luego debo saber en qué región de decisión está el despeje.
-	var resultadoFresnel60=hayDespejeCamino.filter(function(number) {
-		return (number=0);
-	}); //filtro todos los valores cero
+	var resultadoFresnel=hayDespejeCamino.sort();
 
-	var resultadoFresnel40=resultadoFresnel60.filter(function(number) {
-		return (number=1);
-	}); //filtro todos los valores uno
-
-	if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
+	if(resultadoFresnel[hayDespejeCamino.length-1]==0){ 
 		console.log("Existe un despeje del 60% de Fresnel.");
 		fresnelGlobal=0;
 	}
-	else if(resultadoFresnel40.length==0){
+	else if(resultadoFresnel[hayDespejeCamino.length-1]==1){
 		console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 		fresnelGlobal=1;
 	}
