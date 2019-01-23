@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-20 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-01-22 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -211,62 +211,66 @@ return Pw;
 }
 function Fresnel(htx,hrx,Pmax,h_Pmax){
   var lambda;
-  var c= 2.998*Math.pow(10,8);
   if(!Inputfreq){
     alert("Ingrese una frecuencia");
     return;
   }
-	lambda = c/(Inputfreq*Math.pow(10,9));
+
+	lambda = (2.998*Math.pow(10,8))/(Inputfreq*Math.pow(10,9));//c/(Inputfreq*Math.pow(10,9));
 
   var distancia = (haversine(radius, latitud, longitud))*1000;
-  tan_alpha = (htx-hrx)/distancia;
-  alpha = Math.atan(tan_alpha); //Se halla el ángulo de inclinación entre las dos antenas. En caso que estén a la misma altura el ángulo es cero
-  var pto_medio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var altura_puntomedio = altura[(cant_redondeo-1)/2];
+  var pmedio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
+  var h_pmedio = altura[Math.floor((cant_redondeo-1)/2)];
 
-  var d1=Math.abs(pto_medio/Math.cos(alpha)); //Se halla d1= distancia desde Tx al punto medio
-  var d2=(Math.abs(pto_medio/Math.cos(alpha))); // Se halla d2= distancia desde Rx al punto medio
-
+  var d1=pmedio/Math.cos(((-2/distancia)*(htx-h_pmedio))/distancia);
+  var d2=pmedio/Math.cos(((-2/distancia)*(hrx-h_pmedio))/distancia);
   console.log("d1: "+d1);
   console.log("d2: "+d2);
+  console.log("lambda: "+lambda);
 
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
   console.log("R1: "+R1);
-  console.log("pto_medio: "+pto_medio);
-  console.log("altura_ptomedio: "+altura_puntomedio);
+  console.log("pto_medio: "+pmedio);
+  console.log("altura_ptomedio: "+h_pmedio);
 
   var fresnel60= R1*0.6;
   var fresnel40= R1*0.4;
 
   console.log("fresnel60: "+fresnel60);
   console.log("fresnel40: "+fresnel40);
+  console.log("Pmax: "+Pmax);
+  console.log("h_Pmax: "+h_Pmax);
 
-  var resultado60;
-  var resultado40;
+  pendLOS=((-htx+hrx)/distancia)*(distancia/2)+htx;
+  var resultadofresnelTOT;
 
-  if (Pmax==0){ //Si el objeto interferente está en la antena Tx
-    resultado60=((Math.pow((Pmax*100)-pto_medio,2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))) + (Math.pow(htx-altura_puntomedio,2)/Math.pow(fresnel60,2)));
-    resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+ Math.pow((htx-altura_puntomedio),2)/Math.pow(fresnel40,2));
-  }
-  else if ((Pmax*100)==distancia){ //Si el objeto interferente está en la antena Rx
-    resultado60=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))+Math.pow((hrx-altura_puntomedio),2)/Math.pow(fresnel60,2));
-    resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+Math.pow((hrx-altura_puntomedio),2)/Math.pow(fresnel40,2));
-  }
-  else{ //Si el objeto interferente está en el largo del camino y no en los extremos
-    resultado60=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2)+Math.pow(h_Pmax-altura_puntomedio,2)/Math.pow(fresnel60,2)));
-    resultado40=((Math.pow((Pmax*100)-pto_medio),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2)+Math.pow(h_Pmax-altura_puntomedio,2)/Math.pow(fresnel40,2)));
-  }
+  switch(h_Pmax>pendLOS) {
+  case true:{
+    resultadofresnelTOT=2;
+    break;
+    }
+  case false:{
+    var resultado60=Math.pow((Pmax-distancia*0.5),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))+Math.pow((h_Pmax-h_pmedio),2)/(Math.pow(fresnel60,2));
+    var resultado40=Math.pow((Pmax-distancia*0.5),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+Math.pow((h_Pmax-h_pmedio),2)/(Math.pow(fresnel40,2));
 
-  console.log("resultado60: "+resultado60);
-  console.log("resultado40: "+resultado40);
+    console.log("resultado60: "+resultado60);
+    console.log("resultado40: "+resultado40);
 
-  if(resultado60>=1)
-    return 0; //Tengo despeje del 60%
-  else if(resultado40>=1 && resultado60<1)
-    return 1; //Tengo despeje del 40% --> Aca se sugiere hacer Bullington
-  else
-    return 2;
+    if(resultado40<1 && resultado40>0)
+      resultadofresnelTOT=2; //Tengo despeje menor a 40%
+    else if(resultado40>=1 && resultado60<1)
+      resultadofresnelTOT=1; //Tengo despeje del 40%
+    else
+      resultadofresnelTOT=0; //Tengo despeje del 60%
+      break;
+      }
+  default:{
+    alert("No se pudo analizar");
+    resultadofresnelTOT=-1;
+    }
+}
+  return resultadofresnelTOT;
 }
 
 function FSL(distancia,htx,hrx) {
@@ -292,7 +296,7 @@ function getFreq() {
 
 	//Se calcula si hay despeje de fresnel a lo largo del camino
 	var j=0;
-	for (i=0;i<altura.length; i++){
+	for (i=1;i<(altura.length-1); i++){
 		hayDespejeCamino[i]=Fresnel(htx2,hrx2,i,altura[i]);
 		//En caso que tenga un objeto interferente entre 60% y 40% necesito guardar la muestra y la altura del camino para pérdidas por Difracción
 		if (hayDespejeCamino[i] == 1){
@@ -303,19 +307,13 @@ function getFreq() {
 	}
 
 	//luego debo saber en qué región de decisión está el despeje.
-	var resultadoFresnel60=hayDespejeCamino.filter(function(number) {
-		return (number=0);
-	}); //filtro todos los valores cero
+	var resultadoFresnel=hayDespejeCamino.sort();
 
-	var resultadoFresnel40=resultadoFresnel60.filter(function(number) {
-		return (number=1);
-	}); //filtro todos los valores uno
-
-	if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
+	if(resultadoFresnel[hayDespejeCamino.length-1]==0){ //Significa que tengo despeje del 60%
 		console.log("Existe un despeje del 60% de Fresnel.");
 		fresnelGlobal=0;
 	}
-	else if(resultadoFresnel40.length==0){
+	else if(resultadoFresnel[hayDespejeCamino.length-1]==1){
 		console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 		fresnelGlobal=1;
 	}
@@ -761,18 +759,29 @@ function AgregarTabla(objInterferente,resFresnel){
 		var resultado60;
 		var resultado40;
 
-		if(despeje[contador]==0){
+		if(despeje[contador]==0){ //Significa que tengo despeje del 60%
+			console.log("Existe un despeje del 60% de Fresnel.");
 			resultado60=true;
 			resultado40=true;
 		}
 		else if(despeje[contador]==1){
+			console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 			resultado60=false;
 			resultado40=true;
 		}
-		else {
+		else{
+			console.log("No hay despeje de Fresnel.");
 			resultado60=false;
 			resultado40=false;
 		}
+
+		var resultadoFresnel=despeje.sort();
+		if(resultadoFresnel[despeje.length-1]==0)
+			fresnelGlobal=0;
+		else if (resultadoFresnel[despeje.length-1]==1)
+			fresnelGlobal=1;
+		else
+			fresnelGlobal=2;
 
 		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});

@@ -13,7 +13,7 @@ function getFreq() {
 
 	//Se calcula si hay despeje de fresnel a lo largo del camino
 	var j=0;
-	for (i=0;i<altura.length; i++){
+	for (i=1;i<(altura.length-1); i++){
 		hayDespejeCamino[i]=Fresnel(htx2,hrx2,i,altura[i]);
 		//En caso que tenga un objeto interferente entre 60% y 40% necesito guardar la muestra y la altura del camino para pérdidas por Difracción
 		if (hayDespejeCamino[i] == 1){
@@ -24,19 +24,13 @@ function getFreq() {
 	}
 
 	//luego debo saber en qué región de decisión está el despeje.
-	var resultadoFresnel60=hayDespejeCamino.filter(function(number) {
-		return (number=0);
-	}); //filtro todos los valores cero
+	var resultadoFresnel=hayDespejeCamino.sort();
 
-	var resultadoFresnel40=resultadoFresnel60.filter(function(number) {
-		return (number=1);
-	}); //filtro todos los valores uno
-
-	if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
+	if(resultadoFresnel[hayDespejeCamino.length-1]==0){ 
 		console.log("Existe un despeje del 60% de Fresnel.");
 		fresnelGlobal=0;
 	}
-	else if(resultadoFresnel40.length==0){
+	else if(resultadoFresnel[hayDespejeCamino.length-1]==1){
 		console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 		fresnelGlobal=1;
 	}
