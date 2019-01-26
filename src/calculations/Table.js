@@ -25,12 +25,12 @@ function AgregarTabla(objInterferente,resFresnel){
 		var resultado60;
 		var resultado40;
 
-		if(despeje[contador]==0){ //Significa que tengo despeje del 60%
+		if(despeje[contador-1]==0){ //Significa que tengo despeje del 60%
 			console.log("Existe un despeje del 60% de Fresnel.");
 			resultado60=true;
 			resultado40=true;
 		}
-		else if(despeje[contador]==1){
+		else if(despeje[contador-1]==1){
 			console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 			resultado60=false;
 			resultado40=true;
@@ -41,19 +41,12 @@ function AgregarTabla(objInterferente,resFresnel){
 			resultado40=false;
 		}
 
-		var resultadoFresnel=despeje.sort();
-		if(resultadoFresnel[despeje.length-1]==0)
-			fresnelGlobal=0;
-		else if (resultadoFresnel[despeje.length-1]==1)
-			fresnelGlobal=1;
-		else
-			fresnelGlobal=2;
-
 		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
 	}
+	return;
 }
 
 function BorrarFila(){

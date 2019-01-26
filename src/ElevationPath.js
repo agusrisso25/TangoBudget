@@ -28,6 +28,7 @@ function plotElevation(elevations, status) {
     return;
   }
 
+  var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     data = new google.visualization.DataTable();
     chart = new google.visualization.ColumnChart(chartDiv);
@@ -54,26 +55,19 @@ function plotElevation(elevations, status) {
     flag=0;
   }
   if (flag == 0) {
-    h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
+    /*h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
     h_Pmax2=data.getDistinctValues(1)[elevations.length-2];
 
     Pmax1=altura.indexOf(h_Pmax1);
-    Pmax2=altura.indexOf(h_Pmax2);
+    Pmax2=altura.indexOf(h_Pmax2);*/
   }
   else if (flag == 1) { //En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
-    muestra_mod[contador] = Math.floor(distanciaobject/10);
-
-    //Si la muestra que se desea modificar está en el origen o destino, se alertará
-    if (muestra_mod[contador]==0 || muestra_mod[contador]==(cant_redondeo-1)){
-      alert("No se pueden colocar objetos interferentes en las antenas, corrija las distancias");
-      return;
-    }
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
-    despeje[contador]= Fresnel(parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+    despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify_array[contador]);
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
       distanciaFresnel[largoarray]=muestra_mod[contador];
@@ -81,7 +75,7 @@ function plotElevation(elevations, status) {
     }
 
     data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva
-
+    contador++;
     objInterferente=document.getElementById("objetointerferente").value;
     if(!objInterferente){
       alert ("Ingrese un tipo de interferencia");
@@ -94,23 +88,26 @@ function plotElevation(elevations, status) {
       else if (objInterferente=="edificio")
         objInterferente='Edificio';
 
-    resFresnel=(parseFloat(document.getElementById("alturaantenatx").value)+altura[0],parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+    resFresnel=(altura[0],altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
+
     AgregarTabla(objInterferente,+resFresnel);
     flag = 0;
     }
   }
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
-    data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]); //Se modifica al valor anterior
+    data.setValue(muestra_mod[contador-1],1,altura[muestra_mod[contador-1]]); //Se modifica al valor anterior
     BorrarFila(); //Elimina de la tabla el ultimo valor modificado
     contador--; //y se decrementa el contador
-    flag=0; //se resetea el flag en 0
+
+    despeje.pop(); //remueve el ultimo elemento del array
+    flag=0;
   }
   else if (flag==4){ //Cuando se modifica la altura de las antenas
     data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+altura[0]);
     data.setValue(cant_redondeo-1,1,parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1]);
-    altura[0]=altura[0]+parseFloat(document.getElementById("alturaantenatx").value);
-    altura[cant_redondeo-1]= altura[cant_redondeo-1]+parseFloat(document.getElementById("alturaantenarx").value);
+    altura[0]=(altura[0]+parseFloat(document.getElementById("alturaantenatx").value));
+    altura[cant_redondeo-1]= (altura[cant_redondeo-1]+parseFloat(document.getElementById("alturaantenarx").value));
     flag=0;
   }
 
@@ -120,6 +117,44 @@ function plotElevation(elevations, status) {
     titleX: 'Cantidad de muestras',
     titleY: 'Elevation (m)'
   });
+
+  if(!despeje || despeje.length==0){
+    //luego debo saber en qué región de decisión está el despeje.
+  	resultadoFresnel=hayDespejeCamino.sort();
+  	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
+  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+  		fresnelGlobal=0;
+  	}
+  	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
+  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+  		fresnelGlobal=1;
+  	}
+  	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
+  		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+  		fresnelGlobal=2;
+  	}
+  	else{
+  		document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+  	}
+  }
+  else{
+    resultadoFresnel=despeje.sort();
+    if(resultadoFresnel[despeje.length-1]==0){
+      fresnelGlobal=0;
+      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+    }
+    else if (resultadoFresnel[despeje.length-1]==1){
+      fresnelGlobal=1;
+      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+    }
+    else if(resultadoFresnel[despeje.length-1]==2){
+      fresnelGlobal=2;
+      document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+    }
+    else {
+      document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+    }
+  }
 
   hayLOS = LOS(elevations, coordenadas);
   if (hayLOS == 1) {
