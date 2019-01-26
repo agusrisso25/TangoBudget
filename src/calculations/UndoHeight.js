@@ -11,7 +11,7 @@ function DeshacerAltura() {
 	else if(contador==1){
 		flag=3;
 		displayPathElevation(camino, elevator, dist);
-		return;
+		return; 
 	}
 	else{
 		alert("Ya se deshicieron todos los cambios.");

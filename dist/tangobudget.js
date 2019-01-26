@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /*! tangobudget - v0.0.1 - 2019-01-26 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
-=======
-/*! tangobudget - v0.0.1 - 2019-01-23 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
->>>>>>> master
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -246,10 +242,7 @@ function Fresnel(Pmax,h_Pmax){
   console.log("Pmax: "+Pmax);
   console.log("h_Pmax: "+h_Pmax);
 
-<<<<<<< HEAD
-=======
   pendLOS=((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
->>>>>>> master
   var resultadofresnelTOT;
 
   if(h_Pmax>h_pmedio) {
@@ -303,13 +296,8 @@ function getFreq() {
 	//luego debo saber en qué región de decisión está el despeje.
 	var resultadoFresnel=hayDespejeCamino.sort();
 
-<<<<<<< HEAD
 	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
 		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
-=======
-	if(resultadoFresnel[hayDespejeCamino.length-1]==0){
-		console.log("Existe un despeje del 60% de Fresnel.");
->>>>>>> master
 		fresnelGlobal=0;
 	}
 	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
@@ -538,11 +526,7 @@ function ModifyHeight(){
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
   else if (0 < distanciaobject && distanciaobject < distanciatotal && parseInt(document.getElementById("objetointerferente").value)!=null){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
-<<<<<<< HEAD
     //contador ++; //Incrementa el contador de la cantidad de objetos interferentes ingresados
-=======
-    contador ++; //Incrementa el contador de la cantidad de objetos interferentes ingresados
->>>>>>> master
     displayPathElevation(camino, elevator, dist); //Se modifica la altura
   }
   else //if(distanciaobject>distanciatotal || distanciaobject<0) //Cuando se desea colocar un objeto interferente por fuera del largo del camino
@@ -762,7 +746,7 @@ function DeshacerAltura() {
 	else if(contador==1){
 		flag=3;
 		displayPathElevation(camino, elevator, dist);
-		return;
+		return; 
 	}
 	else{
 		alert("Ya se deshicieron todos los cambios.");
@@ -927,23 +911,6 @@ function plotElevation(elevations, status) {
 
     resFresnel=(altura[0],altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
 
-<<<<<<< HEAD
-=======
-    resultadoFresnel=despeje.sort();
-		if(resultadoFresnel[despeje.length-1]==0){
-			fresnelGlobal=0;
-			console.log("Se tiene un despeje del 60%");
-		}
-		else if (resultadoFresnel[despeje.length-1]==1){
-			fresnelGlobal=1;
-			console.log("Se tiene un despeje entre el 40% y 60%");
-		}
-		else{
-			fresnelGlobal=2;
-      console.log("No hay despeje de fresnel");
-		}
-
->>>>>>> master
     AgregarTabla(objInterferente,+resFresnel);
     flag = 0;
     }
@@ -955,23 +922,6 @@ function plotElevation(elevations, status) {
     contador--; //y se decrementa el contador
 
     despeje.pop(); //remueve el ultimo elemento del array
-<<<<<<< HEAD
-=======
-
-    resultadoFresnel=despeje.sort();
-    if(resultadoFresnel[despeje.length-1]==0){
-      fresnelGlobal=0;
-      console.log("Se tiene un despeje del 60%");
-    }
-    else if (resultadoFresnel[despeje.length-1]==1){
-      fresnelGlobal=1;
-      console.log("Se tiene un despeje entre el 40% y 60%");
-    }
-    else{
-      fresnelGlobal=2;
-      console.log("No hay despeje de fresnel");
-    }
->>>>>>> master
     flag=0;
   }
   else if (flag==4){ //Cuando se modifica la altura de las antenas
