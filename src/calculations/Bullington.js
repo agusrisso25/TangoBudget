@@ -1,6 +1,6 @@
 /*Se calculan las pérdidas por difracción cuando hay un obstáculo que genera interferencia entre el 40% y 60% de Fresnel
 */
-function Bullington(htx2,hrx2,distancia) {
+function Bullington(distancia) {
 		var lambda;
 		var c= 3*Math.pow(10,8);
 		lambda = c/Inputfreq;
@@ -24,16 +24,16 @@ function Bullington(htx2,hrx2,distancia) {
 		constituyen la ecuación de la recta
 		*/
 		for(i=0;i<distanciaFresnel.length;i++){
-			pend1=((alturaFresnel[i]-htx2)/distanciaFresnel[i]);
-			cte1=htx2;
+			pend1=((alturaFresnel[i]-altura[0])/distanciaFresnel[i]);
+			cte1=altura[0];
 			if (mayorPendTx<pend1)
 				mayorPendTx=pend1;
 			ctemayorPendTx=cte1;
 		}
 
 		for(j=0;j<distanciaFresnel.length;j++){
-			pend2=((hrx2-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
-			cte2=hrx-distancia*((hrx2-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
+			pend2=((altura[cant_redondeo-1]-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
+			cte2=altura[cant_redondeo-1]-distancia*((altura[cant_redondeo-1]-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
 			if(mayorPendRx>pend2){
 				mayorPendRx=pend2;
 				ctemayorPendRx=cte2;

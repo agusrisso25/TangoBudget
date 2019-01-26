@@ -16,45 +16,31 @@ function InputUser() {
     var MargenFading;
     var disp_canal;
 
-    var cant_muestras=dist*100;
-    var cant_redondeo=Math.floor(cant_muestras);
-
-    var htx=parseNumber(document.getElementById("alturaantenatx").value);
-    var hrx=parseNumber(document.getElementById("alturaantenarx").value);
-    var htx2= (parseFloat(htx)+parseFloat(altura[0])); //Se suma la altura inicial a la altura definida por el usuario
-    var hrx2= (parseFloat(hrx)+parseFloat(altura[cant_redondeo-1]));
-
     var distancia = haversine(radius, latitud, longitud);
+
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
-
-    //Cálculos de algunas pérdidas
-    var perdidasFSL = FSL(distancia,htx2,hrx2); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
+    var perdidasFSL = FSL(distancia,altura[0],altura[cant_redondeo-1]); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
-    var AnguloTilt=Tilt(distancia,htx2,hrx2); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+    var AnguloTilt=Tilt(distancia,altura[o],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
-    var resultadoFresnel60=despeje.filter(function(number) {
-      return (number=0);
-    }); //filtro todos los valores cero
-
-    var resultadoFresnel40=resultadoFresnel60.filter(function(number) {
-      return (number=1);
-    }); //filtro todos los valores uno
-
-
-    if(resultadoFresnel60.length==0){ //Significa que tengo despeje del 60%
-      fresnelGlobal=0;
-    }
-    else if(resultadoFresnel40.length==0){
-      fresnelGlobal=1;
-    }
-    else{
-      fresnelGlobal=2;
-    }
+    var resultadoFresnel=despeje.sort();
+    if(resultadoFresnel[despeje.length-1]==0){
+			fresnelGlobal=0;
+			console.log("Se tiene un despeje del 60%");
+		}
+		else if (resultadoFresnel[despeje.length-1]==1){
+			fresnelGlobal=1;
+			console.log("Se tiene un despeje entre el 40% y 60%");
+		}
+		else{
+			fresnelGlobal=2;
+      console.log("No hay despeje de fresnel");
+		}
 
     var diffBullington;
     if(fresnelGlobal==1)
-      diffBullington=Bullington(htx2,hrx2,distancia);
+      diffBullington=Bullington(distancia);
     else if(fresnelGlobal==0)
       diffBullington=0;
     else
@@ -63,7 +49,7 @@ function InputUser() {
     var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-perdidasLluvia-diffBullington; //Se calcula la potencia de recepción
 
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
-    if(sensRX>=0){
+    if(sensRX>0){
       alert("La sensibilidad debe ser menor a cero");
       return;
     }

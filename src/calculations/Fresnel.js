@@ -1,13 +1,11 @@
 /* Este bloque tiene como funcionalidad calcular el radio de fresnel y luego ver si el objeto interferente
 genera una obstrucción del 40% o 60% del Fresnel.
 Se procede a hallar el radio para calcular la zona de Fresnel. Para ello el usuario deberá ingresar:
-htx: Altura de la antena transmisora
-hrx: Altura de la antena receptora
 Pmax: Punto o muestra en el que se coloca el objeto inteferente
 h_Pmax: Altura del objeto interferente
 */
 
-function Fresnel(htx,hrx,Pmax,h_Pmax){
+function Fresnel(Pmax,h_Pmax){
   var lambda;
   if(!Inputfreq){
     alert("Ingrese una frecuencia");
@@ -20,8 +18,8 @@ function Fresnel(htx,hrx,Pmax,h_Pmax){
   var pmedio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
   var h_pmedio = altura[Math.floor((cant_redondeo-1)/2)];
 
-  var d1=pmedio/Math.cos(((-2/distancia)*(htx-h_pmedio))/distancia);
-  var d2=pmedio/Math.cos(((-2/distancia)*(hrx-h_pmedio))/distancia);
+  var d1=pmedio/Math.cos(((-2/distancia)*(altura[0]-h_pmedio))/distancia);
+  var d2=pmedio/Math.cos(((-2/distancia)*(altura[cant_redondeo-1]-h_pmedio))/distancia);
   console.log("d1: "+d1);
   console.log("d2: "+d2);
   console.log("lambda: "+lambda);
@@ -40,7 +38,7 @@ function Fresnel(htx,hrx,Pmax,h_Pmax){
   console.log("Pmax: "+Pmax);
   console.log("h_Pmax: "+h_Pmax);
 
-  pendLOS=((-htx+hrx)/distancia)*(distancia/2)+htx;
+  pendLOS=((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
   var resultadofresnelTOT;
 
   switch(h_Pmax>pendLOS) {

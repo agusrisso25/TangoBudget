@@ -35,9 +35,7 @@ var alturaFresnel=[];
 var resFresnel;
 var hayDespejeCamino=[];
 var Inputfreq; //Frecuencia que ingresó el usuario en la plataforma
-//var diffBullington; //difracción por bullington
-var fresnelCamino;
-var fresnelOI;
+var fresnelGlobal;
 var despeje=[];
 
 var APP = { };

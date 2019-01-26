@@ -6,17 +6,16 @@ ni se puede colocar objetos interferentes fuera del camino definido
 function ModifyHeight(){
   distanciaobject= parseNumber(document.getElementById("distanciaobjeto").value); //Distancia desde Tx al objeto interferente (En metros)
   distanciatotal=(haversine(radius, latitud, longitud)*1000); //Largo del camino (en metros)
-  var cant_muestras = dist*100; // 100 muestras por km o distancia en metros
-  var cant_redondeo= Math.floor(cant_muestras); //Cantidad de muestras consideradas
 
-  if ((Math.floor(distanciaobject) ==0) || (Math.floor(distanciaobject) == (cant_redondeo-1))){ //Si el objeto interferente que se desea colocar está en las antenas, sale error
+  muestra_mod[contador]=Math.floor(distanciaobject/10); //muestra_mod es un array que contiene la información de la altura del objeto interferente
+
+  if ((muestra_mod[contador] ==0) || (muestra_mod[contador] == (cant_redondeo-1))){ //Si el objeto interferente que se desea colocar está en las antenas, sale error
     alert ("No se pueden colocar objetos interferentes en las antenas");
   }
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
   else if (0 < distanciaobject && distanciaobject < distanciatotal && parseInt(document.getElementById("objetointerferente").value)!=null){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
     contador ++; //Incrementa el contador de la cantidad de objetos interferentes ingresados
-    muestra_mod[contador]=Math.floor(distanciaobject/10); //muestra_mod es un array que contiene la información de la altura del objeto interferente
     displayPathElevation(camino, elevator, dist); //Se modifica la altura
   }
   else //if(distanciaobject>distanciatotal || distanciaobject<0) //Cuando se desea colocar un objeto interferente por fuera del largo del camino
