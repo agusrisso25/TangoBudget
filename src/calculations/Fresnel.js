@@ -40,6 +40,7 @@ function Fresnel(Pmax,h_Pmax){
   console.log("Pmax: "+Pmax);
   console.log("h_Pmax: "+h_Pmax);
 
+  pendLOS=((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
   var resultadofresnelTOT;
 
   if(h_Pmax>h_pmedio) {
