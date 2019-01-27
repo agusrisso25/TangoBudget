@@ -55,11 +55,7 @@ function plotElevation(elevations, status) {
     flag=0;
   }
   if (flag == 0) {
-    /*h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
-    h_Pmax2=data.getDistinctValues(1)[elevations.length-2];
-
-    Pmax1=altura.indexOf(h_Pmax1);
-    Pmax2=altura.indexOf(h_Pmax2);*/
+    //por ahora nada
   }
   else if (flag == 1) { //En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
