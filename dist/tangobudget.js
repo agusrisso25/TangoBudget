@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-23 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-01-26 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -218,7 +218,9 @@ function Fresnel(Pmax,h_Pmax){
 
   var distancia = (haversine(radius, latitud, longitud))*1000;
   var pmedio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var h_pmedio = altura[Math.floor((cant_redondeo-1)/2)];
+  var h_pmedio = ((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
+  var alpha=Math.atan2((altura[cant_redondeo-1]-altura[0]),distancia); //Resultado en Radianes
+  console.log("alpha: "+alpha);
 
   var d1=pmedio/Math.cos(((-2/distancia)*(altura[0]-h_pmedio))/distancia);
   var d2=pmedio/Math.cos(((-2/distancia)*(altura[cant_redondeo-1]-h_pmedio))/distancia);
@@ -243,15 +245,12 @@ function Fresnel(Pmax,h_Pmax){
   pendLOS=((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
   var resultadofresnelTOT;
 
-  switch(h_Pmax>pendLOS) {
-  case true:{
+  if(h_Pmax>h_pmedio) {
     resultadofresnelTOT=2;
-    break;
-    }
-  case false:{
-    var resultado60=Math.pow((Pmax-distancia*0.5),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))+Math.pow((h_Pmax-h_pmedio),2)/(Math.pow(fresnel60,2));
-    var resultado40=Math.pow((Pmax-distancia*0.5),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+Math.pow((h_Pmax-h_pmedio),2)/(Math.pow(fresnel40,2));
-
+  }
+  else{
+    var resultado60=Math.pow((Math.cos(alpha)*(Pmax-pmedio)+Math.sin(alpha)*(h_Pmax-h_pmedio)),2)/(Math.pow(fresnel60,2)+Math.pow(d2,2))+Math.pow((Math.sin(alpha)*(Pmax-pmedio)-Math.cos(alpha)*(h_Pmax-h_pmedio)),2)/(Math.pow(fresnel60,2));
+    var resultado40=Math.pow((Math.cos(alpha)*(Pmax-pmedio)+Math.sin(alpha)*(h_Pmax-h_pmedio)),2)/(Math.pow(fresnel40,2)+Math.pow(d2,2))+Math.pow((Math.sin(alpha)*(Pmax-pmedio)-Math.cos(alpha)*(h_Pmax-h_pmedio)),2)/(Math.pow(fresnel40,2));
     console.log("resultado60: "+resultado60);
     console.log("resultado40: "+resultado40);
 
@@ -259,15 +258,9 @@ function Fresnel(Pmax,h_Pmax){
       resultadofresnelTOT=2; //Tengo despeje menor a 40%
     else if(resultado40>=1 && resultado60<1)
       resultadofresnelTOT=1; //Tengo despeje del 40%
-    else
+    else if(resultado60>1)
       resultadofresnelTOT=0; //Tengo despeje del 60%
-      break;
-      }
-  default:{
-    alert("No se pudo analizar");
-    resultadofresnelTOT=-1;
-    }
-}
+  }
   return resultadofresnelTOT;
 }
 
@@ -303,17 +296,20 @@ function getFreq() {
 	//luego debo saber en qué región de decisión está el despeje.
 	var resultadoFresnel=hayDespejeCamino.sort();
 
-	if(resultadoFresnel[hayDespejeCamino.length-1]==0){
-		console.log("Existe un despeje del 60% de Fresnel.");
+	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
+		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
 		fresnelGlobal=0;
 	}
-	else if(resultadoFresnel[hayDespejeCamino.length-1]==1){
-		console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
+	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
+		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
 		fresnelGlobal=1;
 	}
-	else{
-		console.log("No hay despeje de Fresnel.");
+	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
+		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
 		fresnelGlobal=2;
+	}
+	else{
+		document.getElementById("Fresnel").innerHTML = "No se pudo medir";
 	}
 
 	return;
@@ -404,39 +400,6 @@ var LOS = (function () {
   var chart2DrawCount = 0;
 
 return function LOS(elevations,coordenadas) {
-/*//El data2 se va a borrar mas adelante.
-  var data2 = new google.visualization.DataTable();
-  data2.addColumn('string', 'Muestras');
-  data2.addColumn('number', 'Elevacion');
-  data2.addRow(['TX',altura[0]]);
-	for (var j = 1; j <(elevations.length-1); j++) {
-    data2.addRow(['',altura[j]]);
-		if(data2.getValue(j,1)=='undefined'){
-      coordenadas [j]=0;
-  		altura[j]=0;
-	  }
-  }
-  data2.addRow(['RX',altura[elevations.length-1]]);
-  var options = {
-  	height: 200,
-  	legend: { position: "none" },
-  	titleY: 'Perfil de elevacion (m)',
-    titleX: 'Muestras (m)',
-    color: 'yellow',
-  };
-  if (chart2DrawCount === 0) {
-    var chart2 = new google.visualization.ColumnChart(document.getElementById('elevation_chart2'));
-    var view = new google.visualization.DataView(data2);
-    view.setColumns([0, 1,
-                     { calc: "stringify",
-                       sourceColumn: 1,
-                       type: "string",
-                       role: "annotation" }]);
-
-    chart2.draw(view, options);
-    chart2DrawCount++;
-  }*/
-
   var pend1;
   var pend2;
   var posic_Pmax2;
@@ -447,30 +410,34 @@ return function LOS(elevations,coordenadas) {
   //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura del punto maximo.
   if(posic_Pmax != 0 && posic_Pmax != elevations.length-1){
   	//caso 1: Pmax mayor a ambas antenas
-  	console.log("Prueba: " + data.getDistinctValues(1)[elevations.length-1]);
   	var Pmax= data.getDistinctValues(1)[elevations.length-1].toFixed(3); //calculo altura maxima
     if (Pmax>altura[elevations.length-1].toFixed(3) && Pmax>altura[0].toFixed(3)){
+      console.log("NO");
   		return 0; //NO TENGO LOS: return 0
   }
   //caso 2: Pmax mayor a la antena Tx y menor a la Rx
-  else if (altura[0].toFixed(3)<Pmax<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
+  else if ((altura[0].toFixed(3)<Pmax) && (Pmax<altura[elevations.length-1].toFixed(3))){ //el punto mas alto es el de la posicion elevations.length
   	pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
   	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
   	if (pend1>=pend2){
 			console.log("testA2");
   		return 1;} //TENGO LOS: return 1
-  	else
-  		return 0; //NO TENGO LOS: return 0
+  	else{
+      console.log("NOtestA2");
+      return 0; //NO TENGO LOS: return 0
+    }
   	}
   //caso 3: Pmax mayor a la antena Rx y menor a la Tx
-  else if (altura[elevations.length-1].toFixed(3)<Pmax<altura[0].toFixed(3)){ //el punto mas bajo es el de la posicion 0
+  else if ((altura[elevations.length-1].toFixed(3)<Pmax)&&(Pmax<altura[0].toFixed(3))){ //el punto mas bajo es el de la posicion 0
   	pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
   	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
   	if (pend2<pend1){
 			console.log("testA3");
   		return 1; }//TENGO LOS: return 1
-  	else
+  	else{
+      console.log("NOtestA3");
   		return 0; //NO TENGO LOS: return 0
+    }
   }
   //caso 4: Pmax menor a ambas antenas
   else{
@@ -487,27 +454,32 @@ return function LOS(elevations,coordenadas) {
 			var posic_Pmax3=altura.indexOf(data.getDistinctValues(1)[elevations.length-3]);
 	    	//caso 1: Pmax3 mayor a ambas antenas
 					if (Pmax3>altura[elevations.length-1].toFixed(3) && Pmax3>altura[0].toFixed(3)){
-							return 0; //NO TENGO LOS: return 0
+              console.log("NOtestA5");
+              return 0; //NO TENGO LOS: return 0
 					}
 				//caso 2: Pmax3 mayor a la antena Tx y menor a la Rx
-					else if (altura[0].toFixed(3)<Pmax3<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
+					else if ((altura[0].toFixed(3)<Pmax3)&& (Pmax3<altura[elevations.length-1].toFixed(3))){ //el punto mas alto es el de la posicion elevations.length
 							pend1= ((altura[elevations.length-2].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 							pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 							if (pend1>=pend2){
 								console.log("testB2");
 									return 1; }//TENGO LOS: return 1
-							else
-									return 0; //NO TENGO LOS: return 0
+							else{
+                console.log("NOtestB2");
+                return 0; //NO TENGO LOS: return 0
+              }
 							}//cierro caso 2 Pmx3
 				//caso 3: Pmax mayor a la antena Rx y menor a la Tx
-				else if (altura[elevations.length-1].toFixed(3)<Pmax3<altura[0].toFixed(3)){ //el punto mas bajo es el de la posicion 0
+				else if ((altura[elevations.length-1].toFixed(3)<Pmax3) && (Pmax3<altura[0].toFixed(3))){ //el punto mas bajo es el de la posicion 0
 						pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 						pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 						if (pend2<pend1){
 								console.log("testB3");
 								return 1;} //TENGO LOS: return 1
-						else
-								return 0; //NO TENGO LOS: return 0
+						else{
+              console.log("NOtestB3");
+              return 0; //NO TENGO LOS: return 0
+            }
 				}
 				//caso 4: Pmax3 menor a ambas antenas
 				else{
@@ -523,25 +495,29 @@ else {
 				return 0; //NO TENGO LOS: return 0
 			}
 			//caso 2: Pmax2 mayor a la antena Tx y menor a la Rx
-			else if (altura[0].toFixed(3)<Pmax2<altura[elevations.length-1].toFixed(3)){ //el punto mas alto es el de la posicion elevations.length
+			else if ((altura[0].toFixed(3)<Pmax2) && (Pmax2<altura[elevations.length-1].toFixed(3))){ //el punto mas alto es el de la posicion elevations.length
 				pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 				pend2= (Pmax2-altura[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 					if (pend1>=pend2){
 						console.log("testB22");
 						return 1; }//TENGO LOS: return 1
-					else
+					else{
+            console.log("NO1testB22");
 						return 0; //NO TENGO LOS: return 0
+            }
 			}
 
 			//caso 3: Pmax2 mayor a la antena Rx y menor a la Tx
-			else if (altura[elevations.length-1].toFixed(1)<Pmax2<altura[0].toFixed(1)){ //el punto mas bajo es el de la posicion 0
+			else if ((altura[elevations.length-1].toFixed(1)<Pmax2) && (Pmax2<altura[0].toFixed(1))){ //el punto mas bajo es el de la posicion 0
 				pend1= ((altura[elevations.length-1].toFixed(1)-altura[0].toFixed(1))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 				pend2= (Pmax2-altura[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 				if (pend2<pend1){
 					console.log("testB23");
 					return 1; }//TENGO LOS: return 1
-				else
+				else{
+          console.log("NOtestB23");
 					return 0; //NO TENGO LOS: return 0
+          }
 			}
 			//caso 4: Pmax2 menor a ambas antenas
 				else{
@@ -563,7 +539,7 @@ function ModifyHeight(){
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
   else if (0 < distanciaobject && distanciaobject < distanciatotal && parseInt(document.getElementById("objetointerferente").value)!=null){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
-    contador ++; //Incrementa el contador de la cantidad de objetos interferentes ingresados
+    //contador ++; //Incrementa el contador de la cantidad de objetos interferentes ingresados
     displayPathElevation(camino, elevator, dist); //Se modifica la altura
   }
   else //if(distanciaobject>distanciatotal || distanciaobject<0) //Cuando se desea colocar un objeto interferente por fuera del largo del camino
@@ -738,12 +714,12 @@ function AgregarTabla(objInterferente,resFresnel){
 		var resultado60;
 		var resultado40;
 
-		if(despeje[contador]==0){ //Significa que tengo despeje del 60%
+		if(despeje[contador-1]==0){ //Significa que tengo despeje del 60%
 			console.log("Existe un despeje del 60% de Fresnel.");
 			resultado60=true;
 			resultado40=true;
 		}
-		else if(despeje[contador]==1){
+		else if(despeje[contador-1]==1){
 			console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 			resultado60=false;
 			resultado40=true;
@@ -754,7 +730,7 @@ function AgregarTabla(objInterferente,resFresnel){
 			resultado40=false;
 		}
 
-		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador]]); //Acá empieza a recorrer el array
+		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador-1]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
@@ -774,13 +750,30 @@ function Tilt(distancia,htx,hrx) {
 }
 
 function DeshacerAltura() {
-	if(contador>=0){
+	var resultadoFresnel;
+	if(contador>=1){
 		flag=3;
 		displayPathElevation(camino, elevator, dist);
 		return;
 	}
-	else {
+	else{
 		alert("Ya se deshicieron todos los cambios.");
+		resultadoFresnel=hayDespejeCamino.sort();
+		if(resultadoFresnel[hayDespejeCamino.length-2]==0){
+			document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+			fresnelGlobal=0;
+		}
+		else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
+			document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+			fresnelGlobal=1;
+		}
+		else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
+			document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+			fresnelGlobal=2;
+		}
+		else{
+			document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+		}
 		return;
 	}
 }
@@ -891,11 +884,11 @@ function plotElevation(elevations, status) {
     flag=0;
   }
   if (flag == 0) {
-    h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
+    /*h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
     h_Pmax2=data.getDistinctValues(1)[elevations.length-2];
 
     Pmax1=altura.indexOf(h_Pmax1);
-    Pmax2=altura.indexOf(h_Pmax2);
+    Pmax2=altura.indexOf(h_Pmax2);*/
   }
   else if (flag == 1) { //En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
@@ -911,7 +904,7 @@ function plotElevation(elevations, status) {
     }
 
     data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva
-
+    contador++;
     objInterferente=document.getElementById("objetointerferente").value;
     if(!objInterferente){
       alert ("Ingrese un tipo de interferencia");
@@ -926,45 +919,17 @@ function plotElevation(elevations, status) {
 
     resFresnel=(altura[0],altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
 
-    resultadoFresnel=despeje.sort();
-		if(resultadoFresnel[despeje.length-1]==0){
-			fresnelGlobal=0;
-			console.log("Se tiene un despeje del 60%");
-		}
-		else if (resultadoFresnel[despeje.length-1]==1){
-			fresnelGlobal=1;
-			console.log("Se tiene un despeje entre el 40% y 60%");
-		}
-		else{
-			fresnelGlobal=2;
-      console.log("No hay despeje de fresnel");
-		}
-
     AgregarTabla(objInterferente,+resFresnel);
     flag = 0;
     }
   }
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
-    data.setValue(muestra_mod[contador],1,altura[muestra_mod[contador]]); //Se modifica al valor anterior
+    data.setValue(muestra_mod[contador-1],1,altura[muestra_mod[contador-1]]); //Se modifica al valor anterior
     BorrarFila(); //Elimina de la tabla el ultimo valor modificado
     contador--; //y se decrementa el contador
 
     despeje.pop(); //remueve el ultimo elemento del array
-
-    resultadoFresnel=despeje.sort();
-    if(resultadoFresnel[despeje.length-1]==0){
-      fresnelGlobal=0;
-      console.log("Se tiene un despeje del 60%");
-    }
-    else if (resultadoFresnel[despeje.length-1]==1){
-      fresnelGlobal=1;
-      console.log("Se tiene un despeje entre el 40% y 60%");
-    }
-    else{
-      fresnelGlobal=2;
-      console.log("No hay despeje de fresnel");
-    }
     flag=0;
   }
   else if (flag==4){ //Cuando se modifica la altura de las antenas
@@ -981,6 +946,44 @@ function plotElevation(elevations, status) {
     titleX: 'Cantidad de muestras',
     titleY: 'Elevation (m)'
   });
+
+  if(!despeje || despeje.length==0){
+    //luego debo saber en qué región de decisión está el despeje.
+  	resultadoFresnel=hayDespejeCamino.sort();
+  	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
+  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+  		fresnelGlobal=0;
+  	}
+  	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
+  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+  		fresnelGlobal=1;
+  	}
+  	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
+  		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+  		fresnelGlobal=2;
+  	}
+  	else{
+  		document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+  	}
+  }
+  else{
+    resultadoFresnel=despeje.sort();
+    if(resultadoFresnel[despeje.length-1]==0){
+      fresnelGlobal=0;
+      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+    }
+    else if (resultadoFresnel[despeje.length-1]==1){
+      fresnelGlobal=1;
+      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+    }
+    else if(resultadoFresnel[despeje.length-1]==2){
+      fresnelGlobal=2;
+      document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+    }
+    else {
+      document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+    }
+  }
 
   hayLOS = LOS(elevations, coordenadas);
   if (hayLOS == 1) {

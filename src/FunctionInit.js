@@ -9,8 +9,6 @@ var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = []; //Array que tiene toda la información del perfil de elevación y sin errores
 var coordenadas = [];
-var posic_puntoMax=0;
-var valor_puntoMax=0;
 var flag=0; //defino este flag para testear caso de uso en displayPathElevation
 var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight
 var data; //Información almacenada sobre el perfil de elevación
@@ -20,8 +18,6 @@ var contador=0; //cuenta la cantidad de objetos interferentes agregados
 var elevator;
 var dist;
 var cant_redondeo; //Cuenta la cantidad de muestras que tiene nuestro perfil de elevación
-var Pmax1; //Esta variable corresponde al punto mas alto
-var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var valuetomodify_array= [];
 var elevations;
 var data_detabla;

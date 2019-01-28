@@ -22,17 +22,20 @@ function getFreq() {
 	//luego debo saber en qué región de decisión está el despeje.
 	var resultadoFresnel=hayDespejeCamino.sort();
 
-	if(resultadoFresnel[hayDespejeCamino.length-1]==0){
-		console.log("Existe un despeje del 60% de Fresnel.");
+	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
+		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
 		fresnelGlobal=0;
 	}
-	else if(resultadoFresnel[hayDespejeCamino.length-1]==1){
-		console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
+	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
+		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
 		fresnelGlobal=1;
 	}
-	else{
-		console.log("No hay despeje de Fresnel.");
+	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
+		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
 		fresnelGlobal=2;
+	}
+	else{
+		document.getElementById("Fresnel").innerHTML = "No se pudo medir";
 	}
 
 	return;
