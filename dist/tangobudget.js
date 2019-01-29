@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-26 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-01-29 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -328,7 +328,7 @@ function InputUser() {
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
     var perdidasFSL = FSL(distancia,altura[0],altura[cant_redondeo-1]); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
-    var AnguloTilt=Tilt(distancia,altura[o],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+    var AnguloTilt=Tilt(distancia,altura[0],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
     var resultadoFresnel=despeje.sort();
     if(resultadoFresnel[despeje.length-1]==0){
@@ -412,7 +412,6 @@ return function LOS(elevations,coordenadas) {
   	//caso 1: Pmax mayor a ambas antenas
   	var Pmax= data.getDistinctValues(1)[elevations.length-1].toFixed(3); //calculo altura maxima
     if (Pmax>altura[elevations.length-1].toFixed(3) && Pmax>altura[0].toFixed(3)){
-      console.log("NO");
   		return 0; //NO TENGO LOS: return 0
   }
   //caso 2: Pmax mayor a la antena Tx y menor a la Rx
@@ -420,29 +419,22 @@ return function LOS(elevations,coordenadas) {
   	pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
   	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
   	if (pend1>=pend2){
-			console.log("testA2");
   		return 1;} //TENGO LOS: return 1
-  	else{
-      console.log("NOtestA2");
+  	else
       return 0; //NO TENGO LOS: return 0
-    }
   	}
   //caso 3: Pmax mayor a la antena Rx y menor a la Tx
   else if ((altura[elevations.length-1].toFixed(3)<Pmax)&&(Pmax<altura[0].toFixed(3))){ //el punto mas bajo es el de la posicion 0
   	pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
   	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-  	if (pend2<pend1){
-			console.log("testA3");
-  		return 1; }//TENGO LOS: return 1
-  	else{
-      console.log("NOtestA3");
+  	if (pend2<pend1)
+  		return 1; //TENGO LOS: return 1
+  	else
   		return 0; //NO TENGO LOS: return 0
-    }
   }
   //caso 4: Pmax menor a ambas antenas
-  else{
-		console.log("testA4");
-  	return 1; }//tengo LOS: return 1
+  else
+  	return 1; //tengo LOS: return 1
   }
 
   //CASO B1: La posicion máxima es el origen o el destino
@@ -453,38 +445,30 @@ return function LOS(elevations,coordenadas) {
 			var Pmax3= data.getDistinctValues(1)[elevations.length-3].toFixed(1);
 			var posic_Pmax3=altura.indexOf(data.getDistinctValues(1)[elevations.length-3]);
 	    	//caso 1: Pmax3 mayor a ambas antenas
-					if (Pmax3>altura[elevations.length-1].toFixed(3) && Pmax3>altura[0].toFixed(3)){
-              console.log("NOtestA5");
+					if (Pmax3>altura[elevations.length-1].toFixed(3) && Pmax3>altura[0].toFixed(3))
               return 0; //NO TENGO LOS: return 0
-					}
+
 				//caso 2: Pmax3 mayor a la antena Tx y menor a la Rx
 					else if ((altura[0].toFixed(3)<Pmax3)&& (Pmax3<altura[elevations.length-1].toFixed(3))){ //el punto mas alto es el de la posicion elevations.length
 							pend1= ((altura[elevations.length-2].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 							pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-							if (pend1>=pend2){
-								console.log("testB2");
-									return 1; }//TENGO LOS: return 1
-							else{
-                console.log("NOtestB2");
+							if (pend1>=pend2)
+									return 1; //TENGO LOS: return 1
+							else
                 return 0; //NO TENGO LOS: return 0
-              }
 							}//cierro caso 2 Pmx3
 				//caso 3: Pmax mayor a la antena Rx y menor a la Tx
 				else if ((altura[elevations.length-1].toFixed(3)<Pmax3) && (Pmax3<altura[0].toFixed(3))){ //el punto mas bajo es el de la posicion 0
 						pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 						pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-						if (pend2<pend1){
-								console.log("testB3");
-								return 1;} //TENGO LOS: return 1
-						else{
-              console.log("NOtestB3");
+						if (pend2<pend1)
+								return 1; //TENGO LOS: return 1
+						else
               return 0; //NO TENGO LOS: return 0
-            }
 				}
 				//caso 4: Pmax3 menor a ambas antenas
-				else{
-					console.log("testB4");
-					return 1;} //tengo LOS: return 1
+				else
+					return 1; //tengo LOS: return 1
      }
 
  //CASO B2: Si Pmax 2 es la maxima altura en mi path... y no es extremo
@@ -498,31 +482,24 @@ else {
 			else if ((altura[0].toFixed(3)<Pmax2) && (Pmax2<altura[elevations.length-1].toFixed(3))){ //el punto mas alto es el de la posicion elevations.length
 				pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 				pend2= (Pmax2-altura[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-					if (pend1>=pend2){
-						console.log("testB22");
-						return 1; }//TENGO LOS: return 1
-					else{
-            console.log("NO1testB22");
+					if (pend1>=pend2)
+						return 1; //TENGO LOS: return 1
+					else
 						return 0; //NO TENGO LOS: return 0
-            }
 			}
 
 			//caso 3: Pmax2 mayor a la antena Rx y menor a la Tx
 			else if ((altura[elevations.length-1].toFixed(1)<Pmax2) && (Pmax2<altura[0].toFixed(1))){ //el punto mas bajo es el de la posicion 0
 				pend1= ((altura[elevations.length-1].toFixed(1)-altura[0].toFixed(1))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 				pend2= (Pmax2-altura[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
-				if (pend2<pend1){
-					console.log("testB23");
-					return 1; }//TENGO LOS: return 1
-				else{
-          console.log("NOtestB23");
+				if (pend2<pend1)
+					return 1; //TENGO LOS: return 1
+				else
 					return 0; //NO TENGO LOS: return 0
-          }
 			}
 			//caso 4: Pmax2 menor a ambas antenas
-				else{
-					console.log("testB24");
-					return 1; }//tengo LOS: return 1
+				else
+					return 1; //tengo LOS: return 1
 				}
 }};
 })();
@@ -884,11 +861,7 @@ function plotElevation(elevations, status) {
     flag=0;
   }
   if (flag == 0) {
-    /*h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
-    h_Pmax2=data.getDistinctValues(1)[elevations.length-2];
-
-    Pmax1=altura.indexOf(h_Pmax1);
-    Pmax2=altura.indexOf(h_Pmax2);*/
+    //por ahora nada
   }
   else if (flag == 1) { //En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
@@ -896,7 +869,7 @@ function plotElevation(elevations, status) {
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
-    despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify_array[contador]);
+    despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
       distanciaFresnel[largoarray]=muestra_mod[contador];
@@ -963,7 +936,7 @@ function plotElevation(elevations, status) {
   		fresnelGlobal=2;
   	}
   	else{
-  		document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+  		document.getElementById("Fresnel").innerHTML = " ";
   	}
   }
   else{
@@ -981,7 +954,7 @@ function plotElevation(elevations, status) {
       document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
     }
     else {
-      document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+      document.getElementById("Fresnel").innerHTML = " ";
     }
   }
 
@@ -1043,8 +1016,6 @@ var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = []; //Array que tiene toda la información del perfil de elevación y sin errores
 var coordenadas = [];
-var posic_puntoMax=0;
-var valor_puntoMax=0;
 var flag=0; //defino este flag para testear caso de uso en displayPathElevation
 var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight
 var data; //Información almacenada sobre el perfil de elevación
@@ -1054,8 +1025,6 @@ var contador=0; //cuenta la cantidad de objetos interferentes agregados
 var elevator;
 var dist;
 var cant_redondeo; //Cuenta la cantidad de muestras que tiene nuestro perfil de elevación
-var Pmax1; //Esta variable corresponde al punto mas alto
-var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var valuetomodify_array= [];
 var elevations;
 var data_detabla;

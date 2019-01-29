@@ -22,7 +22,7 @@ function InputUser() {
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
     var perdidasFSL = FSL(distancia,altura[0],altura[cant_redondeo-1]); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
-    var AnguloTilt=Tilt(distancia,altura[o],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+    var AnguloTilt=Tilt(distancia,altura[0],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
     var resultadoFresnel=despeje.sort();
     if(resultadoFresnel[despeje.length-1]==0){
