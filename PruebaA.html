@@ -66,22 +66,38 @@
 
     <div class="row" id="profilebuttons"><!--Botones para modificar perfil de elevación-->
 
-      <div class="col-4"><h6>Altura de antena Tx (m):</h6>
-          <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la altura de la antena transmisora en [m].</p>
-      </div>
-      <div class="col-4"><h6>Altura de antena Rx (m):</h6>
-          <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la altura de la antena receptora en [m].</p>
-      </div>
-      <div class="col-4"><h6>Frecuencia (GHz):</h6>
-          <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la frecuencia de transmisión.</p>
-      </div>
       <div class="col-4">
-        <input id="alturaantenatx" type="number" class="form-control" size="40" value="0"></div>
-      <div class="col-4">
-        <input id="alturaantenarx" type="number" class="form-control" size="40" value="0"></div>
-      <div class="col-4">
-        <input id="frecuencia" type="number" class="form-control" size="40" value="0"></div>
+          <h6>Altura de antena Tx (m):</h6>
+          <div class="info-box">
+                <input id="alturaantenatx" type="number" class="form-control" size="40" value="0">
+                <div class="info">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbNAGWDpnzIPkrjFjRTFMg3g6MwH4tfQhvLtoqnttY88ZIZIkY" />
+                  <p class="alert alert-warning text-justify">Ingrese la altura TOTAL de la antena transmisora sobre el nivel del suelo. Unidad [metros].</p>
+                </div>
+            </div>
+      </div>
 
+      <div class="col-4">
+          <h6>Altura de antena Rx (m):</h6>
+          <div class="info-box">
+                <input id="alturaantenarx" type="number" class="form-control" size="40" value="0">
+                <div class="info">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbNAGWDpnzIPkrjFjRTFMg3g6MwH4tfQhvLtoqnttY88ZIZIkY" />
+                  <p class="alert alert-warning text-justify">Ingrese la altura TOTAL de la antena receptora sobre el nivel del suelo. Unidad [metros].</p>
+                </div>
+         </div>
+      </div>
+
+      <div class="col-4">
+          <h6>Frecuencia (GHz):</h6>
+          <div class="info-box">
+                <input id="frecuencia" type="number" class="form-control" size="40" value="0">
+                <div class="info">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbNAGWDpnzIPkrjFjRTFMg3g6MwH4tfQhvLtoqnttY88ZIZIkY" />
+                  <p class="alert alert-warning text-justify">Ingrese la frecuencia del enlace. Unidad [GigaHertz].</p>
+                </div>
+         </div>
+      </div>
 
       <div class="col-12"></div>
       <div class="col-12"></div>
@@ -96,29 +112,43 @@
       <div class="col-12"></div>
       <div class="col-12"></div>
 
-        <div class="col-4"><h6>Distancia objeto desde TX (m):</h6>
-            <p class="alert alert-warning text-justify">En el siguiente campo se debe indicar la distancia al objeto interferente a ingresar en el
-                perfil, desde la antena transmisora. Por favor ingresar la distancia en metros.</p>
+      <div class="col-4">
+        <h6>Distancia objeto desde TX (m):</h6>
+        <div class="info-box">
+          <input id="distanciaobjeto" type="text" class="form-control" size="40" value="0">
+          <div class="info">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbNAGWDpnzIPkrjFjRTFMg3g6MwH4tfQhvLtoqnttY88ZIZIkY" />
+            <p class="alert alert-warning text-justify">Ingresar la distancia existente entre el Objeto Interferente y la antena trasmisora. Unidad [metros].</p>
+          </div>
         </div>
-        <div class="col-4"><h6>Altura objeto desde suelo (m): </h6>
-            <p class="alert alert-warning text-justify">En el siguiente campo se debe ingresar la altura del objeto interferente a ingresar en el
-                perfil. Por favor ingresar la altura en metros.</p>
-        </div>
-        <div class="col-4"><h6>Objeto interferente: </h6>
-            <p class="alert alert-warning text-justify">En este campo se debe ingresar el tipo de objeto interferente.</p>
-        </div>
+      </div>
 
-        <div class="col-4">
-          <input id="distanciaobjeto" type="text" class="form-control" size="40" value="0"></div>
-        <div class="col-4">
-          <input id="alturaobjeto" type="text" class="form-control" size="40" value="0"></div>
-        <div class="col-4">
-              <select name="objetointerferente" id= "objetointerferente" class="form-control" value="0">
-                  <option value="Ninguno" disabled selected>**Elija una opcion**</option>
-                  <option value="arbol">Arbol</option>
-                  <option value="edificio">Edificio</option>
-              </select>
+      <div class="col-4">
+        <h6>Altura objeto desde suelo (m): </h6>
+        <div class="info-box">
+          <input id="alturaobjeto" type="text" class="form-control" size="40" value="0">
+          <div class="info">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbNAGWDpnzIPkrjFjRTFMg3g6MwH4tfQhvLtoqnttY88ZIZIkY" />
+            <p class="alert alert-warning text-justify">Ingresar la altura del objeto interferente sobre el nivel del suelo. Unidad [metros].</p>
+          </div>
         </div>
+      </div>
+
+      <div class="col-4">
+        <h6>Objeto interferente: </h6>
+        <div class="info-box">
+          <select name="objetointerferente" id="objetointerferente" class="form-control" value="0">
+            <option value="Ninguno" disabled selected>**Elija una opcion**</option>
+            <option value="arbol">Arbol</option>
+            <option value="edificio">Edificio</option>
+            <option value="edificio">Otro</option>
+          </select>
+          <div class="info">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbNAGWDpnzIPkrjFjRTFMg3g6MwH4tfQhvLtoqnttY88ZIZIkY" />
+            <p class="alert alert-warning text-justify">Seleccione el tipo de objeto interferente.</p>
+          </div>
+        </div>
+      </div>
 
         <div class="col-12"></div>
         <div class="col-12"></div>

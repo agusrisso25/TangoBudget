@@ -179,12 +179,17 @@ function DispCanal(distancia,MargenFading) {
 	return disp_canal;
 }
 
-function DisponibilidadCanal (distancia, MargenFading) {
-
+function DisponibilidadCanal (distancia, MargenFading, htx, hrx) {
+    
     var dN1 = -400;
     var rugosidad;
-
-    var alturaantena; // aqui se debe guardar la altura de la antena más baja
+    var alturaantena;
+    
+    if (htx<hrx){
+        alturaantena = htx; // aqui se debe guardar la altura de la antena más baja
+    }
+    else 
+        alturaantena = hrx;
 
     var A = document.getElementById("FactorRugosidad").value;
     var arrayA= [0, 4, 1, 0.25];
@@ -203,7 +208,7 @@ var epsilon = Math.abs(altura[0]-altura[cant_redondeo-1])/distancia;
 
 var Pw = k*Math.pow(1 + epsilon, -1.03)*Math.pow(Inputfreq, 0.8)*Math.pow(10, -0.00076*alturaantena*MargenFading/10);
 
-return Pw;
+return dispanual;
 
 }
 
@@ -363,7 +368,7 @@ function InputUser() {
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
       if(MargenFading>=30){
         disp_canal = DispCanal(distancia,MargenFading);
-        // disp_canal = DisponibilidadCanal (distancia, MargenFading);
+        // disp_canal = DisponibilidadCanal (distancia, MargenFading, htx2, hrx2);
 
         if(disp_canal>=0.99998)
           console.log("Enlace aceptable");

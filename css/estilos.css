@@ -94,3 +94,32 @@ h5 {
     font-size: 10px;
     font-style: italic;
   }
+  .info {
+    position: relative;
+  }
+
+  .info img {
+    width: 20px;
+    margin-left: 10px;
+  }
+
+  .info p {
+    top: 20px;
+    opacity: 0;
+    right: 10px;
+    z-index: 1000;
+    min-width: 300px;
+    position: absolute;
+    pointer-events: none;
+    transition: opacity 0.2s linear;
+  }
+
+  .info:hover p {
+    opacity: 1;
+    pointer-events: initial;
+  }
+
+  .info-box {
+    display: flex;
+    align-items: center;
+  }
