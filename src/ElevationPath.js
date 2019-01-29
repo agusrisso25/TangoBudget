@@ -63,6 +63,7 @@ function plotElevation(elevations, status) {
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
+    resFresnel=Fresnel(distanciaobject_array[contador],valuetomodify);
     despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
@@ -84,9 +85,7 @@ function plotElevation(elevations, status) {
       else if (objInterferente=="edificio")
         objInterferente='Edificio';
 
-    resFresnel=(altura[0],altura[cant_redondeo-1],distanciaobject_array[contador],valuetomodify_array[contador]);
-
-    AgregarTabla(objInterferente,+resFresnel);
+    AgregarTabla(objInterferente);
     flag = 0;
     }
   }

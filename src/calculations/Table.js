@@ -5,7 +5,7 @@ objInterferente: Se generan diferentes atenuaciones de los objetos interferentes
 resFresnel: Se debe pasar el valor del resultado calculado por Fresnel
  */
 
-function AgregarTabla(objInterferente,resFresnel){
+function AgregarTabla(objInterferente){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
 
@@ -25,12 +25,12 @@ function AgregarTabla(objInterferente,resFresnel){
 		var resultado60;
 		var resultado40;
 
-		if(despeje[contador-1]==0){ //Significa que tengo despeje del 60%
+		if(resFresnel==0){ //Significa que tengo despeje del 60%
 			console.log("Existe un despeje del 60% de Fresnel.");
 			resultado60=true;
 			resultado40=true;
 		}
-		else if(despeje[contador-1]==1){
+		else if(resFresnel==1){
 			console.log("Existe el despeje entre el 40% y 60% del Fresnel.");
 			resultado60=false;
 			resultado40=true;
