@@ -130,7 +130,7 @@ function plotElevation(elevations, status) {
   		fresnelGlobal=2;
   	}
   	else{
-  		document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+  		document.getElementById("Fresnel").innerHTML = " ";
   	}
   }
   else{
