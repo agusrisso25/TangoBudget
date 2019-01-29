@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-26 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-01-29 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -884,11 +884,7 @@ function plotElevation(elevations, status) {
     flag=0;
   }
   if (flag == 0) {
-    /*h_Pmax1=data.getDistinctValues(1)[elevations.length-1];
-    h_Pmax2=data.getDistinctValues(1)[elevations.length-2];
-
-    Pmax1=altura.indexOf(h_Pmax1);
-    Pmax2=altura.indexOf(h_Pmax2);*/
+    //por ahora nada
   }
   else if (flag == 1) { //En caso que el flag sea 1, se modifica la altura
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
@@ -896,7 +892,7 @@ function plotElevation(elevations, status) {
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
-    despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify_array[contador]);
+    despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
       distanciaFresnel[largoarray]=muestra_mod[contador];
@@ -981,7 +977,7 @@ function plotElevation(elevations, status) {
       document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
     }
     else {
-      document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+      document.getElementById("Fresnel").innerHTML = " ";
     }
   }
 
@@ -1043,8 +1039,6 @@ var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = []; //Array que tiene toda la información del perfil de elevación y sin errores
 var coordenadas = [];
-var posic_puntoMax=0;
-var valor_puntoMax=0;
 var flag=0; //defino este flag para testear caso de uso en displayPathElevation
 var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight
 var data; //Información almacenada sobre el perfil de elevación
@@ -1054,8 +1048,6 @@ var contador=0; //cuenta la cantidad de objetos interferentes agregados
 var elevator;
 var dist;
 var cant_redondeo; //Cuenta la cantidad de muestras que tiene nuestro perfil de elevación
-var Pmax1; //Esta variable corresponde al punto mas alto
-var h_Pmax1; //Esta variable corresponde a la altura del punto mas alto
 var valuetomodify_array= [];
 var elevations;
 var data_detabla;

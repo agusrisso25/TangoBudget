@@ -63,7 +63,7 @@ function plotElevation(elevations, status) {
 
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
-    despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify_array[contador]);
+    despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
       distanciaFresnel[largoarray]=muestra_mod[contador];
@@ -148,7 +148,7 @@ function plotElevation(elevations, status) {
       document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
     }
     else {
-      document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+      document.getElementById("Fresnel").innerHTML = " ";
     }
   }
 
