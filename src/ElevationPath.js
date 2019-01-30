@@ -22,7 +22,7 @@ function displayPathElevation(camino, elevator, dist) {
 }
 
 function plotElevation(elevations, status) {
-  var chartDiv = document.getElementById('elevation_chart');
+  chartDiv = document.getElementById('elevation_chart');
   if (status !== 'OK') {
     chartDiv.innerHTML = 'No se pudo calcular el perfil de elevación porque: ' + status;
     return;

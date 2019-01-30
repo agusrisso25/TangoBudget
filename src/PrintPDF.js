@@ -1,5 +1,11 @@
 function printPDF(){
-  var doc = new jsPDF();
+  //var doc = new jsPDF();
+    google.visualization.events.addListener(elevation_chart, 'ready', function () {
+      chartDiv.innerHTML = '<img src="' + elevation_chart.getImageURI() + '">';
+      console.log("se hizo");
+    });
+
+    chart.draw(data);
 
 //Titulo del Reporte
 //  doc.setFontSize(30);
@@ -21,8 +27,8 @@ doc.fromHTML(
   });
 */
 
-  doc.fromHTML($('#panel-total').get(0), 20, 20, {
-    'width': 500});
+  //doc.fromHTML($('#panel-total').get(0), 20, 20, {
+    //'width': 500});
 
-  doc.save('Reporte.pdf');
+  //doc.save('Reporte.pdf');
 }

@@ -13,6 +13,7 @@ var flag=0; //defino este flag para testear caso de uso en displayPathElevation
 var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight
 var data; //Información almacenada sobre el perfil de elevación
 var chart;
+var chartDiv;
 var distanciaobject_array=[]; // Nos indica la distancia desde el TX que queremos modificar
 var contador=0; //cuenta la cantidad de objetos interferentes agregados
 var elevator;

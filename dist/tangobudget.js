@@ -833,7 +833,7 @@ function displayPathElevation(camino, elevator, dist) {
 }
 
 function plotElevation(elevations, status) {
-  var chartDiv = document.getElementById('elevation_chart');
+  chartDiv = document.getElementById('elevation_chart');
   if (status !== 'OK') {
     chartDiv.innerHTML = 'No se pudo calcular el perfil de elevación porque: ' + status;
     return;
@@ -1024,6 +1024,7 @@ var flag=0; //defino este flag para testear caso de uso en displayPathElevation
 var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight
 var data; //Información almacenada sobre el perfil de elevación
 var chart;
+var chartDiv;
 var distanciaobject_array=[]; // Nos indica la distancia desde el TX que queremos modificar
 var contador=0; //cuenta la cantidad de objetos interferentes agregados
 var elevator;
@@ -1096,7 +1097,13 @@ function toggleBounce(){
           // Si da el tiempo, ver como hacer que robote cada vez que se hace click en el marcador (sin arrastrar)
         }
 function printPDF(){
-  var doc = new jsPDF();
+  //var doc = new jsPDF();
+    google.visualization.events.addListener(elevation_chart, 'ready', function () {
+      chartDiv.innerHTML = '<img src="' + elevation_chart.getImageURI() + '">';
+      console.log("se hizo");
+    });
+
+    chart.draw(data);
 
 //Titulo del Reporte
 //  doc.setFontSize(30);
@@ -1118,11 +1125,12 @@ doc.fromHTML(
   });
 */
 
-  doc.fromHTML($('#panel-total').get(0), 20, 20, {
-    'width': 500});
+  //doc.fromHTML($('#panel-total').get(0), 20, 20, {
+    //'width': 500});
 
-  doc.save('Reporte.pdf');
+  //doc.save('Reporte.pdf');
 }
+
 // Convert from radians to degrees.
 function toDegrees(radians){
 	return ((radians * 180) / Math.PI);
