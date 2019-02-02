@@ -950,11 +950,13 @@ function plotElevation(elevations, status) {
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
-      getFreq();
-      document.getElementById("alturaantenatx").disabled = false;
+      getFreq(); //Se recalcula el fresnel del camino
+      document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").disabled = false;
-      document.getElementById("frecuencia").disabled = false;
-      despeje=[];
+      //document.getElementById("frecuencia").disabled = false;
+      despeje=[]; //Se borra array de los despejes de los OI
+      for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
+        BorrarFila();
     }
 
     data = new google.visualization.DataTable();
@@ -1114,17 +1116,25 @@ function deleteMarkersAndPath() {
     elevator = [];
     elevations=[];
     altura = [];
+    despeje=[];
+    muestra_mod=[];
     data=0;
     contador=0;
 
     path = poly.setPath([]);  // ELIMINA la poly
     document.getElementById('transmisor').value = "";
     document.getElementById('receptor').value = "";
+    document.getElementById('alturaantenarx').value = "";
+    document.getElementById('alturaantenatx').value = "";
+
     document.getElementById('result3').innerHTML="";
     document.getElementById("Ldevista").innerHTML= "";
+    document.getElementById("Fresnel").innerHTML="";
+    document.getElementById('result_table').innerHTML="";
+    document.getElementById('table_div').innerHTML="";
 
     document.getElementById('elevation_chart').innerHTML="";
-    document.getElementById('elevation_chart2').innerHTML="";
+
 }
 
 // Los marcadores aparecen cuando el usuario hace click en el mapa:

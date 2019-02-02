@@ -31,13 +31,13 @@ function plotElevation(elevations, status) {
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
-      getFreq(); //Se recalcula el fresnel del camino 
+      getFreq(); //Se recalcula el fresnel del camino
       document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").disabled = false;
       //document.getElementById("frecuencia").disabled = false;
       despeje=[]; //Se borra array de los despejes de los OI
-      for(i=0;i<contador<i++) //Borro tabla de objetos interferentes
-        BorrarFila;
+      for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
+        BorrarFila();
     }
 
     data = new google.visualization.DataTable();

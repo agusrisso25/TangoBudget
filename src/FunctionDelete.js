@@ -10,15 +10,23 @@ function deleteMarkersAndPath() {
     elevator = [];
     elevations=[];
     altura = [];
+    despeje=[];
+    muestra_mod=[];
     data=0;
     contador=0;
 
     path = poly.setPath([]);  // ELIMINA la poly
     document.getElementById('transmisor').value = "";
     document.getElementById('receptor').value = "";
+    document.getElementById('alturaantenarx').value = "";
+    document.getElementById('alturaantenatx').value = "";
+
     document.getElementById('result3').innerHTML="";
     document.getElementById("Ldevista").innerHTML= "";
+    document.getElementById("Fresnel").innerHTML="";
+    document.getElementById('result_table').innerHTML="";
+    document.getElementById('table_div').innerHTML="";
 
     document.getElementById('elevation_chart').innerHTML="";
-    document.getElementById('elevation_chart2').innerHTML="";
+
 }
