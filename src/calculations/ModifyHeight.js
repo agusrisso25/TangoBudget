@@ -15,7 +15,12 @@ function ModifyHeight(){
   //hay que agregar el replace por si el usuario ingresa una coma y va un punto
   else if (0 < distanciaobject && distanciaobject < distanciatotal && parseInt(document.getElementById("objetointerferente").value)!=null){
     flag=1; //seteo el flag en 1 para cuando llame la funcion displayPathElevation me modifique la altura
-    //contador ++; //Incrementa el contador de la cantidad de objetos interferentes ingresados
+    for(i=0;i<contador;i++){
+      if(muestra_mod[contador]==muestra_mod[i]){
+        alert("No se puede agregar otro OI en esta ubicación, intente de nuevo");
+        return;
+        }
+    }
     displayPathElevation(camino, elevator, dist); //Se modifica la altura
   }
   else //if(distanciaobject>distanciatotal || distanciaobject<0) //Cuando se desea colocar un objeto interferente por fuera del largo del camino
