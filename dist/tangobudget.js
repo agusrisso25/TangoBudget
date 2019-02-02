@@ -26,14 +26,15 @@ function addMarkersAndAll(location, map) {
     //muevo la linea cuando muevo los marcadores y creo una nueva:
     var etiqueta = marker.getLabel();
     if (etiqueta == "R") {
-      //Si el marcador que muevo es el B
-      path.pop(); //saco el ulimo elemento de path porque es el relacionado con B
+      //Si el marcador que muevo es el R
+      path.pop(); //saco el ulimo elemento de path porque es el relacionado con R
       path.push(evt.latLng); // hago un push del nuevo lugar del marcador al array
       path = poly.getPath(); // dibujo la linea con las dos ubicaciones
 
       latitud[1] = marker.getPosition().lat();
       longitud[1] = marker.getPosition().lng();
-    } else {
+    }
+    else {
       // si muevo el marcador A
       var remove2 = path.removeAt(1); // Saco el elemento del lugar 1 y lo guardo
       var remove = path.removeAt(0); // Saco el elemento 0 y lo guardo porque obliga la funcion pero no lo uso -- al pepe
@@ -58,7 +59,7 @@ function addMarkersAndAll(location, map) {
       camino[1] = path.getAt(1);
 
       dist = haversine(radius, latitud, longitud);
-      displayPathElevation(camino, elevator, dist); // OJO porque distl lo saco de showCoordenadas() !! no funciona
+      displayPathElevation(camino, elevator, dist);
     }
   });
 
@@ -280,9 +281,10 @@ function FSL(distancia) {
 }
 
 function getFreq() {
-	Inputfreq=parseNumber(document.getElementById("frecuencia").value);
-	document.getElementById("frecuencia").disabled = true;
-
+	if(!Inputfreq){
+		Inputfreq=parseNumber(document.getElementById("frecuencia").value);
+		document.getElementById("frecuencia").disabled = true;
+	}
 	var despeje60;
 	var despeje40;
 
@@ -947,6 +949,14 @@ function plotElevation(elevations, status) {
 
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
+    if (flag==2){
+      getFreq();
+      document.getElementById("alturaantenatx").disabled = false;
+      document.getElementById("alturaantenarx").disabled = false;
+      document.getElementById("frecuencia").disabled = false;
+      despeje=[];
+    }
+
     data = new google.visualization.DataTable();
     chart = new google.visualization.ColumnChart(chartDiv);
     data.addColumn('string', 'Sample'); //en la primer columna se especifica el tipo de valor a almacenar. En este caso en la columna 0 se almacena una variable "Sample" y es de tipo string

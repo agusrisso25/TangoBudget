@@ -1,9 +1,10 @@
 /* Este bloque toma la frecuencia que ingresó el usuario en la plataforma y deshabilita el campo de modificación
 */
 function getFreq() {
-	Inputfreq=parseNumber(document.getElementById("frecuencia").value);
-	document.getElementById("frecuencia").disabled = true;
-
+	if(!Inputfreq){
+		Inputfreq=parseNumber(document.getElementById("frecuencia").value);
+		document.getElementById("frecuencia").disabled = true;
+	}
 	var despeje60;
 	var despeje40;
 

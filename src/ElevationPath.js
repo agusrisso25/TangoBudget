@@ -30,6 +30,16 @@ function plotElevation(elevations, status) {
 
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
+    if (flag==2){
+      getFreq(); //Se recalcula el fresnel del camino 
+      document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
+      document.getElementById("alturaantenarx").disabled = false;
+      //document.getElementById("frecuencia").disabled = false;
+      despeje=[]; //Se borra array de los despejes de los OI
+      for(i=0;i<contador<i++) //Borro tabla de objetos interferentes
+        BorrarFila;
+    }
+
     data = new google.visualization.DataTable();
     chart = new google.visualization.ColumnChart(chartDiv);
     data.addColumn('string', 'Sample'); //en la primer columna se especifica el tipo de valor a almacenar. En este caso en la columna 0 se almacena una variable "Sample" y es de tipo string
