@@ -130,6 +130,7 @@ function plotElevation(elevations, status) {
   	}
   	else{
   		document.getElementById("Fresnel").innerHTML = " ";
+      fresnelGlobal=-1;
   	}
   }
   else{
@@ -148,6 +149,7 @@ function plotElevation(elevations, status) {
     }
     else {
       document.getElementById("Fresnel").innerHTML = " ";
+      fresnelGlobal=-1;
     }
   }
 

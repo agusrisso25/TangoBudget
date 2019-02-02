@@ -4,7 +4,7 @@ distancia: Largo del camino
 htx: Altura de la antena Tx
 hrx: Altura de la antena Rx
 */
-function FSL(distancia,htx,hrx) {
+function FSL(distancia) {
 	var resultado;
 	var lambda;
 	var c= 3*Math.pow(10,8);

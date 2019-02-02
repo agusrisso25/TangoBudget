@@ -12,13 +12,13 @@ function DispCanal(distancia,MargenFading) {
 	var valueA;
 	var valueB;
 
-	var A = document.getElementById("FactorRugosidad").value;
-	var B = document.getElementById("FactorClima").value;
+	var A = parseNumber(document.getElementById("FactorRugosidad").value);
+	var B = parseNumber(document.getElementById("FactorClima").value);
 
 	var arrayA= [0, 4, 1, 0.25];
 	var arrayB= [0, 1, 0.5, 0.25, 0.125];
 
-	if (A == "0"){
+	if (A == 0){
 		alert("Favor de completar el factor de rugosidad.");
 		return;
 	}
@@ -26,7 +26,7 @@ function DispCanal(distancia,MargenFading) {
 		valueA = arrayA [A];
 	}
 
-	if (B == "0"){
+	if (B == 0){
 		alert("Favor de completar el Factor Clima.");
 		return;
 	}

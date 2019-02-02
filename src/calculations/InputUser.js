@@ -20,34 +20,16 @@ function InputUser() {
 
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
-    var perdidasFSL = FSL(distancia,altura[0],altura[cant_redondeo-1]); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
+    var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
     var AnguloTilt=Tilt(distancia,altura[0],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
-    var resultadoFresnel=despeje.sort();
-    if(resultadoFresnel[despeje.length-1]==0){
-			fresnelGlobal=0;
-			console.log("Se tiene un despeje del 60%");
-		}
-		else if (resultadoFresnel[despeje.length-1]==1){
-			fresnelGlobal=1;
-			console.log("Se tiene un despeje entre el 40% y 60%");
-		}
-		else{
-			fresnelGlobal=2;
-      console.log("No hay despeje de fresnel");
-		}
-
-    var diffBullington;
+    var diffBullington=0;
     if(fresnelGlobal==1)
       diffBullington=Bullington(distancia);
-    else if(fresnelGlobal==0)
-      diffBullington=0;
-    else
-      alert("No se puede calcular la difracción de Bullington, reconsiderar información ingresada");
 
-    var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-perdidasLluvia-diffBullington; //Se calcula la potencia de recepción
-
+    var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
+    console.log("Prx es: "+Prx);
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
     if(sensRX>0){
       alert("La sensibilidad debe ser menor a cero");
@@ -55,6 +37,7 @@ function InputUser() {
     }
     if(Prx>sensRX){
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
+      console.log("MF es: "+MargenFading);
       if(MargenFading>=30){
         disp_canal = DispCanal(distancia,MargenFading);
         // disp_canal = DisponibilidadCanal (distancia, MargenFading, htx2, hrx2);
@@ -63,29 +46,30 @@ function InputUser() {
           console.log("Enlace aceptable");
           //hay que seguir esta parte
         else
-          alert("Se debe mejorar la altura de las antenas o datos del enlace.");
-        return;
+          console.log("Se debe mejorar la altura de las antenas o datos del enlace.");
+        //return;
       }
       else {
-        alert("Se debe mejorar la altura de las antenas o los datos del enlace.");
-        return;
+        console.log("Se debe mejorar la altura de las antenas o los datos del enlace.");
+        //return;
       }
     }
     else{
       alert("Se debe mejorar la potencia de transmisión.");
-      return;
+      //return;
     }
+    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
+
 
     //Se analiza la linea de vista para pasar a la tabla de resultados
     if (hayLOS == 1){
-      hayLOS=true;
+      hayLOS="Sí";
     }
     else if (hayLOS == 0){
-      hayLOS=false;
+      hayLOS="No";
     }
     else
       return;
-    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
-    Resultados(hayLOS,perdidasFSL,disp_canal,AnguloTilt,despeje60,despeje40);
+    Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
     return;
 }

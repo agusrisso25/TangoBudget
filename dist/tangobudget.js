@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-01-29 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-02 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -153,13 +153,13 @@ function DispCanal(distancia,MargenFading) {
 	var valueA;
 	var valueB;
 
-	var A = document.getElementById("FactorRugosidad").value;
-	var B = document.getElementById("FactorClima").value;
+	var A = parseNumber(document.getElementById("FactorRugosidad").value);
+	var B = parseNumber(document.getElementById("FactorClima").value);
 
 	var arrayA= [0, 4, 1, 0.25];
 	var arrayB= [0, 1, 0.5, 0.25, 0.125];
 
-	if (A == "0"){
+	if (A == 0){
 		alert("Favor de completar el factor de rugosidad.");
 		return;
 	}
@@ -167,7 +167,7 @@ function DispCanal(distancia,MargenFading) {
 		valueA = arrayA [A];
 	}
 
-	if (B == "0"){
+	if (B == 0){
 		alert("Favor de completar el Factor Clima.");
 		return;
 	}
@@ -269,7 +269,7 @@ function Fresnel(Pmax,h_Pmax){
   return resultadofresnelTOT;
 }
 
-function FSL(distancia,htx,hrx) {
+function FSL(distancia) {
 	var resultado;
 	var lambda;
 	var c= 3*Math.pow(10,8);
@@ -331,34 +331,16 @@ function InputUser() {
 
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
-    var perdidasFSL = FSL(distancia,altura[0],altura[cant_redondeo-1]); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
+    var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
     var AnguloTilt=Tilt(distancia,altura[0],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
-    var resultadoFresnel=despeje.sort();
-    if(resultadoFresnel[despeje.length-1]==0){
-			fresnelGlobal=0;
-			console.log("Se tiene un despeje del 60%");
-		}
-		else if (resultadoFresnel[despeje.length-1]==1){
-			fresnelGlobal=1;
-			console.log("Se tiene un despeje entre el 40% y 60%");
-		}
-		else{
-			fresnelGlobal=2;
-      console.log("No hay despeje de fresnel");
-		}
-
-    var diffBullington;
+    var diffBullington=0;
     if(fresnelGlobal==1)
       diffBullington=Bullington(distancia);
-    else if(fresnelGlobal==0)
-      diffBullington=0;
-    else
-      alert("No se puede calcular la difracción de Bullington, reconsiderar información ingresada");
 
-    var Prx=Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-perdidasLluvia-diffBullington; //Se calcula la potencia de recepción
-
+    var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
+    console.log("Prx es: "+Prx);
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
     if(sensRX>0){
       alert("La sensibilidad debe ser menor a cero");
@@ -366,6 +348,7 @@ function InputUser() {
     }
     if(Prx>sensRX){
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
+      console.log("MF es: "+MargenFading);
       if(MargenFading>=30){
         disp_canal = DispCanal(distancia,MargenFading);
         // disp_canal = DisponibilidadCanal (distancia, MargenFading, htx2, hrx2);
@@ -374,30 +357,31 @@ function InputUser() {
           console.log("Enlace aceptable");
           //hay que seguir esta parte
         else
-          alert("Se debe mejorar la altura de las antenas o datos del enlace.");
-        return;
+          console.log("Se debe mejorar la altura de las antenas o datos del enlace.");
+        //return;
       }
       else {
-        alert("Se debe mejorar la altura de las antenas o los datos del enlace.");
-        return;
+        console.log("Se debe mejorar la altura de las antenas o los datos del enlace.");
+        //return;
       }
     }
     else{
       alert("Se debe mejorar la potencia de transmisión.");
-      return;
+      //return;
     }
+    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
+
 
     //Se analiza la linea de vista para pasar a la tabla de resultados
     if (hayLOS == 1){
-      hayLOS=true;
+      hayLOS="Sí";
     }
     else if (hayLOS == 0){
-      hayLOS=false;
+      hayLOS="No";
     }
     else
       return;
-    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
-    Resultados(hayLOS,perdidasFSL,disp_canal,AnguloTilt,despeje60,despeje40);
+    Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
     return;
 }
 
@@ -655,25 +639,142 @@ function AtenuacionLluvia() {
 	return(A);
 }
 
-function Resultados(hayLOS,perdidasFSL,disp_canal,AnguloTilt,despeje60,despeje40){
-	google.charts.load('current', {'packages':['table']});
-	google.charts.setOnLoadCallback(ResultTable);
+function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
 
-	function ResultTable() {
-		if(!data_resultados){
-			data_resultados = new google.visualization.DataTable();
-			data_resultados.addColumn('boolean','Hay linea de vista?');
-			data_resultados.addColumn('number', 'Perdidas de espacio libre (dB)');
-			data_resultados.addColumn('number', 'Disponibilidad del canal (%)');
-			data_resultados.addColumn('number', 'Angulo de Tilt');
-			data_resultados.addColumn('boolean', 'Despeje 60%?');
-			data_resultados.addColumn('boolean', 'Despeje 40%?');
+	var despejefinal;
+	var coordtx="( " +latitud[0] + ", " + longitud[0] +" )";
+	var coordrx="( " + latitud[1] + ", " + longitud[1] +" )";
+	var htx=altura[0] +" metros";
+	var hrx=altura[cant_redondeo-1] +" metros";
+	var dimensionestx=document.getElementById("dimensionestx").value;
+	var dimensionesrx=document.getElementById("dimensionesrx").value;
+	var pol=parseNumber(document.getElementById("polarizacion").value);
 
-			tableRes = new google.visualization.Table(document.getElementById('result_table'));
-		}
-		data_resultados.addRow([hayLOS,+perdidasFSL,+disp_canal,+AnguloTilt ,despeje60 ,despeje40]); //Acá empieza a recorrer el array
-		tableRes.draw(data_resultados, {showRowNumber: false, width: '100%', height: '100%'});
+	if(pol==1)
+		pol="Vertical";
+	else
+		pol="Horizontal";
+
+
+	if(fresnelGlobal==0)
+	{
+		despejefinal="Mayor o igual a 60%";
 	}
+	else if(fresnelGlobal==1){
+		despejefinal="Entre el 40% y 60%";
+	}
+	else {
+		despejefinal="No hay despeje de Fresnel";
+	}
+
+	var totPerdidas=perdidasFSL+perdidasLluvia+perdidasOtras+perdidasConectores;
+
+	var obj = [
+		{
+			name: "Coordenadas Transmisor (Lat, Lng)",
+			value: coordtx
+		},
+		{
+			name: "Coordenadas Receptor (Lat, Lng)",
+			value: coordrx
+		},
+		{
+			name: "Altura total del Transmisor (dB) ",
+			value: htx
+		},
+		{
+			name: "Altura total del Receptor (dB) ",
+			value: hrx
+		},
+		{
+			name: "Ganancia del Transmisor (dBi)",
+			value: Gtx
+		},
+		{
+			name: "Ganancia del Receptor (dBi) ",
+			value: Grx
+		},
+		{
+			name: "Potencia del Transmisor (dBm) ",
+			value: Ptx
+		},
+		{
+			name: "Potencia del Receptor (dBm)",
+			value: Prx
+		},
+		{
+			name: "Angulo Tilt (grados)",
+			value: AnguloTilt
+		},
+		{
+			name: "Sensibilidad de Recepción (dBm) ",
+			value: sensRX
+		},
+		{
+			name: "Frecuencia (GHz) ",
+			value: Inputfreq
+		},
+		{
+			name: "Largo del camino (Km) ",
+			value: distancia
+		},
+		{
+			name: "Polarizacion ",
+			value: pol
+		},
+		{
+	    name: "Perdidas de Espacio Libre (dB)",
+	    value: perdidasFSL
+	  },
+		{
+	    name: "Perdidas por Fading (dB)",
+	    value: MargenFading
+	  },
+		{
+	    name: "Perdidas por Lluvia (dB)",
+	    value: perdidasLluvia
+	  },
+		{
+	    name: "Perdidas de Conectores (dB)",
+	    value: perdidasConectores
+	  },
+		{
+	    name: "Otras Perdidas (dB)",
+	    value: perdidasOtras
+	  },
+		{
+	    name: "TOTAL DE PERDIDAS (dB)",
+	    value: totPerdidas
+	  },
+		{
+	    name: "Hay linea de vista?",
+	    value: hayLOS
+	  },
+		{
+	    name: "Despeje de Fresnel",
+	    value: despejefinal
+	  },
+	  {
+	    name: "Disponibilidad de Canal (%)",
+	    value: disp_canal
+	  }
+
+	];
+
+	function populateTable(obj) {
+	  var report = document.getElementById('result_table');
+
+	  // Limpiar tabla antes de agregar datos
+	  report.innerHTML = '';
+
+	  // Por cada elemento agregar una fila con dos columnas. Una para el nombre y otra para el valor
+	  for (var i = 0; i < Object.keys(obj).length; i++) {
+	    var tr = "<tr><td>" + obj[i].name + "</td><td>" + obj[i].value + "</td></tr>";
+	    report.innerHTML += tr;
+	  }
+	}
+
+	populateTable(obj);
 }
 
 function AgregarTabla(objInterferente){
@@ -941,6 +1042,7 @@ function plotElevation(elevations, status) {
   	}
   	else{
   		document.getElementById("Fresnel").innerHTML = " ";
+      fresnelGlobal=-1;
   	}
   }
   else{
@@ -959,6 +1061,7 @@ function plotElevation(elevations, status) {
     }
     else {
       document.getElementById("Fresnel").innerHTML = " ";
+      fresnelGlobal=-1;
     }
   }
 
