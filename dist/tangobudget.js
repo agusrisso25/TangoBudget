@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-02 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-03 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -326,9 +326,10 @@ function InputUser() {
     var Gtx=parseNumber(document.getElementById("gananciatx").value);
     var Grx=parseNumber(document.getElementById("gananciarx").value);
     var Ptx=parseNumber(document.getElementById("potenciatx").value);
+    var test= document.getElementById("tx").value;
     var MargenFading;
     var disp_canal;
-
+  
     var distancia = haversine(radius, latitud, longitud);
 
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);

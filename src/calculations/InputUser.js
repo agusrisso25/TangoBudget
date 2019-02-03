@@ -13,9 +13,10 @@ function InputUser() {
     var Gtx=parseNumber(document.getElementById("gananciatx").value);
     var Grx=parseNumber(document.getElementById("gananciarx").value);
     var Ptx=parseNumber(document.getElementById("potenciatx").value);
+    var test= document.getElementById("tx").value;
     var MargenFading;
     var disp_canal;
-
+  
     var distancia = haversine(radius, latitud, longitud);
 
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
