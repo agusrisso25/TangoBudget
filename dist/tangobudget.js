@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-02 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-03 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -953,7 +953,10 @@ function plotElevation(elevations, status) {
       getFreq(); //Se recalcula el fresnel del camino
       document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").disabled = false;
-      //document.getElementById("frecuencia").disabled = false;
+      document.getElementById("frecuencia").disabled = false;
+      document.getElementById("alturaantenatx").value = ""; //Habilita los campos nuevamente
+      document.getElementById("alturaantenarx").value = "";
+      document.getElementById("frecuencia").value = "";
       despeje=[]; //Se borra array de los despejes de los OI
       for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
         BorrarFila();
