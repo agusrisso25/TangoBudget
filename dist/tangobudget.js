@@ -954,7 +954,10 @@ function plotElevation(elevations, status) {
       getFreq(); //Se recalcula el fresnel del camino
       document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").disabled = false;
-      //document.getElementById("frecuencia").disabled = false;
+      document.getElementById("frecuencia").disabled = false;
+      document.getElementById("alturaantenatx").value = ""; //Habilita los campos nuevamente
+      document.getElementById("alturaantenarx").value = "";
+      document.getElementById("frecuencia").value = "";
       despeje=[]; //Se borra array de los despejes de los OI
       for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
         BorrarFila();
