@@ -14,18 +14,24 @@ function deleteMarkersAndPath() {
     muestra_mod=[];
     data=0;
     contador=0;
+    cant_redondeo=0;
 
     path = poly.setPath([]);  // ELIMINA la poly
     document.getElementById('transmisor').value = "";
     document.getElementById('receptor').value = "";
     document.getElementById('alturaantenarx').value = "";
     document.getElementById('alturaantenatx').value = "";
+    document.getElementById('frecuencia').value = "";
+    document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
+    document.getElementById("alturaantenarx").disabled = false;
+    document.getElementById("frecuencia").disabled = false;
 
     document.getElementById('result3').innerHTML="";
     document.getElementById("Ldevista").innerHTML= "";
     document.getElementById("Fresnel").innerHTML="";
     document.getElementById('result_table').innerHTML="";
     document.getElementById('table_div').innerHTML="";
+
 
     document.getElementById('elevation_chart').innerHTML="";
 
