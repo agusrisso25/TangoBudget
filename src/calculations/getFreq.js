@@ -3,7 +3,7 @@
 function getFreq() {
 	if(!Inputfreq){
 		Inputfreq=parseNumber(document.getElementById("frecuencia").value);
-		document.getElementById("frecuencia").disabled = true;
+		//document.getElementById("frecuencia").disabled = true;
 	}
 	var despeje60;
 	var despeje40;

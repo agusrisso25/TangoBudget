@@ -30,6 +30,7 @@ var hayLOS;
 var distanciaFresnel=[];
 var alturaFresnel=[];
 var resFresnel;
+var fresnelOI_array=[];
 var hayDespejeCamino=[];
 var Inputfreq; //Frecuencia que ingresó el usuario en la plataforma
 var fresnelGlobal;
@@ -41,7 +42,7 @@ APP.objInterferente = null;
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });
 // Inicializo el mapa centrado en un lugar de Montevideo y con su zoom correspondiente
-function initMap() {
+function initMapInteractive() {
   var uluru = { lat: -34.916467, lng: -56.154272 };
   var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
@@ -55,6 +56,31 @@ function initMap() {
     if (markers.length <= 1)
       //Limito a 2 marcadores maximo.
       addMarkersAndAll(event.latLng, map);
+  parseSearchString();
+  });
+
+  poly = new google.maps.Polyline({
+    strokeColor: "#000000",
+    strokeOpacity: 1.0,
+    strokeWeight: 3
+  });
+}
+
+function initMapPrintable() {
+  var uluru = { lat: -34.916467, lng: -56.154272 };
+  var map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: uluru
+  });
+
+ // var geocoder = new google.maps.Geocoder();// creo que no la usamos para nada
+  //var infowindow = new google.maps.InfoWindow;
+  // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
+  google.maps.event.addListener(map, "click", function(event) {
+    if (markers.length <= 1)
+      //Limito a 2 marcadores maximo.
+      addMarkersAndAll(event.latLng, map);
+  parseSearchString();
   });
 
   poly = new google.maps.Polyline({

@@ -32,12 +32,12 @@ function plotElevation(elevations, status) {
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
       getFreq(); //Se recalcula el fresnel del camino
-      document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
-      document.getElementById("alturaantenarx").disabled = false;
-      document.getElementById("frecuencia").disabled = false;
-      document.getElementById("alturaantenatx").value = ""; //Habilita los campos nuevamente
-      document.getElementById("alturaantenarx").value = "";
-      document.getElementById("frecuencia").value = "";
+      //document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
+      //document.getElementById("alturaantenarx").disabled = false;
+      //document.getElementById("frecuencia").disabled = false;
+      document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
+      document.getElementById("alturaantenarx").value = "0";
+      document.getElementById("frecuencia").value = "0";
       despeje=[]; //Se borra array de los despejes de los OI
       for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
         BorrarFila();
@@ -77,6 +77,7 @@ function plotElevation(elevations, status) {
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
     resFresnel=Fresnel(distanciaobject_array[contador],valuetomodify);
+    fresnelOI_array[contador]=resFresnel; //Guardo en el histórico el resultado del despeje de fresnel
     despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
@@ -106,16 +107,17 @@ function plotElevation(elevations, status) {
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador-1],1,altura[muestra_mod[contador-1]]); //Se modifica al valor anterior
     BorrarFila(); //Elimina de la tabla el ultimo valor modificado
-    contador--; //y se decrementa el contador
 
-    despeje.pop(); //remueve el ultimo elemento del array
+    delete (despeje[(fresnelOI_array[contador-1])]);
+    fresnelOI_array.pop(); //remueve el ultimo elemento del array
+    contador--; //y se decrementa el contador
     flag=0;
   }
   else if (flag==4){ //Cuando se modifica la altura de las antenas
     data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+altura[0]);
-    data.setValue(cant_redondeo-1,1,parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1]);
+    data.setValue(altura.length-1,1,parseFloat(document.getElementById("alturaantenarx").value)+altura[altura.length-1]);
     altura[0]=(altura[0]+parseFloat(document.getElementById("alturaantenatx").value));
-    altura[cant_redondeo-1]= (altura[cant_redondeo-1]+parseFloat(document.getElementById("alturaantenarx").value));
+    altura[altura.length-1]= (altura[altura.length-1]+parseFloat(document.getElementById("alturaantenarx").value));
     flag=0;
   }
 

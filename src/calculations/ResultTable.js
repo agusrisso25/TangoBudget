@@ -12,7 +12,7 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 	var coordtx="(" +latitud[0] + " , " + longitud[0] +")";
 	var coordrx="(" + latitud[1] + " , " + longitud[1] +")";
 	var htx=altura[0].toFixed(2) +" metros";
-	var hrx=altura[cant_redondeo-1].toFixed(2) +" metros";
+	var hrx=altura[altura.length-1].toFixed(2) +" metros";
 	var dimensionestx=document.getElementById("dimensionestx").value;
 	var dimensionesrx=document.getElementById("dimensionesrx").value;
 	var pol=parseNumber(document.getElementById("polarizacion").value);

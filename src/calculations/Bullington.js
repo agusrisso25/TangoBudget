@@ -32,8 +32,8 @@ function Bullington(distancia) {
 		}
 
 		for(j=0;j<distanciaFresnel.length;j++){
-			pend2=((altura[cant_redondeo-1]-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
-			cte2=altura[cant_redondeo-1]-distancia*((altura[cant_redondeo-1]-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
+			pend2=((altura[altura.length-1]-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
+			cte2=altura[altura.length-1]-distancia*((altura[altura.length-1]-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
 			if(mayorPendRx>pend2){
 				mayorPendRx=pend2;
 				ctemayorPendRx=cte2;

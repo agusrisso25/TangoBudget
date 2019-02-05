@@ -16,12 +16,12 @@ function Fresnel(Pmax,h_Pmax){
 
   var distancia = (haversine(radius, latitud, longitud))*1000;
   var pmedio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var h_pmedio = ((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
-  var alpha=Math.atan2((altura[cant_redondeo-1]-altura[0]),distancia); //Resultado en Radianes
+  var h_pmedio = ((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
+  var alpha=Math.atan2((altura[altura.length-1]-altura[0]),distancia); //Resultado en Radianes
   console.log("alpha: "+alpha);
 
   var d1=pmedio/Math.cos(((-2/distancia)*(altura[0]-h_pmedio))/distancia);
-  var d2=pmedio/Math.cos(((-2/distancia)*(altura[cant_redondeo-1]-h_pmedio))/distancia);
+  var d2=pmedio/Math.cos(((-2/distancia)*(altura[altura.length-1]-h_pmedio))/distancia);
   console.log("d1: "+d1);
   console.log("d2: "+d2);
   console.log("lambda: "+lambda);
@@ -40,7 +40,7 @@ function Fresnel(Pmax,h_Pmax){
   console.log("Pmax: "+Pmax);
   console.log("h_Pmax: "+h_Pmax);
 
-  pendLOS=((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
+  pendLOS=((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
   var resultadofresnelTOT;
 
   if(h_Pmax>h_pmedio) {

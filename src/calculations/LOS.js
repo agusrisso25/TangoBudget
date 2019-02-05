@@ -17,10 +17,7 @@ CASO B2: Si Pmax2 es la maxima altura en mi path... y no es extremo
   - caso 4: Pmax2 menor a ambas antenas
 */
 
-var LOS = (function () {
-  var chart2DrawCount = 0;
-
-return function LOS(elevations,coordenadas) {
+function LOS(elevations,coordenadas) {
   var pend1;
   var pend2;
   var posic_Pmax2;
@@ -122,5 +119,5 @@ else {
 				else
 					return 1; //tengo LOS: return 1
 				}
-}};
-})();
+}
+}

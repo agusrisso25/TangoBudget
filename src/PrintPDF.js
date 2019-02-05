@@ -1,12 +1,5 @@
 function printPDF(){
-  //var doc = new jsPDF();
-    google.visualization.events.addListener(elevation_chart, 'ready', function () {
-      chartDiv.innerHTML = '<img src="' + elevation_chart.getImageURI() + '">';
-      console.log("se hizo");
-    });
-
-    chart.draw(data);
-
+    
 //Titulo del Reporte
 //  doc.setFontSize(30);
  // doc.text (50, 50, 'Tango Budget'); // se indica la locacion del texto en el formato de coordenadas (x,y)
