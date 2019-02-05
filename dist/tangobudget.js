@@ -833,7 +833,7 @@ function BorrarFila(){
 
 function Tilt(distancia) {
 	var resultado;
-	resultado=toDegrees(Math.atan2((altura[0]-altura[altura.length-1])/(distancia)));
+	resultado=toDegrees(Math.atan2((altura[0]-altura[altura.length-1]),(distancia)));
 	return resultado;
 }
 
