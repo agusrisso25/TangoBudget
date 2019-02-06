@@ -23,7 +23,7 @@ function InputUser() {
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
     var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
-    var AnguloTilt=Tilt(distancia,altura[0],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+    var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
     var diffBullington=0;
     if(fresnelGlobal==1)
@@ -72,5 +72,6 @@ function InputUser() {
     else
       return;
     Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
+    //se genera la url del PruebaB
     return;
 }

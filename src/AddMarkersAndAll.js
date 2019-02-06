@@ -52,7 +52,6 @@ function addMarkersAndAll(location, map) {
     showCoordenadas(latitud, longitud);
 
     if (markers.length == 2) {
-      // Create an ElevationService:
       var elevator = new google.maps.ElevationService();
       // Draw the path, using the Visualization API and the Elevation service:
       camino[0] = path.getAt(0);
@@ -66,10 +65,8 @@ function addMarkersAndAll(location, map) {
   marker.addListener("click", toggleBounce);
 
   if (markers.length == 2) {
-    if(!elevator){
-      // Create an ElevationService:
-      elevator = new google.maps.ElevationService();
-    }
+    elevator = new google.maps.ElevationService();
+
     // Draw the path, using the Visualization API and the Elevation service:
     camino[0] = path.getAt(0);
     camino[1] = path.getAt(1);

@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-03 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-05 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -52,7 +52,6 @@ function addMarkersAndAll(location, map) {
     showCoordenadas(latitud, longitud);
 
     if (markers.length == 2) {
-      // Create an ElevationService:
       var elevator = new google.maps.ElevationService();
       // Draw the path, using the Visualization API and the Elevation service:
       camino[0] = path.getAt(0);
@@ -66,10 +65,8 @@ function addMarkersAndAll(location, map) {
   marker.addListener("click", toggleBounce);
 
   if (markers.length == 2) {
-    if(!elevator){
-      // Create an ElevationService:
-      elevator = new google.maps.ElevationService();
-    }
+    elevator = new google.maps.ElevationService();
+
     // Draw the path, using the Visualization API and the Elevation service:
     camino[0] = path.getAt(0);
     camino[1] = path.getAt(1);
@@ -111,8 +108,8 @@ function Bullington(distancia) {
 		}
 
 		for(j=0;j<distanciaFresnel.length;j++){
-			pend2=((altura[cant_redondeo-1]-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
-			cte2=altura[cant_redondeo-1]-distancia*((altura[cant_redondeo-1]-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
+			pend2=((altura[altura.length-1]-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
+			cte2=altura[altura.length-1]-distancia*((altura[altura.length-1]-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
 			if(mayorPendRx>pend2){
 				mayorPendRx=pend2;
 				ctemayorPendRx=cte2;
@@ -181,15 +178,15 @@ function DispCanal(distancia,MargenFading) {
 }
 
 function DisponibilidadCanal (distancia, MargenFading, htx, hrx) {
-    
+
     var dN1 = -400;
     var rugosidad;
     var alturaantena;
-    
+
     if (htx<hrx){
         alturaantena = htx; // aqui se debe guardar la altura de la antena más baja
     }
-    else 
+    else
         alturaantena = hrx;
 
     var A = document.getElementById("FactorRugosidad").value;
@@ -205,7 +202,7 @@ function DisponibilidadCanal (distancia, MargenFading, htx, hrx) {
 
 
 var k = Math.pow(10, -4.4-0.0027*dN1)*Math.pow(10 + rugosidad, -0.46);
-var epsilon = Math.abs(altura[0]-altura[cant_redondeo-1])/distancia;
+var epsilon = Math.abs(altura[0]-altura[altura.length-1])/distancia;
 
 var Pw = k*Math.pow(1 + epsilon, -1.03)*Math.pow(Inputfreq, 0.8)*Math.pow(10, -0.00076*alturaantena*MargenFading/10);
 
@@ -224,12 +221,12 @@ function Fresnel(Pmax,h_Pmax){
 
   var distancia = (haversine(radius, latitud, longitud))*1000;
   var pmedio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var h_pmedio = ((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
-  var alpha=Math.atan2((altura[cant_redondeo-1]-altura[0]),distancia); //Resultado en Radianes
+  var h_pmedio = ((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
+  var alpha=Math.atan2((altura[altura.length-1]-altura[0]),distancia); //Resultado en Radianes
   console.log("alpha: "+alpha);
 
   var d1=pmedio/Math.cos(((-2/distancia)*(altura[0]-h_pmedio))/distancia);
-  var d2=pmedio/Math.cos(((-2/distancia)*(altura[cant_redondeo-1]-h_pmedio))/distancia);
+  var d2=pmedio/Math.cos(((-2/distancia)*(altura[altura.length-1]-h_pmedio))/distancia);
   console.log("d1: "+d1);
   console.log("d2: "+d2);
   console.log("lambda: "+lambda);
@@ -248,7 +245,7 @@ function Fresnel(Pmax,h_Pmax){
   console.log("Pmax: "+Pmax);
   console.log("h_Pmax: "+h_Pmax);
 
-  pendLOS=((-altura[0]+altura[cant_redondeo-1])/distancia)*(distancia/2)+altura[0];
+  pendLOS=((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
   var resultadofresnelTOT;
 
   if(h_Pmax>h_pmedio) {
@@ -281,10 +278,7 @@ function FSL(distancia) {
 }
 
 function getFreq() {
-	if(!Inputfreq){
-		Inputfreq=parseNumber(document.getElementById("frecuencia").value);
-		document.getElementById("frecuencia").disabled = true;
-	}
+	Inputfreq=parseNumber(document.getElementById("frecuencia").value);
 	var despeje60;
 	var despeje40;
 
@@ -336,7 +330,7 @@ function InputUser() {
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
     var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
     var perdidasLluvia=AtenuacionLluvia();
-    var AnguloTilt=Tilt(distancia,altura[0],altura[cant_redondeo-1]); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+    var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
     var diffBullington=0;
     if(fresnelGlobal==1)
@@ -385,13 +379,11 @@ function InputUser() {
     else
       return;
     Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
+    //se genera la url del PruebaB
     return;
 }
 
-var LOS = (function () {
-  var chart2DrawCount = 0;
-
-return function LOS(elevations,coordenadas) {
+function LOS(elevations,coordenadas) {
   var pend1;
   var pend2;
   var posic_Pmax2;
@@ -493,8 +485,8 @@ else {
 				else
 					return 1; //tengo LOS: return 1
 				}
-}};
-})();
+}
+}
 
 function ModifyHeight(){
   distanciaobject= parseNumber(document.getElementById("distanciaobjeto").value); //Distancia desde Tx al objeto interferente (En metros)
@@ -524,15 +516,12 @@ function ModifyHeight(){
 function ModifyRxTx() {
 	var htx= parseNumber(document.getElementById("alturaantenatx").value);
 	var hrx= parseNumber(document.getElementById("alturaantenarx").value);
-	if(htx<=0 || hrx<=0){ //Si el usuario no ingresa un valor correcto, despliega error
+	/*if(htx<=0 || hrx<=0){ //Si el usuario no ingresa un valor correcto, despliega error
 		alert("Altura incorrecta, intente de nuevo");
 		return;
-	}
+	}*/
 	flag=4;
 	displayPathElevation(camino,elevator,dist);
-	//deshabilita los campos despues de modificado su valor
-	document.getElementById("alturaantenarx").disabled = true;
-	document.getElementById("alturaantenatx").disabled = true;
 	return;
 }
 
@@ -653,7 +642,7 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 	var coordtx="(" +latitud[0] + " , " + longitud[0] +")";
 	var coordrx="(" + latitud[1] + " , " + longitud[1] +")";
 	var htx=altura[0].toFixed(2) +" metros";
-	var hrx=altura[cant_redondeo-1].toFixed(2) +" metros";
+	var hrx=altura[altura.length-1].toFixed(2) +" metros";
 	var dimensionestx=document.getElementById("dimensionestx").value;
 	var dimensionesrx=document.getElementById("dimensionesrx").value;
 	var pol=parseNumber(document.getElementById("polarizacion").value);
@@ -834,9 +823,9 @@ function BorrarFila(){
 	table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 	}
 
-function Tilt(distancia,htx,hrx) {
+function Tilt(distancia) {
 	var resultado;
-	resultado=toDegrees(Math.atan((htx-hrx)/(distancia)));
+	resultado=toDegrees(Math.atan2((altura[0]-altura[altura.length-1]),(distancia)));
 	return resultado;
 }
 
@@ -932,8 +921,6 @@ function dragElement(elmnt) {
 function displayPathElevation(camino, elevator, dist) {
   var cant_muestras = dist * 100; // 100 muestras por km
   cant_redondeo = Math.floor(cant_muestras);
-  console.log("Cantidad de muestras por km: " + cant_muestras);
-  console.log("Redondeo de muestras: " + cant_redondeo);
 
   elevator.getElevationAlongPath({
     'path': camino,
@@ -952,13 +939,11 @@ function plotElevation(elevations, status) {
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
       getFreq(); //Se recalcula el fresnel del camino
-      document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
-      document.getElementById("alturaantenarx").disabled = false;
-      document.getElementById("frecuencia").disabled = false;
-      document.getElementById("alturaantenatx").value = ""; //Habilita los campos nuevamente
-      document.getElementById("alturaantenarx").value = "";
-      document.getElementById("frecuencia").value = "";
+      document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
+      document.getElementById("alturaantenarx").value = "0";
+      document.getElementById("frecuencia").value = "0";
       despeje=[]; //Se borra array de los despejes de los OI
+      muestra_mod=[];
       for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
         BorrarFila();
     }
@@ -997,6 +982,7 @@ function plotElevation(elevations, status) {
     valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
     resFresnel=Fresnel(distanciaobject_array[contador],valuetomodify);
+    fresnelOI_array[contador]=resFresnel; //Guardo en el histórico el resultado del despeje de fresnel
     despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
@@ -1026,16 +1012,21 @@ function plotElevation(elevations, status) {
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador-1],1,altura[muestra_mod[contador-1]]); //Se modifica al valor anterior
     BorrarFila(); //Elimina de la tabla el ultimo valor modificado
-    contador--; //y se decrementa el contador
 
-    despeje.pop(); //remueve el ultimo elemento del array
+    delete (despeje[(fresnelOI_array[contador-1])]);
+    fresnelOI_array.pop(); //remueve el ultimo elemento del array
+    contador--; //y se decrementa el contador
     flag=0;
   }
   else if (flag==4){ //Cuando se modifica la altura de las antenas
-    data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+altura[0]);
-    data.setValue(cant_redondeo-1,1,parseFloat(document.getElementById("alturaantenarx").value)+altura[cant_redondeo-1]);
-    altura[0]=(altura[0]+parseFloat(document.getElementById("alturaantenatx").value));
-    altura[cant_redondeo-1]= (altura[cant_redondeo-1]+parseFloat(document.getElementById("alturaantenarx").value));
+    if (!AlturaIni){
+      AlturaIni=data.getValue(0,1);
+      AlturaFin=data.getValue((altura.length-1),1);
+    }
+    data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+AlturaIni);
+    data.setValue(altura.length-1,1,parseFloat(document.getElementById("alturaantenarx").value)+AlturaFin);
+    altura[0]=(AlturaIni+parseFloat(document.getElementById("alturaantenatx").value));
+    altura[altura.length-1]= (AlturaFin+parseFloat(document.getElementById("alturaantenarx").value));
     flag=0;
   }
 
@@ -1124,12 +1115,14 @@ function deleteMarkersAndPath() {
     muestra_mod=[];
     data=0;
     contador=0;
+    cant_redondeo=0;
 
     path = poly.setPath([]);  // ELIMINA la poly
-    document.getElementById('transmisor').value = "";
-    document.getElementById('receptor').value = "";
-    document.getElementById('alturaantenarx').value = "";
-    document.getElementById('alturaantenatx').value = "";
+    document.getElementById('transmisor').value = "0";
+    document.getElementById('receptor').value = "0";
+    document.getElementById('alturaantenarx').value = "0";
+    document.getElementById('alturaantenatx').value = "0";
+    document.getElementById('frecuencia').value = "0";
 
     document.getElementById('result3').innerHTML="";
     document.getElementById("Ldevista").innerHTML= "";
@@ -1169,10 +1162,13 @@ var data_resultados;
 var table;
 var tableRes;
 var hayLOS;
+var AlturaIni;
+var AlturaFin;
 //Creo estos dos arrays para guardar los valores que tienen un despeje de 40% y 60%
 var distanciaFresnel=[];
 var alturaFresnel=[];
 var resFresnel;
+var fresnelOI_array=[];
 var hayDespejeCamino=[];
 var Inputfreq; //Frecuencia que ingresó el usuario en la plataforma
 var fresnelGlobal;
@@ -1184,7 +1180,7 @@ APP.objInterferente = null;
 // Load the Visualization API and the columnchart package:
 google.load("visualization", "1", { packages: ["columnchart"] });
 // Inicializo el mapa centrado en un lugar de Montevideo y con su zoom correspondiente
-function initMap() {
+function initMapInteractive() {
   var uluru = { lat: -34.916467, lng: -56.154272 };
   var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
@@ -1198,6 +1194,31 @@ function initMap() {
     if (markers.length <= 1)
       //Limito a 2 marcadores maximo.
       addMarkersAndAll(event.latLng, map);
+  parseSearchString();
+  });
+
+  poly = new google.maps.Polyline({
+    strokeColor: "#000000",
+    strokeOpacity: 1.0,
+    strokeWeight: 3
+  });
+}
+
+function initMapPrintable() {
+  var uluru = { lat: -34.916467, lng: -56.154272 };
+  var map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: uluru
+  });
+
+ // var geocoder = new google.maps.Geocoder();// creo que no la usamos para nada
+  //var infowindow = new google.maps.InfoWindow;
+  // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
+  google.maps.event.addListener(map, "click", function(event) {
+    if (markers.length <= 1)
+      //Limito a 2 marcadores maximo.
+      addMarkersAndAll(event.latLng, map);
+  parseSearchString();
   });
 
   poly = new google.maps.Polyline({
@@ -1228,15 +1249,18 @@ function toggleBounce(){
           marker.setAnimation(google.maps.Animation.BOUNCE);//rebora marcador la primera vez que se ingresa en el mapa
           // Si da el tiempo, ver como hacer que robote cada vez que se hace click en el marcador (sin arrastrar)
         }
+
+function parseSearchString() {
+  var result = {};
+  location.search.substr(1).split('&').forEach(function (par) {
+    var kv = par.split('=');
+    result[kv[0]] = kv[1];
+  });
+  return result;
+}
+
 function printPDF(){
-  //var doc = new jsPDF();
-    google.visualization.events.addListener(elevation_chart, 'ready', function () {
-      chartDiv.innerHTML = '<img src="' + elevation_chart.getImageURI() + '">';
-      console.log("se hizo");
-    });
-
-    chart.draw(data);
-
+    
 //Titulo del Reporte
 //  doc.setFontSize(30);
  // doc.text (50, 50, 'Tango Budget'); // se indica la locacion del texto en el formato de coordenadas (x,y)
