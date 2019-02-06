@@ -7,7 +7,7 @@ B: Factor del clima
 MargenFading: Margen de Fading
 */
 
-function DispCanal(distancia,MargenFading) {
+function DispCanal(distancia,MargenFading) { //Barnet Vigant
 	var disp_canal;
 	var valueA;
 	var valueB;

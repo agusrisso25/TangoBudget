@@ -1,4 +1,4 @@
-function DisponibilidadCanal (distancia, MargenFading, htx, hrx) {
+function DisponibilidadCanal (distancia, MargenFading, htx, hrx) { // ITU 530 - disp anual
 
     var dN1 = -400;
     var rugosidad;
@@ -21,12 +21,16 @@ function DisponibilidadCanal (distancia, MargenFading, htx, hrx) {
 		rugosidad = arrayA [A];
 	    }
 
+var rugosidad2 = 5.9; // uso este porque recomienta ITU
 
-var k = Math.pow(10, -4.4-0.0027*dN1)*Math.pow(10 + rugosidad, -0.46);
+var k = Math.pow(10, -4.4-0.0027*dN1)*Math.pow(10 + rugosidad2, -0.46);
 var epsilon = Math.abs(altura[0]-altura[altura.length-1])/distancia;
 
 var Pw = k*Math.pow(1 + epsilon, -1.03)*Math.pow(Inputfreq, 0.8)*Math.pow(10, -0.00076*alturaantena*MargenFading/10);
+var dispmensual = (1-Pw)*100;
 
-return dispanual;
+PasajeAnual(distancia, epsilon, Pw);
+
+return dispmensual;
 
 }

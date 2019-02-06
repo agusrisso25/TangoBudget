@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-05 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-06 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -146,7 +146,7 @@ function Bullington(distancia) {
 		}
 }
 
-function DispCanal(distancia,MargenFading) {
+function DispCanal(distancia,MargenFading) { //Barnet Vigant
 	var disp_canal;
 	var valueA;
 	var valueB;
@@ -177,7 +177,7 @@ function DispCanal(distancia,MargenFading) {
 	return disp_canal;
 }
 
-function DisponibilidadCanal (distancia, MargenFading, htx, hrx) {
+function DisponibilidadCanal (distancia, MargenFading, htx, hrx) { // ITU 530 - disp anual
 
     var dN1 = -400;
     var rugosidad;
@@ -200,13 +200,17 @@ function DisponibilidadCanal (distancia, MargenFading, htx, hrx) {
 		rugosidad = arrayA [A];
 	    }
 
+var rugosidad2 = 5.9; // uso este porque recomienta ITU
 
-var k = Math.pow(10, -4.4-0.0027*dN1)*Math.pow(10 + rugosidad, -0.46);
+var k = Math.pow(10, -4.4-0.0027*dN1)*Math.pow(10 + rugosidad2, -0.46);
 var epsilon = Math.abs(altura[0]-altura[altura.length-1])/distancia;
 
 var Pw = k*Math.pow(1 + epsilon, -1.03)*Math.pow(Inputfreq, 0.8)*Math.pow(10, -0.00076*alturaantena*MargenFading/10);
+var dispmensual = (1-Pw)*100;
 
-return dispanual;
+PasajeAnual(distancia, epsilon, Pw);
+
+return dispmensual;
 
 }
 
@@ -316,6 +320,15 @@ function getFreq() {
 	return;
 }
 
+function indispMin(disponibilidad){ // pasaje de la disponibilidad anual a la indisponibilidad en minutos
+
+    var anomin = 525600;
+
+    var IndisMin = (100 - disponibilidad)*anomin/100;
+
+    return IndisMin;
+
+}
 function InputUser() {
     var Gtx=parseNumber(document.getElementById("gananciatx").value);
     var Grx=parseNumber(document.getElementById("gananciarx").value);
@@ -525,6 +538,17 @@ function ModifyRxTx() {
 	return;
 }
 
+function PasajeAnual(distancia, epsilon, Pw){
+
+    var DeltaG = 10.5 - 5.6*Math.log(1.1 - Math.pow(Math.abs(Math.cos(2)), 0.7)) - 2.7*Math.log(distancia) + 1.7*Math.log(1 + Math.abs(epsilon));
+
+    var dispanual =  Math.pow(10, -DeltaG/10)*Pw;
+
+    indispMin(dispanual);
+    
+    return dispanual;
+
+}
 function AtenuacionLluvia() {
 	var pol=parseNumber(document.getElementById("polarizacion").value);
 	var R;
