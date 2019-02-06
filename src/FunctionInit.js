@@ -26,6 +26,8 @@ var data_resultados;
 var table;
 var tableRes;
 var hayLOS;
+var AlturaIni;
+var AlturaFin;
 //Creo estos dos arrays para guardar los valores que tienen un despeje de 40% y 60%
 var distanciaFresnel=[];
 var alturaFresnel=[];

@@ -12,8 +12,6 @@ Finalmente, luego de todos los casos de uso, se actualiza la tabla y se calcula 
 function displayPathElevation(camino, elevator, dist) {
   var cant_muestras = dist * 100; // 100 muestras por km
   cant_redondeo = Math.floor(cant_muestras);
-  console.log("Cantidad de muestras por km: " + cant_muestras);
-  console.log("Redondeo de muestras: " + cant_redondeo);
 
   elevator.getElevationAlongPath({
     'path': camino,
@@ -32,13 +30,11 @@ function plotElevation(elevations, status) {
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
       getFreq(); //Se recalcula el fresnel del camino
-      //document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
-      //document.getElementById("alturaantenarx").disabled = false;
-      //document.getElementById("frecuencia").disabled = false;
       document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").value = "0";
       document.getElementById("frecuencia").value = "0";
       despeje=[]; //Se borra array de los despejes de los OI
+      muestra_mod=[];
       for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
         BorrarFila();
     }
@@ -114,10 +110,14 @@ function plotElevation(elevations, status) {
     flag=0;
   }
   else if (flag==4){ //Cuando se modifica la altura de las antenas
-    data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+altura[0]);
-    data.setValue(altura.length-1,1,parseFloat(document.getElementById("alturaantenarx").value)+altura[altura.length-1]);
-    altura[0]=(altura[0]+parseFloat(document.getElementById("alturaantenatx").value));
-    altura[altura.length-1]= (altura[altura.length-1]+parseFloat(document.getElementById("alturaantenarx").value));
+    if (!AlturaIni){
+      AlturaIni=data.getValue(0,1);
+      AlturaFin=data.getValue((altura.length-1),1);
+    }
+    data.setValue(0,1,parseFloat(document.getElementById("alturaantenatx").value)+AlturaIni);
+    data.setValue(altura.length-1,1,parseFloat(document.getElementById("alturaantenarx").value)+AlturaFin);
+    altura[0]=(AlturaIni+parseFloat(document.getElementById("alturaantenatx").value));
+    altura[altura.length-1]= (AlturaFin+parseFloat(document.getElementById("alturaantenarx").value));
     flag=0;
   }
 

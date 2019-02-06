@@ -17,21 +17,17 @@ function deleteMarkersAndPath() {
     cant_redondeo=0;
 
     path = poly.setPath([]);  // ELIMINA la poly
-    document.getElementById('transmisor').value = "";
-    document.getElementById('receptor').value = "";
-    document.getElementById('alturaantenarx').value = "";
-    document.getElementById('alturaantenatx').value = "";
-    document.getElementById('frecuencia').value = "";
-    document.getElementById("alturaantenatx").disabled = false; //Habilita los campos nuevamente
-    document.getElementById("alturaantenarx").disabled = false;
-    document.getElementById("frecuencia").disabled = false;
+    document.getElementById('transmisor').value = "0";
+    document.getElementById('receptor').value = "0";
+    document.getElementById('alturaantenarx').value = "0";
+    document.getElementById('alturaantenatx').value = "0";
+    document.getElementById('frecuencia').value = "0";
 
     document.getElementById('result3').innerHTML="";
     document.getElementById("Ldevista").innerHTML= "";
     document.getElementById("Fresnel").innerHTML="";
     document.getElementById('result_table').innerHTML="";
     document.getElementById('table_div').innerHTML="";
-
 
     document.getElementById('elevation_chart').innerHTML="";
 

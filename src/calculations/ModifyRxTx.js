@@ -11,8 +11,5 @@ function ModifyRxTx() {
 	}*/
 	flag=4;
 	displayPathElevation(camino,elevator,dist);
-	//deshabilita los campos despues de modificado su valor
-	//document.getElementById("alturaantenarx").disabled = true;
-	//document.getElementById("alturaantenatx").disabled = true;
 	return;
 }
