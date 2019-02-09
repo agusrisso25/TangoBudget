@@ -13,10 +13,9 @@ function InputUser() {
     var Gtx=parseNumber(document.getElementById("gananciatx").value);
     var Grx=parseNumber(document.getElementById("gananciarx").value);
     var Ptx=parseNumber(document.getElementById("potenciatx").value);
-    var test= document.getElementById("tx").value;
     var MargenFading;
     var disp_canal;
-  
+
     var distancia = haversine(radius, latitud, longitud);
 
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
@@ -72,6 +71,6 @@ function InputUser() {
     else
       return;
     Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
-    //se genera la url del PruebaB
+    print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
     return;
 }

@@ -37,6 +37,7 @@ var hayDespejeCamino=[];
 var Inputfreq; //Frecuencia que ingresó el usuario en la plataforma
 var fresnelGlobal;
 var despeje=[];
+var result;
 
 var APP = { };
 APP.objInterferente = null;
@@ -58,7 +59,7 @@ function initMapInteractive() {
     if (markers.length <= 1)
       //Limito a 2 marcadores maximo.
       addMarkersAndAll(event.latLng, map);
-  parseSearchString();
+  //printablevalues=parseSearchString();
   });
 
   poly = new google.maps.Polyline({
@@ -70,19 +71,18 @@ function initMapInteractive() {
 
 function initMapPrintable() {
   var uluru = { lat: -34.916467, lng: -56.154272 };
+  //var result={};
+  result=parseSearchString();
+  ResultadosPruebaB();
   var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: uluru
   });
 
- // var geocoder = new google.maps.Geocoder();// creo que no la usamos para nada
-  //var infowindow = new google.maps.InfoWindow;
-  // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
   google.maps.event.addListener(map, "click", function(event) {
     if (markers.length <= 1)
       //Limito a 2 marcadores maximo.
       addMarkersAndAll(event.latLng, map);
-  parseSearchString();
   });
 
   poly = new google.maps.Polyline({

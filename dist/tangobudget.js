@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-06 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-09 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -333,10 +333,9 @@ function InputUser() {
     var Gtx=parseNumber(document.getElementById("gananciatx").value);
     var Grx=parseNumber(document.getElementById("gananciarx").value);
     var Ptx=parseNumber(document.getElementById("potenciatx").value);
-    var test= document.getElementById("tx").value;
     var MargenFading;
     var disp_canal;
-  
+
     var distancia = haversine(radius, latitud, longitud);
 
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
@@ -392,7 +391,7 @@ function InputUser() {
     else
       return;
     Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
-    //se genera la url del PruebaB
+    print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
     return;
 }
 
@@ -1197,6 +1196,7 @@ var hayDespejeCamino=[];
 var Inputfreq; //Frecuencia que ingresó el usuario en la plataforma
 var fresnelGlobal;
 var despeje=[];
+var result;
 
 var APP = { };
 APP.objInterferente = null;
@@ -1218,7 +1218,7 @@ function initMapInteractive() {
     if (markers.length <= 1)
       //Limito a 2 marcadores maximo.
       addMarkersAndAll(event.latLng, map);
-  parseSearchString();
+  //printablevalues=parseSearchString();
   });
 
   poly = new google.maps.Polyline({
@@ -1230,19 +1230,18 @@ function initMapInteractive() {
 
 function initMapPrintable() {
   var uluru = { lat: -34.916467, lng: -56.154272 };
+  //var result={};
+  result=parseSearchString();
+  ResultadosPruebaB();
   var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: uluru
   });
 
- // var geocoder = new google.maps.Geocoder();// creo que no la usamos para nada
-  //var infowindow = new google.maps.InfoWindow;
-  // Evento que escucha el click y llama a la funcion addMarkersAndAll() cuando sucede.
   google.maps.event.addListener(map, "click", function(event) {
     if (markers.length <= 1)
       //Limito a 2 marcadores maximo.
       addMarkersAndAll(event.latLng, map);
-  parseSearchString();
   });
 
   poly = new google.maps.Polyline({
@@ -1275,7 +1274,7 @@ function toggleBounce(){
         }
 
 function parseSearchString() {
-  var result = {};
+  result = {};
   location.search.substr(1).split('&').forEach(function (par) {
     var kv = par.split('=');
     result[kv[0]] = kv[1];
@@ -1283,8 +1282,17 @@ function parseSearchString() {
   return result;
 }
 
-function printPDF(){
-    
+function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
+  var coordtx=coordenadas[0];
+  var coordrx=coordenadas[altura.length-1];
+  var htx=altura[0].toFixed(2);
+  var hrx=altura[altura.length-1].toFixed(2);
+  var dimensionestx=document.getElementById("dimensionestx").value;
+  var dimensionesrx=document.getElementById("dimensionesrx").value;
+  var pol=parseNumber(document.getElementById("polarizacion").value);
+
+  document.getElementById("link").innerHTML = "Haga click aquí para imprimir la página de resultados: file:///Users/claudiaduarte/Desktop/PruebasTango/TangoBudget/PruebaB.html?perdidasFSL="+perdidasFSL.toFixed(2)+"&disp_canal="+disp_canal+"&AnguloTilt="+AnguloTilt+"&Gtx="+Gtx+"&Grx="+Grx+"&Ptx="+Ptx+"&Prx="+Prx+"&MargenFading="+MargenFading+"&distancia="+distancia+"&perdidasLluvia="+perdidasLluvia+"&perdidasConectores="+perdidasConectores+"&perdidasOtras="+perdidasOtras+"&coordtx="+coordtx+"&coordrx="+coordrx+"&Freq="+Inputfreq+"&pol="+pol+"&htx="+htx+"&hrx="+hrx;
+return;
 //Titulo del Reporte
 //  doc.setFontSize(30);
  // doc.text (50, 50, 'Tango Budget'); // se indica la locacion del texto en el formato de coordenadas (x,y)
@@ -1310,6 +1318,134 @@ doc.fromHTML(
 
   //doc.save('Reporte.pdf');
 }
+
+function ResultadosPruebaB(){
+  var despejefinal;
+
+  var pol=result.pol;
+  if(pol==1)
+    pol="Vertical";
+  else
+    pol="Horizontal";
+
+  document.getElementById("transmisorpruebaB").value =
+    result.coordtx;
+  document.getElementById("receptorpruebaB").value =
+      result.coordrx;
+  document.getElementById("distpruebaB").innerHTML = result.distancia+" km";
+
+  if(fresnelGlobal==0)
+  {
+    despejefinal="Mayor o igual a 60%";
+  }
+  else if(fresnelGlobal==1){
+    despejefinal="Entre el 40% y 60%";
+  }
+  else {
+    despejefinal="No hay despeje de Fresnel";
+  }
+
+  var totPerdidas=result.perdidasFSL+result.perdidasLluvia+result.perdidasOtras+result.perdidasConectores;
+
+  var obj = [
+    {
+      name: "Altura total del Transmisor (dB) ",
+      value: result.htx
+    },
+    {
+      name: "Altura total del Receptor (dB) ",
+      value: result.hrx
+    },
+    {
+      name: "Ganancia del Transmisor (dBi)",
+      value: result.Gtx
+    },
+    {
+      name: "Ganancia del Receptor (dBi) ",
+      value: result.Grx
+    },
+    {
+      name: "Potencia del Transmisor (dBm) ",
+      value: result.Ptx
+    },
+    {
+      name: "Potencia del Receptor (dBm)",
+      value: result.Prx
+    },
+    {
+      name: "Angulo Tilt (grados)",
+      value: result.AnguloTilt
+    },
+    {
+      name: "Sensibilidad de Recepción (dBm) ",
+      value: result.sensRX
+    },
+    {
+      name: "Frecuencia (GHz) ",
+      value: result.Inputfreq
+    },
+    {
+      name: "Largo del camino (Km) ",
+      value: result.distancia
+    },
+    {
+      name: "Polarizacion ",
+      value: pol
+    },
+    {
+      name: "Perdidas de Espacio Libre (dB)",
+      value: result.perdidasFSL
+    },
+    {
+      name: "Perdidas por Fading (dB)",
+      value: result.MargenFading
+    },
+    {
+      name: "Perdidas por Lluvia (dB)",
+      value: result.perdidasLluvia
+    },
+    {
+      name: "Perdidas de Conectores (dB)",
+      value: result.perdidasConectores
+    },
+    {
+      name: "Otras Perdidas (dB)",
+      value: result.perdidasOtras
+    },
+    {
+      name: "TOTAL DE PERDIDAS (dB)",
+      value: result.totPerdidas
+    },
+    {
+      name: "Hay linea de vista?",
+      value: result.hayLOS
+    },
+    {
+      name: "Despeje de Fresnel",
+      value: result.despejefinal
+    },
+    {
+      name: "Disponibilidad de Canal (%)",
+      value: result.disp_canal
+    }
+
+  ];
+
+  function populateTable(obj) {
+    var report = document.getElementById('result_table_pruebaB');
+
+    // Limpiar tabla antes de agregar datos
+    report.innerHTML = '';
+
+    // Por cada elemento agregar una fila con dos columnas. Una para el nombre y otra para el valor
+    for (var i = 0; i < Object.keys(obj).length; i++) {
+      var tr = "<tr><td>" + obj[i].name + "</td><td>" + obj[i].value + "</td></tr>";
+      report.innerHTML += tr;
+    }
+  }
+
+  populateTable(obj);
+  }
 
 // Convert from radians to degrees.
 function toDegrees(radians){

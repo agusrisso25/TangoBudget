@@ -23,24 +23,23 @@
     <div class="row">
         <div class="col-12" id="map"> </div>
         <div class="col-12">
-          <button class = "btn btn-info float-right"  id="Boton" onclick="deleteMarkersAndPath();" >Eliminar todo el camino</button></div>
     </div>
 
     <div class="row" id="panel-total">
-        <div class="col-12" title="En este panel se pueden visualizar las coordenadas (lat, lng) de la antena transmisora y receptora respectivamente. Además, se indica la distancia entre ambas en km." data-toggle="tooltip"> <h2>Panel de resultados</h2>
-        <p class="alert alert-info text-justify">En este panel se pueden visualizar las coordenadas (lat, lng) de la antena
-            transmisora y receptora respectivamente. Además, se indica la distancia entre ambas en km.</p></div>
+        <div class="col-12">
+          <h2>Panel de resultados</h2>
+        </div>
         <div class="col-6" value = "tx"><h3>Coordenadas Transmisor:</h3> </div>
         <div class="col-6" value = "rx"><h3>Coordenadas Receptor: </h3></div>
 
         <div class="col-6">
-          <input id="transmisor" type="text" class="form-control" size="40"></div>
+          <input id="transmisorpruebaB" type="text" class="form-control" size="40"></div>
       <!--  <div class="col-2">
           <button class="btn btn-info btn-sm" type="button" id="Submit">Submit</button></div>
         <div class="col-1"></div>     COMENTO LOS BOTONES PARA EL MAPA POR AHORA-->
 
         <div class="col-6">
-          <input id="receptor" type="text" class="form-control" size="40"></div>
+          <input id="receptorpruebaB" type="text" class="form-control" size="40"></div>
        <!-- <div class="col-2">
           <button class="btn btn-info btn-sm" type="button" id="Submit2" value="">Submit</button></div>
         <div class="col-1"></div>     COMENTO LOS BOTONES PARA EL MAPA POR AHORA -->
@@ -49,7 +48,7 @@
 
         <div class="col-12"><h3>Largo del camino:</h3></div>
         <div class="col-5"></div>
-            <div class="col-2" id="result3" type="text" class="form-control" size="40"></label></div>
+            <div class="col-2" id="distpruebaB" type="text" class="form-control" size="40"></label></div>
         <div class="col-5"></div>
 
     </div> <!--Cierra el Panel-total-->
@@ -57,8 +56,6 @@
     <div class="row"  id="info">
       <div class="col-12">
           <h4>Perfil de elevación del terreno</h4>
-          <p class="alert alert-info text-justify">A continuación se despliega el perfil de elevación del terreno del trayecto
-              entre ambas antenas. Se solicita al usuario utilizar los botones debajo para modificar las alturas de cada punto del perfil.</p>
       </div>
     </div>
 
@@ -71,11 +68,10 @@
 	<div class="row" id="formulario">
         <div class="col-12"><h3>Resultados de cálculos:</h3>
                     <table align = "center">
-                    <tbody id="result_table"></tbody>
+                    <tbody id="result_table_pruebaB"></tbody>
                 </table><!--<div id="result_table"></div>-->
         </div> <!--Cierre de Resultados de calculos-->
     </div><!--cierre div formulario-->
-
 </div><!--Cierre div container-->
 
 <!--*************************************Termina el cuerpo de la página*****************************-->
@@ -85,7 +81,7 @@
     <script src="bootstrap_js/bootstrap.bundle.min.js" ></script>
 
     <script src="jsPDF-1.3.2/dist/jspdf.min.js" ></script>
-    <script src="jsPDF-1.3.2/libs/html2canvas/dist/html2canvas.js" ></script>
+    <!---<script src="jsPDF-1.3.2/libs/html2canvas/dist/html2canvas.js" ></script>-->
     <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
 <!-- Llamada al script completo del programa -->
     <script type="text/javascript" src = "dist/tangobudget.js"></script>
