@@ -1,7 +1,6 @@
 function addMarkers2(location, map){
 
     // https://developers.google.com/maps/documentation/javascript/examples/marker-simple
-
     
     function initMapInteractive() {
         var uluru = { lat: -34.916467, lng: -56.154272 };

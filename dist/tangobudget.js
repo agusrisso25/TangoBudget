@@ -1279,10 +1279,9 @@ function initMapPrintable() {
     center: uluru
   });
 
-  google.maps.event.addListener(map, "click", function(event) {
-    if (markers.length <= 1)
-      //Limito a 2 marcadores maximo.
-      addMarkersAndAll(event.latLng, map);
+  var marker = new google.maps.Marker({
+    position: {lat: latitud[0], lng: longitud[0]}, 
+    map: map
   });
 
   poly = new google.maps.Polyline({

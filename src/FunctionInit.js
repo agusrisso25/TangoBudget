@@ -74,15 +74,14 @@ function initMapPrintable() {
   //var result={};
   result=parseSearchString();
   ResultadosPruebaB();
-  var map = new google.maps.Map(document.getElementById("map"), {
+  var map = new google.maps.Map(document.getElementById("mapB"), {
     zoom: 15,
     center: uluru
   });
 
-  google.maps.event.addListener(map, "click", function(event) {
-    if (markers.length <= 1)
-      //Limito a 2 marcadores maximo.
-      addMarkersAndAll(event.latLng, map);
+  var marker = new google.maps.Marker({
+    position: {lat: latitud[0], lng: longitud[0]}, 
+    map: map
   });
 
   poly = new google.maps.Polyline({
