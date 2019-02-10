@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-09 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-10 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -797,6 +797,47 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 	populateTable(obj);
 }
 
+function addMarkers2(location, map){
+
+    // https://developers.google.com/maps/documentation/javascript/examples/marker-simple
+
+    
+    function initMapInteractive() {
+        var uluru = { lat: -34.916467, lng: -56.154272 };
+        var map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 15,
+          center: uluru
+        });
+
+        var marker = new google.maps.Marker({
+            position: { lat: coordenadas [0] , lng: coordenadas[altura.length-1]},
+            map: map,
+          });
+    }
+
+    path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
+    path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
+
+    poly.setMap(map); // setea la polyline en el mapa
+
+
+    poly = new google.maps.Polyline({
+        strokeColor: "#000000",
+        strokeOpacity: 1.0,
+        strokeWeight: 3
+      });
+
+    elevator = new google.maps.ElevationService();
+
+        // Draw the path, using the Visualization API and the Elevation service:
+        camino[0] = path.getAt(0);
+        camino[1] = path.getAt(1);
+        // Draw the path, using the Visualization API and the Elevation service:
+        dist = haversine(radius, latitud, longitud);
+        displayPathElevation(camino, elevator, dist);
+}
+
+
 function AgregarTabla(objInterferente){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
@@ -1238,10 +1279,9 @@ function initMapPrintable() {
     center: uluru
   });
 
-  google.maps.event.addListener(map, "click", function(event) {
-    if (markers.length <= 1)
-      //Limito a 2 marcadores maximo.
-      addMarkersAndAll(event.latLng, map);
+  var marker = new google.maps.Marker({
+    position: {lat: latitud[0], lng: longitud[0]}, 
+    map: map
   });
 
   poly = new google.maps.Polyline({
@@ -1291,8 +1331,10 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
   var dimensionesrx=document.getElementById("dimensionesrx").value;
   var pol=parseNumber(document.getElementById("polarizacion").value);
 
-  document.getElementById("link").innerHTML = "Haga click aquí para imprimir la página de resultados: file:///Users/claudiaduarte/Desktop/PruebasTango/TangoBudget/PruebaB.html?perdidasFSL="+perdidasFSL.toFixed(2)+"&disp_canal="+disp_canal+"&AnguloTilt="+AnguloTilt+"&Gtx="+Gtx+"&Grx="+Grx+"&Ptx="+Ptx+"&Prx="+Prx+"&MargenFading="+MargenFading+"&distancia="+distancia+"&perdidasLluvia="+perdidasLluvia+"&perdidasConectores="+perdidasConectores+"&perdidasOtras="+perdidasOtras+"&coordtx="+coordtx+"&coordrx="+coordrx+"&Freq="+Inputfreq+"&pol="+pol+"&htx="+htx+"&hrx="+hrx;
-return;
+  //document.getElementById("link").innerHTML = "Haga click aquí para imprimir la página de resultados: file:///Users/claudiaduarte/Desktop/PruebasTango/TangoBudget/PruebaB.html?perdidasFSL="+perdidasFSL.toFixed(2)+"&disp_canal="+disp_canal+"&AnguloTilt="+AnguloTilt+"&Gtx="+Gtx+"&Grx="+Grx+"&Ptx="+Ptx+"&Prx="+Prx+"&MargenFading="+MargenFading+"&distancia="+distancia+"&perdidasLluvia="+perdidasLluvia+"&perdidasConectores="+perdidasConectores+"&perdidasOtras="+perdidasOtras+"&coordtx="+coordtx+"&coordrx="+coordrx+"&Freq="+Inputfreq+"&pol="+pol+"&htx="+htx+"&hrx="+hrx;
+  document.getElementById("link").innerHTML = "Haga click aquí para imprimir la página de resultados: file:///C:/Users/Usuario/Documents/UCU/tesis/TangoBudget/TangoBudget/PruebaB.html?perdidasFSL="+perdidasFSL.toFixed(2)+"&disp_canal="+disp_canal+"&AnguloTilt="+AnguloTilt+"&Gtx="+Gtx+"&Grx="+Grx+"&Ptx="+Ptx+"&Prx="+Prx+"&MargenFading="+MargenFading+"&distancia="+distancia+"&perdidasLluvia="+perdidasLluvia+"&perdidasConectores="+perdidasConectores+"&perdidasOtras="+perdidasOtras+"&coordtx="+coordtx+"&coordrx="+coordrx+"&Freq="+Inputfreq+"&pol="+pol+"&htx="+htx+"&hrx="+hrx;
+  
+  return;
 //Titulo del Reporte
 //  doc.setFontSize(30);
  // doc.text (50, 50, 'Tango Budget'); // se indica la locacion del texto en el formato de coordenadas (x,y)
