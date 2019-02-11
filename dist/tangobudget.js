@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-10 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-11 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -800,7 +800,6 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 function addMarkers2(location, map){
 
     // https://developers.google.com/maps/documentation/javascript/examples/marker-simple
-
     
     function initMapInteractive() {
         var uluru = { lat: -34.916467, lng: -56.154272 };
@@ -940,7 +939,12 @@ function DistanceToBorders (coordenadas, posic_Pmax){
     console.log("Distancia a TX" + distanciaRX.toFixed(6) + " km");
 }
 //Make the DIV element draggagle:
-dragElement(document.getElementById("Boton"));
+(function () {
+  var boton = document.getElementById("Boton");
+  if (boton) {
+    dragElement(boton);
+  }
+})();
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -982,6 +986,7 @@ function dragElement(elmnt) {
     document.onmousemove = null;
   }
 }
+
 function displayPathElevation(camino, elevator, dist) {
   var cant_muestras = dist * 100; // 100 muestras por km
   cant_redondeo = Math.floor(cant_muestras);
@@ -1271,24 +1276,25 @@ function initMapInteractive() {
 
 function initMapPrintable() {
   var uluru = { lat: -34.916467, lng: -56.154272 };
-  //var result={};
-  result=parseSearchString();
-  ResultadosPruebaB();
   var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: uluru
   });
 
   var marker = new google.maps.Marker({
-    position: {lat: latitud[0], lng: longitud[0]}, 
+    position: {lat: -34.916467, lng: -56.154272},
     map: map
   });
+  marker.setMap(map);
 
-  poly = new google.maps.Polyline({
+  result=parseSearchString();
+  ResultadosPruebaB();
+
+  /*poly = new google.maps.Polyline({
     strokeColor: "#000000",
     strokeOpacity: 1.0,
     strokeWeight: 3
-  });
+  });*/
 }
 
         //Funcion para el cálculo de distancia entre dos puntos:
@@ -1332,8 +1338,25 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
   var pol=parseNumber(document.getElementById("polarizacion").value);
 
   //document.getElementById("link").innerHTML = "Haga click aquí para imprimir la página de resultados: file:///Users/claudiaduarte/Desktop/PruebasTango/TangoBudget/PruebaB.html?perdidasFSL="+perdidasFSL.toFixed(2)+"&disp_canal="+disp_canal+"&AnguloTilt="+AnguloTilt+"&Gtx="+Gtx+"&Grx="+Grx+"&Ptx="+Ptx+"&Prx="+Prx+"&MargenFading="+MargenFading+"&distancia="+distancia+"&perdidasLluvia="+perdidasLluvia+"&perdidasConectores="+perdidasConectores+"&perdidasOtras="+perdidasOtras+"&coordtx="+coordtx+"&coordrx="+coordrx+"&Freq="+Inputfreq+"&pol="+pol+"&htx="+htx+"&hrx="+hrx;
-  document.getElementById("link").innerHTML = "Haga click aquí para imprimir la página de resultados: file:///C:/Users/Usuario/Documents/UCU/tesis/TangoBudget/TangoBudget/PruebaB.html?perdidasFSL="+perdidasFSL.toFixed(2)+"&disp_canal="+disp_canal+"&AnguloTilt="+AnguloTilt+"&Gtx="+Gtx+"&Grx="+Grx+"&Ptx="+Ptx+"&Prx="+Prx+"&MargenFading="+MargenFading+"&distancia="+distancia+"&perdidasLluvia="+perdidasLluvia+"&perdidasConectores="+perdidasConectores+"&perdidasOtras="+perdidasOtras+"&coordtx="+coordtx+"&coordrx="+coordrx+"&Freq="+Inputfreq+"&pol="+pol+"&htx="+htx+"&hrx="+hrx;
-  
+  document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
+     '&disp_canal='+ disp_canal +
+     '&AnguloTilt'+AnguloTilt+
+     '&Gtx='+Gtx+
+     '&Grx='+Grx+
+     '&Ptx='+Ptx+
+     '&Prx='+Prx+
+     '&MargenFading='+MargenFading+
+     '&distancia='+distancia+
+     '&perdidasLluvia='+perdidasLluvia+
+     '&perdidasConectores='+perdidasConectores+
+     '&perdidasOtras='+perdidasOtras+
+     '&coordtx='+coordtx+
+     '&coordrx='+coordrx+
+     '&Freq='+Inputfreq+
+     '&pol='+pol+
+     '&htx='+htx+
+     '&hrx='+hrx+
+     '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 //Titulo del Reporte
 //  doc.setFontSize(30);

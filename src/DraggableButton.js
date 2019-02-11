@@ -1,5 +1,10 @@
 //Make the DIV element draggagle:
-dragElement(document.getElementById("Boton"));
+(function () {
+  var boton = document.getElementById("Boton");
+  if (boton) {
+    dragElement(boton);
+  }
+})();
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;

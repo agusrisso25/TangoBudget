@@ -71,22 +71,23 @@ function initMapInteractive() {
 
 function initMapPrintable() {
   var uluru = { lat: -34.916467, lng: -56.154272 };
-  //var result={};
-  result=parseSearchString();
-  ResultadosPruebaB();
-  var map = new google.maps.Map(document.getElementById("mapB"), {
+  var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: uluru
   });
 
   var marker = new google.maps.Marker({
-    position: {lat: latitud[0], lng: longitud[0]}, 
+    position: {lat: -34.916467, lng: -56.154272},
     map: map
   });
+  marker.setMap(map);
 
-  poly = new google.maps.Polyline({
+  result=parseSearchString();
+  ResultadosPruebaB();
+
+  /*poly = new google.maps.Polyline({
     strokeColor: "#000000",
     strokeOpacity: 1.0,
     strokeWeight: 3
-  });
+  });*/
 }
