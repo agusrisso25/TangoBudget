@@ -70,24 +70,43 @@ function initMapInteractive() {
 }
 
 function initMapPrintable() {
+  result=parseSearchString();
+  ResultadosPruebaB();
+
   var uluru = { lat: -34.916467, lng: -56.154272 };
   var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: uluru
   });
 
-  var marker = new google.maps.Marker({
-    position: {lat: -34.916467, lng: -56.154272},
+  var arr1=result.coordtx.split(",");
+  var arr2=result.coordrx.split(",");
+  var lat0=parseFloat(arr1[0]);
+  var lng0=parseFloat(arr1[1]);
+  var lat1=parseFloat(arr2[0]);
+  var lng1=parseFloat(arr2[1]);
+
+  var marker1 = new google.maps.Marker({
+    position: {lat: lat0, lng: lng0},
     map: map
   });
-  marker.setMap(map);
+  var marker2 = new google.maps.Marker({
+    position: {lat: lat1, lng: lng1},
+    map: map
+  });
+  marker1.setMap(map);
+  marker2.setMap(map);
 
-  result=parseSearchString();
-  ResultadosPruebaB();
-
-  /*poly = new google.maps.Polyline({
-    strokeColor: "#000000",
+  var pathfinal = [
+            {lat: lat0, lng: lng0},
+            {lat: lat1, lng: lng1}];
+  var flightPath = new google.maps.Polyline({
+    path: pathfinal,
+    geodesic: true,
+    strokeColor: 'black',
     strokeOpacity: 1.0,
-    strokeWeight: 3
-  });*/
+    strokeWeight: 2
+  });
+
+  flightPath.setMap(map);
 }

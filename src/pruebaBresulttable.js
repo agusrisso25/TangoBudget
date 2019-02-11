@@ -28,11 +28,11 @@ function ResultadosPruebaB(){
 
   var obj = [
     {
-      name: "Altura total del Transmisor (dB) ",
+      name: "Altura total del Transmisor (m) ",
       value: result.htx
     },
     {
-      name: "Altura total del Receptor (dB) ",
+      name: "Altura total del Receptor (m) ",
       value: result.hrx
     },
     {

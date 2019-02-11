@@ -1275,26 +1275,45 @@ function initMapInteractive() {
 }
 
 function initMapPrintable() {
+  result=parseSearchString();
+  ResultadosPruebaB();
+
   var uluru = { lat: -34.916467, lng: -56.154272 };
   var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: uluru
   });
 
-  var marker = new google.maps.Marker({
-    position: {lat: -34.916467, lng: -56.154272},
+  var arr1=result.coordtx.split(",");
+  var arr2=result.coordrx.split(",");
+  var lat0=parseFloat(arr1[0]);
+  var lng0=parseFloat(arr1[1]);
+  var lat1=parseFloat(arr2[0]);
+  var lng1=parseFloat(arr2[1]);
+
+  var marker1 = new google.maps.Marker({
+    position: {lat: lat0, lng: lng0},
     map: map
   });
-  marker.setMap(map);
+  var marker2 = new google.maps.Marker({
+    position: {lat: lat1, lng: lng1},
+    map: map
+  });
+  marker1.setMap(map);
+  marker2.setMap(map);
 
-  result=parseSearchString();
-  ResultadosPruebaB();
-
-  /*poly = new google.maps.Polyline({
-    strokeColor: "#000000",
+  var pathfinal = [
+            {lat: lat0, lng: lng0},
+            {lat: lat1, lng: lng1}];
+  var flightPath = new google.maps.Polyline({
+    path: pathfinal,
+    geodesic: true,
+    strokeColor: 'black',
     strokeOpacity: 1.0,
-    strokeWeight: 3
-  });*/
+    strokeWeight: 2
+  });
+
+  flightPath.setMap(map);
 }
 
         //Funcion para el cálculo de distancia entre dos puntos:
@@ -1329,15 +1348,18 @@ function parseSearchString() {
 }
 
 function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
-  var coordtx=coordenadas[0];
-  var coordrx=coordenadas[altura.length-1];
+  var lat0=latitud[0].toFixed(3);
+  var lng0=longitud[0].toFixed(3);
+  var lat1=latitud[1].toFixed(3);
+  var lng1=longitud[1].toFixed(3);
+  var coordtx=lat0+","+lng0;
+  var coordrx=lat1+","+lng1;
   var htx=altura[0].toFixed(2);
   var hrx=altura[altura.length-1].toFixed(2);
   var dimensionestx=document.getElementById("dimensionestx").value;
   var dimensionesrx=document.getElementById("dimensionesrx").value;
   var pol=parseNumber(document.getElementById("polarizacion").value);
 
-  //document.getElementById("link").innerHTML = "Haga click aquí para imprimir la página de resultados: file:///Users/claudiaduarte/Desktop/PruebasTango/TangoBudget/PruebaB.html?perdidasFSL="+perdidasFSL.toFixed(2)+"&disp_canal="+disp_canal+"&AnguloTilt="+AnguloTilt+"&Gtx="+Gtx+"&Grx="+Grx+"&Ptx="+Ptx+"&Prx="+Prx+"&MargenFading="+MargenFading+"&distancia="+distancia+"&perdidasLluvia="+perdidasLluvia+"&perdidasConectores="+perdidasConectores+"&perdidasOtras="+perdidasOtras+"&coordtx="+coordtx+"&coordrx="+coordrx+"&Freq="+Inputfreq+"&pol="+pol+"&htx="+htx+"&hrx="+hrx;
   document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
      '&disp_canal='+ disp_canal +
      '&AnguloTilt'+AnguloTilt+
@@ -1358,30 +1380,6 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
      '&hrx='+hrx+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
-//Titulo del Reporte
-//  doc.setFontSize(30);
- // doc.text (50, 50, 'Tango Budget'); // se indica la locacion del texto en el formato de coordenadas (x,y)
-
-/*var elementHandler = {
-  '#ignorePDF': function (element, renderer){
-    return true;
-  }
-};
-//var source = window.document.getElementsByTagName("body")[0];
- var source = window.document.getElementById("panel-total")[0];
-doc.fromHTML(
-  source,
-  15,
-  15,
-  {
-    'width': 180, 'elementHandlers': elementHandler
-  });
-*/
-
-  //doc.fromHTML($('#panel-total').get(0), 20, 20, {
-    //'width': 500});
-
-  //doc.save('Reporte.pdf');
 }
 
 function ResultadosPruebaB(){
@@ -1414,11 +1412,11 @@ function ResultadosPruebaB(){
 
   var obj = [
     {
-      name: "Altura total del Transmisor (dB) ",
+      name: "Altura total del Transmisor (m) ",
       value: result.htx
     },
     {
-      name: "Altura total del Receptor (dB) ",
+      name: "Altura total del Receptor (m) ",
       value: result.hrx
     },
     {
