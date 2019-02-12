@@ -7,10 +7,8 @@ function ResultadosPruebaB(){
   else
     pol="Horizontal";
 
-  document.getElementById("transmisorpruebaB").value =
-    result.coordtx;
-  document.getElementById("receptorpruebaB").value =
-      result.coordrx;
+  document.getElementById("transmisorpruebaB").value = "("+result.coordtx+")";
+  document.getElementById("receptorpruebaB").value = "("+result.coordrx+")";
   document.getElementById("distpruebaB").innerHTML = result.distancia+" km";
 
   if(fresnelGlobal==0)

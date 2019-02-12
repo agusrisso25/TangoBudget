@@ -662,8 +662,6 @@ function AtenuacionLluvia() {
 function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
 
 	var despejefinal;
-	var coordtx="(" +latitud[0] + " , " + longitud[0] +")";
-	var coordrx="(" + latitud[1] + " , " + longitud[1] +")";
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
 	var dimensionestx=document.getElementById("dimensionestx").value;
@@ -690,14 +688,6 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 	var totPerdidas=perdidasFSL+perdidasLluvia+perdidasOtras+perdidasConectores;
 
 	var obj = [
-		{
-			name: "Coordenadas Transmisor (Lat, Lng)",
-			value: coordtx
-		},
-		{
-			name: "Coordenadas Receptor (Lat, Lng)",
-			value: coordrx
-		},
 		{
 			name: "Altura total del Transmisor (dB) ",
 			value: htx
@@ -1361,14 +1351,14 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
   var pol=parseNumber(document.getElementById("polarizacion").value);
 
   document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
-     '&disp_canal='+ disp_canal +
-     '&AnguloTilt'+AnguloTilt+
+     '&disp_canal='+ disp_canal.toFixed(5) +
+     '&AnguloTilt='+AnguloTilt.toFixed(2)+
      '&Gtx='+Gtx+
      '&Grx='+Grx+
      '&Ptx='+Ptx+
      '&Prx='+Prx+
      '&MargenFading='+MargenFading+
-     '&distancia='+distancia+
+     '&distancia='+distancia.toFixed(3)+
      '&perdidasLluvia='+perdidasLluvia+
      '&perdidasConectores='+perdidasConectores+
      '&perdidasOtras='+perdidasOtras+
@@ -1378,6 +1368,7 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
      '&pol='+pol+
      '&htx='+htx+
      '&hrx='+hrx+
+     '&sensRX='+sensRX+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }
@@ -1391,10 +1382,8 @@ function ResultadosPruebaB(){
   else
     pol="Horizontal";
 
-  document.getElementById("transmisorpruebaB").value =
-    result.coordtx;
-  document.getElementById("receptorpruebaB").value =
-      result.coordrx;
+  document.getElementById("transmisorpruebaB").value = "("+result.coordtx+")";
+  document.getElementById("receptorpruebaB").value = "("+result.coordrx+")";
   document.getElementById("distpruebaB").innerHTML = result.distancia+" km";
 
   if(fresnelGlobal==0)

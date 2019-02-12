@@ -9,8 +9,6 @@ AnguloTilt: Angulo de inclinación calculado
 function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
 
 	var despejefinal;
-	var coordtx="(" +latitud[0] + " , " + longitud[0] +")";
-	var coordrx="(" + latitud[1] + " , " + longitud[1] +")";
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
 	var dimensionestx=document.getElementById("dimensionestx").value;
@@ -37,14 +35,6 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 	var totPerdidas=perdidasFSL+perdidasLluvia+perdidasOtras+perdidasConectores;
 
 	var obj = [
-		{
-			name: "Coordenadas Transmisor (Lat, Lng)",
-			value: coordtx
-		},
-		{
-			name: "Coordenadas Receptor (Lat, Lng)",
-			value: coordrx
-		},
 		{
 			name: "Altura total del Transmisor (dB) ",
 			value: htx

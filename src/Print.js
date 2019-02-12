@@ -12,14 +12,14 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
   var pol=parseNumber(document.getElementById("polarizacion").value);
 
   document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
-     '&disp_canal='+ disp_canal +
-     '&AnguloTilt'+AnguloTilt+
+     '&disp_canal='+ disp_canal.toFixed(5) +
+     '&AnguloTilt='+AnguloTilt.toFixed(2)+
      '&Gtx='+Gtx+
      '&Grx='+Grx+
      '&Ptx='+Ptx+
      '&Prx='+Prx+
      '&MargenFading='+MargenFading+
-     '&distancia='+distancia+
+     '&distancia='+distancia.toFixed(3)+
      '&perdidasLluvia='+perdidasLluvia+
      '&perdidasConectores='+perdidasConectores+
      '&perdidasOtras='+perdidasOtras+
@@ -29,6 +29,7 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
      '&pol='+pol+
      '&htx='+htx+
      '&hrx='+hrx+
+     '&sensRX='+sensRX+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }
