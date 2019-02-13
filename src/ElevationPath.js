@@ -69,7 +69,7 @@ function plotElevation(elevations, status) {
     var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
-    valuetomodify_array[contador]= parseFloat(document.getElementById("alturaobjeto").value);
+    valuetomodify_array[contador]= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
     distanciaobject_array[contador]=parseFloat(document.getElementById("distanciaobjeto").value);
     resFresnel=Fresnel(distanciaobject_array[contador],valuetomodify);
     fresnelOI_array[contador]=resFresnel; //Guardo en el histórico el resultado del despeje de fresnel

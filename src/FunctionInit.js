@@ -124,6 +124,9 @@ function initMapPrintable() {
     var chartDiv = document.getElementById('elevation_chart');
     var chart = new google.visualization.ColumnChart(chartDiv);
     var info = result.altura.split(",");
+    var valuetomodify=result.valuetomodify_array.split(",");
+    var muestra_mod=result.muestra_mod.split(",");
+    var k=parseNumber(result.contador);
 
     var dataB = new google.visualization.DataTable();
     dataB.addColumn('string', 'Sample');
@@ -131,11 +134,14 @@ function initMapPrintable() {
     for (var i = 0; i < info.length; i++) {
       dataB.addRow(['', parseFloat(info[i])]);
     }
-    /*var i=parseNumber(result.contador);
+
     var j;
-    for(j=0;i<i;j++){
-      data.setValue(result.muestra_mod[i], 1, valuetomodify);//dataB.setValue();
-    }*/
+    for(j=0;j<k;j++){
+      valuetomodify[j]=parseFloat(valuetomodify[j]);
+      muestra_mod[j]=parseNumber(muestra_mod[j]);
+      dataB.setValue(muestra_mod[j], 1, valuetomodify[j]);
+    }
+
     chart.draw(dataB, {
       height: 200,
       legend: 'none',
