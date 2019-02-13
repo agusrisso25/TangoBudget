@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-11 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-12 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -787,46 +787,6 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 	populateTable(obj);
 }
 
-function addMarkers2(location, map){
-
-    // https://developers.google.com/maps/documentation/javascript/examples/marker-simple
-    
-    function initMapInteractive() {
-        var uluru = { lat: -34.916467, lng: -56.154272 };
-        var map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 15,
-          center: uluru
-        });
-
-        var marker = new google.maps.Marker({
-            position: { lat: coordenadas [0] , lng: coordenadas[altura.length-1]},
-            map: map,
-          });
-    }
-
-    path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
-    path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
-
-    poly.setMap(map); // setea la polyline en el mapa
-
-
-    poly = new google.maps.Polyline({
-        strokeColor: "#000000",
-        strokeOpacity: 1.0,
-        strokeWeight: 3
-      });
-
-    elevator = new google.maps.ElevationService();
-
-        // Draw the path, using the Visualization API and the Elevation service:
-        camino[0] = path.getAt(0);
-        camino[1] = path.getAt(1);
-        // Draw the path, using the Visualization API and the Elevation service:
-        dist = haversine(radius, latitud, longitud);
-        displayPathElevation(camino, elevator, dist);
-}
-
-
 function AgregarTabla(objInterferente){
 	google.charts.load('current', {'packages':['table']});
 	google.charts.setOnLoadCallback(drawTable);
@@ -1025,7 +985,6 @@ function plotElevation(elevations, status) {
         alert("Vuelva a recargar la página, hay pérdida de información en el perfil de elevación.");
         return;
       }
-
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
       coordenadas[i] = elevations[i].location;
     }
@@ -1093,7 +1052,7 @@ function plotElevation(elevations, status) {
     height: 200,
     legend: 'none',
     titleX: 'Cantidad de muestras',
-    titleY: 'Elevation (m)'
+    titleY: 'Elevación (m)'
   });
 
   if(!despeje || despeje.length==0){
@@ -1292,8 +1251,7 @@ function initMapPrintable() {
   marker1.setMap(map);
   marker2.setMap(map);
 
-  var pathfinal = [
-            {lat: lat0, lng: lng0},
+  var pathfinal = [{lat: lat0, lng: lng0},
             {lat: lat1, lng: lng1}];
   var flightPath = new google.maps.Polyline({
     path: pathfinal,
@@ -1304,6 +1262,42 @@ function initMapPrintable() {
   });
 
   flightPath.setMap(map);
+
+  var elevator = new google.maps.ElevationService();
+  // Draw the path, using the Visualization API and the Elevation service.
+  displayPathElevationB(pathfinal, elevator, map);
+
+  function displayPathElevationB(path, elevator, map) {
+    elevator.getElevationAlongPath({
+      'path': path,
+      'samples': parseNumber(result.cant_redondeo)
+    }, plotElevation);
+  }
+
+  function plotElevation(elevations, status) {
+    var chartDiv = document.getElementById('elevation_chart');
+    var chart = new google.visualization.ColumnChart(chartDiv);
+    var info = result.altura.split(",");
+
+    var dataB = new google.visualization.DataTable();
+    dataB.addColumn('string', 'Sample');
+    dataB.addColumn('number', 'Elevation');
+    for (var i = 0; i < info.length; i++) {
+      dataB.addRow(['', parseFloat(info[i])]);
+    }
+    /*var i=parseNumber(result.contador);
+    var j;
+    for(j=0;i<i;j++){
+      data.setValue(result.muestra_mod[i], 1, valuetomodify);//dataB.setValue();
+    }*/
+    chart.draw(dataB, {
+      height: 200,
+      legend: 'none',
+      titleX: 'Cantidad de muestras',
+      titleY: 'Elevación (m)'
+    });
+  }
+
 }
 
         //Funcion para el cálculo de distancia entre dos puntos:
@@ -1349,6 +1343,7 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
   var dimensionestx=document.getElementById("dimensionestx").value;
   var dimensionesrx=document.getElementById("dimensionesrx").value;
   var pol=parseNumber(document.getElementById("polarizacion").value);
+  var freq=Inputfreq;
 
   document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
      '&disp_canal='+ disp_canal.toFixed(5) +
@@ -1356,7 +1351,7 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
      '&Gtx='+Gtx+
      '&Grx='+Grx+
      '&Ptx='+Ptx+
-     '&Prx='+Prx+
+     '&Prx='+Prx.toFixed(3)+
      '&MargenFading='+MargenFading+
      '&distancia='+distancia.toFixed(3)+
      '&perdidasLluvia='+perdidasLluvia+
@@ -1364,11 +1359,16 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
      '&perdidasOtras='+perdidasOtras+
      '&coordtx='+coordtx+
      '&coordrx='+coordrx+
-     '&Freq='+Inputfreq+
+     '&Freq='+freq+
      '&pol='+pol+
      '&htx='+htx+
      '&hrx='+hrx+
      '&sensRX='+sensRX+
+     '&cant_redondeo='+cant_redondeo+
+     '&altura='+altura+
+     '&muestra_mod='+muestra_mod+
+     '&contador='+contador+
+     '&valuetomodify_array='+valuetomodify_array+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }

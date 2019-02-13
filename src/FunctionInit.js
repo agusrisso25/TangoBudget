@@ -97,8 +97,7 @@ function initMapPrintable() {
   marker1.setMap(map);
   marker2.setMap(map);
 
-  var pathfinal = [
-            {lat: lat0, lng: lng0},
+  var pathfinal = [{lat: lat0, lng: lng0},
             {lat: lat1, lng: lng1}];
   var flightPath = new google.maps.Polyline({
     path: pathfinal,
@@ -109,4 +108,40 @@ function initMapPrintable() {
   });
 
   flightPath.setMap(map);
+
+  var elevator = new google.maps.ElevationService();
+  // Draw the path, using the Visualization API and the Elevation service.
+  displayPathElevationB(pathfinal, elevator, map);
+
+  function displayPathElevationB(path, elevator, map) {
+    elevator.getElevationAlongPath({
+      'path': path,
+      'samples': parseNumber(result.cant_redondeo)
+    }, plotElevation);
+  }
+
+  function plotElevation(elevations, status) {
+    var chartDiv = document.getElementById('elevation_chart');
+    var chart = new google.visualization.ColumnChart(chartDiv);
+    var info = result.altura.split(",");
+
+    var dataB = new google.visualization.DataTable();
+    dataB.addColumn('string', 'Sample');
+    dataB.addColumn('number', 'Elevation');
+    for (var i = 0; i < info.length; i++) {
+      dataB.addRow(['', parseFloat(info[i])]);
+    }
+    /*var i=parseNumber(result.contador);
+    var j;
+    for(j=0;i<i;j++){
+      data.setValue(result.muestra_mod[i], 1, valuetomodify);//dataB.setValue();
+    }*/
+    chart.draw(dataB, {
+      height: 200,
+      legend: 'none',
+      titleX: 'Cantidad de muestras',
+      titleY: 'Elevación (m)'
+    });
+  }
+
 }

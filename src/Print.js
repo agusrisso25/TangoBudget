@@ -10,6 +10,7 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
   var dimensionestx=document.getElementById("dimensionestx").value;
   var dimensionesrx=document.getElementById("dimensionesrx").value;
   var pol=parseNumber(document.getElementById("polarizacion").value);
+  var freq=Inputfreq;
 
   document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
      '&disp_canal='+ disp_canal.toFixed(5) +
@@ -17,7 +18,7 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
      '&Gtx='+Gtx+
      '&Grx='+Grx+
      '&Ptx='+Ptx+
-     '&Prx='+Prx+
+     '&Prx='+Prx.toFixed(3)+
      '&MargenFading='+MargenFading+
      '&distancia='+distancia.toFixed(3)+
      '&perdidasLluvia='+perdidasLluvia+
@@ -25,11 +26,16 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
      '&perdidasOtras='+perdidasOtras+
      '&coordtx='+coordtx+
      '&coordrx='+coordrx+
-     '&Freq='+Inputfreq+
+     '&Freq='+freq+
      '&pol='+pol+
      '&htx='+htx+
      '&hrx='+hrx+
      '&sensRX='+sensRX+
+     '&cant_redondeo='+cant_redondeo+
+     '&altura='+altura+
+     '&muestra_mod='+muestra_mod+
+     '&contador='+contador+
+     '&valuetomodify_array='+valuetomodify_array+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }

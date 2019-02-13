@@ -57,7 +57,6 @@ function plotElevation(elevations, status) {
         alert("Vuelva a recargar la página, hay pérdida de información en el perfil de elevación.");
         return;
       }
-
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
       coordenadas[i] = elevations[i].location;
     }
@@ -125,7 +124,7 @@ function plotElevation(elevations, status) {
     height: 200,
     legend: 'none',
     titleX: 'Cantidad de muestras',
-    titleY: 'Elevation (m)'
+    titleY: 'Elevación (m)'
   });
 
   if(!despeje || despeje.length==0){
