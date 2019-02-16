@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-12 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-15 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -146,7 +146,7 @@ function Bullington(distancia) {
 		}
 }
 
-function DispCanal(distancia,MargenFading) { //Barnet Vigant
+function DispCanalBarnett(distancia,MargenFading) { //Barnet Vigant
 	var disp_canal;
 	var valueA;
 	var valueB;
@@ -177,17 +177,17 @@ function DispCanal(distancia,MargenFading) { //Barnet Vigant
 	return disp_canal;
 }
 
-function DisponibilidadCanal (distancia, MargenFading, htx, hrx) { // ITU 530 - disp anual
+function DispCanalITU (distancia, MargenFading) { // ITU 530 - disp anual
 
     var dN1 = -400;
     var rugosidad;
     var alturaantena;
 
-    if (htx<hrx){
-        alturaantena = htx; // aqui se debe guardar la altura de la antena más baja
+    if (altura[0]<altura[altura.length-1]){
+        alturaantena = altura[0]; // aqui se debe guardar la altura de la antena más baja
     }
     else
-        alturaantena = hrx;
+        alturaantena = altura[altura.length-1];
 
     var A = document.getElementById("FactorRugosidad").value;
     var arrayA= [0, 4, 1, 0.25];
@@ -212,6 +212,37 @@ PasajeAnual(distancia, epsilon, Pw);
 
 return dispmensual;
 
+}
+
+function DispCanalLluvia (perdidasLluvia, MargenFading) {
+
+  var c01= 0.12+0.14*Math.log10(Math.pow((Inputfreq*0.1),0.8)); //Cuando Inputfreq es mayor a 10GHz
+  var c02= 0.12; //Cuando Inputfreq es menor a 10 GHz
+  var c0;
+  if(Inputfreq<10){
+    c0=c02;
+  }
+  else {
+    c0=c01;
+  }
+
+  var c1=Math.pow(0.07,c0)*(Math.pow(0.12,(1-c0)));
+  var c2=0.855*c0+0.546*(1-c0);
+  var c3=0.139*c0+0.043*(1-c0);
+
+  var k;
+  var p;
+  var ec1= (MargenFading/perdidasLluvia);
+  var ec2;
+
+  for(k=Math.pow(10,-7);k<Math.pow(10,-2);(k=k+0.00002)){
+    ec2=c1*(Math.pow(k,-(c2+c3*Math.log10(k))));
+    if(ec1>ec2)
+      p=(k-0.00002);
+    console.log("k es:"+k);
+  }
+  var displluvia=100-p;
+  return(displluvia);
 }
 
 function Fresnel(Pmax,h_Pmax){
@@ -334,7 +365,9 @@ function InputUser() {
     var Grx=parseNumber(document.getElementById("gananciarx").value);
     var Ptx=parseNumber(document.getElementById("potenciatx").value);
     var MargenFading;
-    var disp_canal;
+    var disp_canalTOT;
+    var disp_canalMC;
+    var disp_canalLL;
 
     var distancia = haversine(radius, latitud, longitud);
 
@@ -345,8 +378,8 @@ function InputUser() {
     var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
     var diffBullington=0;
-    if(fresnelGlobal==1)
-      diffBullington=Bullington(distancia);
+    //if(fresnelGlobal==1)
+      //diffBullington=Bullington(distancia);
 
     var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
     console.log("Prx es: "+Prx);
@@ -359,10 +392,82 @@ function InputUser() {
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
       console.log("MF es: "+MargenFading);
       if(MargenFading>=30){
-        disp_canal = DispCanal(distancia,MargenFading);
-        // disp_canal = DisponibilidadCanal (distancia, MargenFading, htx2, hrx2);
+        //disp_canal = DispCanalBarnett(distancia,MargenFading);
+        disp_canalMC = DispCanalITU (distancia, MargenFading);
+        disp_canalLL= DispCanalLLuvia (perdidasLluvia, MargenFading);
+        disp_canalTOT=100 -((100-disp_canalMC)+(100-disp_canalLL));
 
-        if(disp_canal>=0.99998)
+        if(disp_canalTOT>=99.998)//hay que definir cual es el aceptable.
+          console.log("Enlace aceptable");
+          //hay que seguir esta parte
+        else
+          console.log("Se debe mejorar la altura de las antenas o datos del enlace.");
+        //return;
+      }
+      else {
+        console.log("Se debe mejorar la altura de las antenas o los datos del enlace.");
+        //return;
+      }
+    }
+    else{
+      alert("Se debe mejorar la potencia de transmisión.");
+      //return;
+    }
+    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
+
+
+    //Se analiza la linea de vista para pasar a la tabla de resultados
+    if (hayLOS == 1){
+      hayLOS="Sí";
+    }
+    else if (hayLOS == 0){
+      hayLOS="No";
+    }
+    else
+      return;
+    Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
+    print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
+    return;
+}
+
+function InputUser() {
+    var Gtx=parseNumber(document.getElementById("gananciatx").value);
+    var Grx=parseNumber(document.getElementById("gananciarx").value);
+    var Ptx=parseNumber(document.getElementById("potenciatx").value);
+    var MargenFading;
+    var disp_canalTOT;
+    var disp_canalMC;
+    var disp_canalLL;
+
+    var distancia = haversine(radius, latitud, longitud);
+
+    var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
+    var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
+    var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
+    var perdidasLluvia=AtenuacionLluvia();
+    var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+
+    var diffBullington=0;
+    //if(fresnelGlobal==1)
+      //diffBullington=Bullington(distancia);
+
+    var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
+    console.log("Prx es: "+Prx);
+    var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
+    if(sensRX>0){
+      alert("La sensibilidad debe ser menor a cero");
+      return;
+    }
+    if(Prx>sensRX){
+      MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
+      console.log("MF es: "+MargenFading);
+      if(MargenFading>=30){
+        //disp_canal = DispCanalBarnett(distancia,MargenFading);
+        disp_canalMC = DispCanalITU (distancia, MargenFading);
+        disp_canalLL= DispCanalLLuvia();
+        //llamar
+
+        if(disp_canalTOT>=0.99998)
           console.log("Enlace aceptable");
           //hay que seguir esta parte
         else
@@ -528,6 +633,10 @@ function ModifyHeight(){
 function ModifyRxTx() {
 	var htx= parseNumber(document.getElementById("alturaantenatx").value);
 	var hrx= parseNumber(document.getElementById("alturaantenarx").value);
+	if (htx<5 || hrx<5){
+		htx=5;
+		hrx=5;
+	}
 	/*if(htx<=0 || hrx<=0){ //Si el usuario no ingresa un valor correcto, despliega error
 		alert("Altura incorrecta, intente de nuevo");
 		return;
@@ -689,11 +798,11 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 
 	var obj = [
 		{
-			name: "Altura total del Transmisor (dB) ",
+			name: "Altura total del Transmisor (m) ",
 			value: htx
 		},
 		{
-			name: "Altura total del Receptor (dB) ",
+			name: "Altura total del Receptor (m) ",
 			value: hrx
 		},
 		{
@@ -838,7 +947,7 @@ function BorrarFila(){
 
 function Tilt(distancia) {
 	var resultado;
-	resultado=toDegrees(Math.atan2((altura[0]-altura[altura.length-1]),(distancia)));
+	resultado=Math.atan2((altura[altura.length-1]-altura[0]),(distancia));
 	return resultado;
 }
 

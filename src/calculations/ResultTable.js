@@ -36,11 +36,11 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 
 	var obj = [
 		{
-			name: "Altura total del Transmisor (dB) ",
+			name: "Altura total del Transmisor (m) ",
 			value: htx
 		},
 		{
-			name: "Altura total del Receptor (dB) ",
+			name: "Altura total del Receptor (m) ",
 			value: hrx
 		},
 		{

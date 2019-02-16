@@ -43,10 +43,10 @@ function InputUser() {
       if(MargenFading>=30){
         //disp_canal = DispCanalBarnett(distancia,MargenFading);
         disp_canalMC = DispCanalITU (distancia, MargenFading);
-        disp_canalLL= DispCanalLLuvia (perdidasLluvia, MargenFading);
-        disp_canalTOT=100 -((100-disp_canalMC)+(100-disp_canalLL));
+        disp_canalLL= DispCanalLLuvia();
+        //llamar
 
-        if(disp_canalTOT>=99.998)//hay que definir cual es el aceptable.
+        if(disp_canalTOT>=0.99998)
           console.log("Enlace aceptable");
           //hay que seguir esta parte
         else

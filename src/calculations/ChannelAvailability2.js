@@ -1,14 +1,14 @@
-function DisponibilidadCanal (distancia, MargenFading, htx, hrx) { // ITU 530 - disp anual
+function DispCanalITU (distancia, MargenFading) { // ITU 530 - disp anual
 
     var dN1 = -400;
     var rugosidad;
     var alturaantena;
 
-    if (htx<hrx){
-        alturaantena = htx; // aqui se debe guardar la altura de la antena más baja
+    if (altura[0]<altura[altura.length-1]){
+        alturaantena = altura[0]; // aqui se debe guardar la altura de la antena más baja
     }
     else
-        alturaantena = hrx;
+        alturaantena = altura[altura.length-1];
 
     var A = document.getElementById("FactorRugosidad").value;
     var arrayA= [0, 4, 1, 0.25];
