@@ -33,7 +33,7 @@ function AtenuacionLluvia() {
 	var R2 = document.getElementById("ZonaHidrometeorologica").value;
 	var u = letra.indexOf(R2);
 
-	if (u == -1){
+	if (R2=="0"){
 		alert("Por favor ingresar el zona hidrometeorológica para el cálculo de lluvia.");}
 	else {
 		R = R0[u];
@@ -96,13 +96,10 @@ function AtenuacionLluvia() {
 		alert ("Ingrese un tipo de polarización");
 		return;
 	}
-	console.log("k:" +k);
-	console.log("alfa:" +alfa);
 
 	var gamaR= k*Math.pow(R, alfa);
 	var d0=35*Math.exp(-0.015*R);
-	//var r = 1/(1+distancia/d0);
-	var r = 1/(0.477*Math.pow(distancia, 0.633)*Math.pow(R, 0.073*alfa)*Math.pow(frecu, 0.123) - 10.579*(1-Math.exp(-0.024*distancia)));
+	var r = 1/((0.477*Math.pow(distancia,0.633)*Math.pow(R,(0.073*alfa))*Math.pow(Inputfreq,0.123))-10.579*(1-Math.exp(-0.024*distancia)));
 	var deff= distancia*r;
 	var A = gamaR*deff;
 

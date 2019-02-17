@@ -1,4 +1,4 @@
-function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
+function print(perdidasFSL,disp_canalTOT,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -13,7 +13,7 @@ function print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,se
   var freq=Inputfreq;
 
   document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
-     '&disp_canal='+ disp_canal.toFixed(5) +
+     '&disp_canal='+ disp_canalTOT.toFixed(5) +
      '&AnguloTilt='+AnguloTilt.toFixed(2)+
      '&Gtx='+Gtx+
      '&Grx='+Grx+

@@ -17,6 +17,7 @@ function InputUser() {
     var disp_canalTOT;
     var disp_canalMC;
     var disp_canalLL;
+    var enlace;
 
     var distancia = haversine(radius, latitud, longitud);
 
@@ -26,12 +27,16 @@ function InputUser() {
     var perdidasLluvia=AtenuacionLluvia();
     var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
+    console.log("perdidas conectores: "+perdidasConectores);
+    console.log("perdidas Otras: "+perdidasOtras);
+    console.log("perdidas FSL: "+perdidasFSL);
+    console.log("perdidas Lluvia: "+perdidasLluvia);
+    
     var diffBullington=0;
     //if(fresnelGlobal==1)
       //diffBullington=Bullington(distancia);
 
     var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
-    console.log("Prx es: "+Prx);
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
     if(sensRX>0){
       alert("La sensibilidad debe ser menor a cero");
@@ -41,20 +46,24 @@ function InputUser() {
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
       console.log("MF es: "+MargenFading);
       if(MargenFading>=30){
-        //disp_canal = DispCanalBarnett(distancia,MargenFading);
+        //disp_canalMC = DispCanalBarnett(distancia,MargenFading);
         disp_canalMC = DispCanalITU (distancia, MargenFading);
         disp_canalLL= DispCanalLLuvia (perdidasLluvia, MargenFading);
         disp_canalTOT=100 -((100-disp_canalMC)+(100-disp_canalLL));
 
-        if(disp_canalTOT>=99.998)//hay que definir cual es el aceptable.
+        if(disp_canalTOT>=99.998){
+          //hay que definir cual es el aceptable.
           console.log("Enlace aceptable");
-          //hay que seguir esta parte
+          enlace=0;
+        }
         else
-          console.log("Se debe mejorar la altura de las antenas o datos del enlace.");
+          console.log("Enlace no aceptable");
+          enlace=1;
         //return;
       }
       else {
         console.log("Se debe mejorar la altura de las antenas o los datos del enlace.");
+        enlace=1;
         //return;
       }
     }
@@ -62,9 +71,6 @@ function InputUser() {
       alert("Se debe mejorar la potencia de transmisión.");
       //return;
     }
-    //Se envían los resultados a la función Resultados, que permite desplegar una tabla
-
-
     //Se analiza la linea de vista para pasar a la tabla de resultados
     if (hayLOS == 1){
       hayLOS="Sí";
@@ -74,7 +80,8 @@ function InputUser() {
     }
     else
       return;
-    Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
-    print(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
+
+    Resultados(perdidasFSL,disp_canalLL,disp_canalMC,disp_canalTOT,enlace,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);
+    print(perdidasFSL,disp_canalLL,disp_canalMC,disp_canalTOT,enlace,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
     return;
 }

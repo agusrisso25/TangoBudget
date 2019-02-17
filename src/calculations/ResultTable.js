@@ -6,7 +6,7 @@ disp_canal: La disponibilidad calculada
 AnguloTilt: Angulo de inclinación calculado
 */
 
-function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
+function Resultados(perdidasFSL,disp_canalLL,disp_canalMC,disp_canalTOT,enlace,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
 
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
@@ -14,6 +14,13 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 	var dimensionestx=document.getElementById("dimensionestx").value;
 	var dimensionesrx=document.getElementById("dimensionesrx").value;
 	var pol=parseNumber(document.getElementById("polarizacion").value);
+
+	if(enlace==1){
+		enlace="Enlace aceptable";
+	}
+	else {
+		enlace="Enlace no aceptable";
+	}
 
 	if(pol==1)
 		pol="Vertical";
@@ -57,11 +64,11 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 		},
 		{
 			name: "Potencia del Receptor (dBm)",
-			value: Prx
+			value: Prx.toFixed(2)
 		},
 		{
 			name: "Angulo Tilt (grados)",
-			value: AnguloTilt
+			value: AnguloTilt.toFixed(3)
 		},
 		{
 			name: "Sensibilidad de Recepción (dBm) ",
@@ -73,7 +80,7 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 		},
 		{
 			name: "Largo del camino (Km) ",
-			value: distancia
+			value: distancia.toFixed(4)
 		},
 		{
 			name: "Polarizacion ",
@@ -81,27 +88,27 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 		},
 		{
 	    name: "Perdidas de Espacio Libre (dB)",
-	    value: perdidasFSL
+	    value: perdidasFSL.toFixed(3)
 	  },
 		{
 	    name: "Perdidas por Fading (dB)",
-	    value: MargenFading
+	    value: MargenFading.toFixed(3)
 	  },
 		{
 	    name: "Perdidas por Lluvia (dB)",
-	    value: perdidasLluvia
+	    value: perdidasLluvia.toFixed(3)
 	  },
 		{
 	    name: "Perdidas de Conectores (dB)",
-	    value: perdidasConectores
+	    value: perdidasConectores.toFixed(2)
 	  },
 		{
 	    name: "Otras Perdidas (dB)",
-	    value: perdidasOtras
+	    value: perdidasOtras.toFixed(2)
 	  },
 		{
 	    name: "TOTAL DE PERDIDAS (dB)",
-	    value: totPerdidas
+	    value: totPerdidas.toFixed(3)
 	  },
 		{
 	    name: "Hay linea de vista?",
@@ -111,9 +118,21 @@ function Resultados(perdidasFSL,disp_canal,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFadi
 	    name: "Despeje de Fresnel",
 	    value: despejefinal
 	  },
+		{
+	    name: "Disponibilidad de Canal Multi Camino (%)",
+	    value: disp_canalMC
+	  },
+		{
+	    name: "Disponibilidad de Canal por lluvia (%)",
+	    value: disp_canalLL
+	  },
 	  {
 	    name: "Disponibilidad de Canal (%)",
-	    value: disp_canal
+	    value: disp_canalTOT
+	  },
+		{
+	    name: "Viabilidad del enlace",
+	    value: enlace
 	  }
 
 	];

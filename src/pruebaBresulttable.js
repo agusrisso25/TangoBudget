@@ -103,7 +103,7 @@ function ResultadosPruebaB(){
     },
     {
       name: "Disponibilidad de Canal (%)",
-      value: result.disp_canal
+      value: result.disp_canalTOT
     }
 
   ];
