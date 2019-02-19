@@ -96,6 +96,8 @@ function AtenuacionLluvia() {
 		alert ("Ingrese un tipo de polarización");
 		return;
 	}
+	console.log("k de lluvia: " +k);
+	console.log("alfa de lluvia: " +alfa);
 
 	var gamaR= k*Math.pow(R, alfa);
 	var d0=35*Math.exp(-0.015*R);

@@ -6,7 +6,7 @@ disp_canal: La disponibilidad calculada
 AnguloTilt: Angulo de inclinación calculado
 */
 
-function Resultados(perdidasFSL,disp_canalLL,disp_canalMC,disp_canalTOT,enlace,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
+function Resultados(perdidasFSL,disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
 
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
@@ -14,13 +14,6 @@ function Resultados(perdidasFSL,disp_canalLL,disp_canalMC,disp_canalTOT,enlace,A
 	var dimensionestx=document.getElementById("dimensionestx").value;
 	var dimensionesrx=document.getElementById("dimensionesrx").value;
 	var pol=parseNumber(document.getElementById("polarizacion").value);
-
-	if(enlace==1){
-		enlace="Enlace aceptable";
-	}
-	else {
-		enlace="Enlace no aceptable";
-	}
 
 	if(pol==1)
 		pol="Vertical";
@@ -39,7 +32,7 @@ function Resultados(perdidasFSL,disp_canalLL,disp_canalMC,disp_canalTOT,enlace,A
 		despejefinal="No hay despeje de Fresnel";
 	}
 
-	var totPerdidas=perdidasFSL+perdidasLluvia+perdidasOtras+perdidasConectores;
+	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
 
 	var obj = [
 		{
@@ -111,6 +104,10 @@ function Resultados(perdidasFSL,disp_canalLL,disp_canalMC,disp_canalTOT,enlace,A
 	    value: totPerdidas.toFixed(3)
 	  },
 		{
+			name:"",
+			value: ""
+		},
+		{
 	    name: "Hay linea de vista?",
 	    value: hayLOS
 	  },
@@ -119,20 +116,28 @@ function Resultados(perdidasFSL,disp_canalLL,disp_canalMC,disp_canalTOT,enlace,A
 	    value: despejefinal
 	  },
 		{
-	    name: "Disponibilidad de Canal Multi Camino (%)",
-	    value: disp_canalMC
+	    name: "Disponibilidad de Canal del peor mes por Multi Camino(%)",
+	    value: disp_mensualMC
 	  },
 		{
-	    name: "Disponibilidad de Canal por lluvia (%)",
+	    name: "Disponibilidad de Canal anual por Multi Camino(%)",
+	    value: disp_anualMC
+	  },
+		{
+	    name: "Indisponibilidad anual (min)",
+	    value: indisp_anualmin
+	  },
+		{
+	    name: "Disponibilidad de Canal anual por lluvia (%)",
 	    value: disp_canalLL
 	  },
 	  {
-	    name: "Disponibilidad de Canal (%)",
+	    name: "Disponibilidad Total del Canal (Multi Camino + Lluvia) (%)",
 	    value: disp_canalTOT
 	  },
 		{
-	    name: "Viabilidad del enlace",
-	    value: enlace
+	    name: "Disponibilidad Total de Canal (min)",
+	    value: disp_canalTOT_min
 	  }
 
 	];

@@ -9,7 +9,7 @@ function FSL(distancia) {
 	var lambda;
 	var c= 3*Math.pow(10,8);
 	lambda = c/Inputfreq;
-	var freespaceloss=((4*Math.PI*distancia)/(lambda)); //Definición de pérdidas de espacio libre
-	resultado= 20*(-Math.log10(freespaceloss)); //El resultado esta en dB
-	return (resultado);
+	var frec=Inputfreq*1000;
+	var freespaceloss=32.4+20*Math.log10(frec*distancia);
+	return (freespaceloss);
 }
