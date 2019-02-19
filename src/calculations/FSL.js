@@ -1,8 +1,6 @@
-/* Este bloque tiene como funcionalidad calcular las pérdidas de espacio libre
-Para ello, el usuario debe ingresar la siguiente información:
+/* Este bloque tiene como funcionalidad calcular las pérdidas de espacio libre por definición
+Para ello, se toma la siguiente información:
 distancia: Largo del camino
-htx: Altura de la antena Tx
-hrx: Altura de la antena Rx
 */
 function FSL(distancia) {
 	var resultado;

@@ -16,6 +16,7 @@ function Bullington(distancia) {
 		var d2;
 		var a1;
 		var a2;
+		var J_v;
 
 		/*calculo las pendientes que generan entre un 40% y 60% de Despeje con la antena Tx
 		Para ello es necesario recorrer el array donde guardé toda la información de los objetos que obstruyen
@@ -62,10 +63,9 @@ function Bullington(distancia) {
 		 */
 		v=h_OIficticio*Math.sqrt(2/lambda*(1/d1+1/d2));
 		if(v<-0.78)
-			return(0);
+			return 0;
 		else{
-			var J_v=6.9+20*Math.log10(Math.sqrt(Math.pow(v-0.1,2)+1)+v-0.1);
-			console.log("Las perdidas de difracción son: " +J_v);
+			J_v=6.9+20*Math.log10(Math.sqrt(Math.pow(v-0.1,2)+1)+v-0.1);
 			return(J_v);
 		}
 }

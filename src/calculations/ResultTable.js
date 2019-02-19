@@ -6,8 +6,7 @@ disp_canal: La disponibilidad calculada
 AnguloTilt: Angulo de inclinación calculado
 */
 
-function Resultados(perdidasFSL,disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
-
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -19,7 +18,6 @@ function Resultados(perdidasFSL,disp_canalLL,disp_mensualMC,disp_anualMC,indisp_
 		pol="Vertical";
 	else
 		pol="Horizontal";
-
 
 	if(fresnelGlobal==0)
 	{
@@ -57,7 +55,7 @@ function Resultados(perdidasFSL,disp_canalLL,disp_mensualMC,disp_anualMC,indisp_
 		},
 		{
 			name: "Potencia del Receptor (dBm)",
-			value: Prx.toFixed(2)
+			value: Prx.toFixed(3)
 		},
 		{
 			name: "Angulo Tilt (grados)",
@@ -78,6 +76,10 @@ function Resultados(perdidasFSL,disp_canalLL,disp_mensualMC,disp_anualMC,indisp_
 		{
 			name: "Polarizacion ",
 			value: pol
+		},
+		{
+			name: "",
+			value: ""
 		},
 		{
 	    name: "Perdidas de Espacio Libre (dB)",
@@ -104,7 +106,7 @@ function Resultados(perdidasFSL,disp_canalLL,disp_mensualMC,disp_anualMC,indisp_
 	    value: totPerdidas.toFixed(3)
 	  },
 		{
-			name:"",
+			name: "",
 			value: ""
 		},
 		{
@@ -116,44 +118,43 @@ function Resultados(perdidasFSL,disp_canalLL,disp_mensualMC,disp_anualMC,indisp_
 	    value: despejefinal
 	  },
 		{
+			name: "",
+			value: ""
+		},
+		{
 	    name: "Disponibilidad de Canal del peor mes por Multi Camino(%)",
-	    value: disp_mensualMC
+	    value: disp_mensualMC.toFixed(6)
 	  },
 		{
 	    name: "Disponibilidad de Canal anual por Multi Camino(%)",
-	    value: disp_anualMC
+	    value: disp_anualMC.toFixed(6)
 	  },
 		{
 	    name: "Indisponibilidad anual (min)",
-	    value: indisp_anualmin
+	    value: indisp_anualmin.toFixed(6)
 	  },
 		{
 	    name: "Disponibilidad de Canal anual por lluvia (%)",
-	    value: disp_canalLL
+	    value: disp_canalLL.toFixed(6)
 	  },
 	  {
 	    name: "Disponibilidad Total del Canal (Multi Camino + Lluvia) (%)",
-	    value: disp_canalTOT
+	    value: disp_canalTOT.toFixed(6)
 	  },
 		{
 	    name: "Disponibilidad Total de Canal (min)",
-	    value: disp_canalTOT_min
-	  }
-
-	];
+	    value: disp_canalTOT_min.toFixed(6)
+	  }];
 
 	function populateTable(obj) {
 	  var report = document.getElementById('result_table');
-
 	  // Limpiar tabla antes de agregar datos
 	  report.innerHTML = '';
-
 	  // Por cada elemento agregar una fila con dos columnas. Una para el nombre y otra para el valor
 	  for (var i = 0; i < Object.keys(obj).length; i++) {
 	    var tr = "<tr><td>" + obj[i].name + "</td><td>" + obj[i].value + "</td></tr>";
 	    report.innerHTML += tr;
 	  }
 	}
-
 	populateTable(obj);
 }

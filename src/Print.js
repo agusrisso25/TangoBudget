@@ -1,4 +1,4 @@
-function print(perdidasFSL,disp_canalTOT,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasLluvia,perdidasConectores,perdidasOtras){
+function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -11,9 +11,15 @@ function print(perdidasFSL,disp_canalTOT,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading
   var dimensionesrx=document.getElementById("dimensionesrx").value;
   var pol=parseNumber(document.getElementById("polarizacion").value);
   var freq=Inputfreq;
+  var fresnel=fresnelGlobal;
 
   document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
-     '&disp_canal='+ disp_canalTOT.toFixed(5) +
+     '&disp_canalTOT='+ disp_canalTOT.toFixed(6) +
+     '&disp_canalLL='+disp_canalLL.toFixed(6)+
+     '&disp_mensualMC='+disp_mensualMC.toFixed(6)+
+     '&disp_anualMC='+disp_anualMC.toFixed(6)+
+     '&indisp_anualmin='+indisp_anualmin.toFixed(6)+
+     '&disp_canalTOT_min='+disp_canalTOT_min.toFixed(6)+
      '&AnguloTilt='+AnguloTilt.toFixed(2)+
      '&Gtx='+Gtx+
      '&Grx='+Grx+
@@ -36,6 +42,7 @@ function print(perdidasFSL,disp_canalTOT,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading
      '&muestra_mod='+muestra_mod+
      '&contador='+contador+
      '&valuetomodify_array='+valuetomodify_array+
+     '&fresnelGlobal='+fresnel+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }

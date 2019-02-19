@@ -105,7 +105,5 @@ function AtenuacionLluvia() {
 	var deff= distancia*r;
 	var A = gamaR*deff;
 
-	console.log("Las pérdidas debido a lluvias son de: " + A + "dB.");
-
 	return(A);
 }
