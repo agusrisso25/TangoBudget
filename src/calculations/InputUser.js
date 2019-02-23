@@ -4,10 +4,11 @@ Para ello, es necesario leer toda la información que ingresó el usuario en la 
 los pasos de analisis son los siguientes:
 1. Se lee toda la información ingresada por el usuario
 2. Se calculan las perdidas
-3. Se calcula la potencia de recepción y el angulo de tilt entre antenas
-4. Se calcula el despeje de fresnel del hayDespejeCamino
-5. Se pasa la tabla de Resultados
-6. Se analiza el margen de fading
+3. Se calcula el ángulo tilt entre las antenas
+3. Se calcula la potencia de recepción y en función a eso, se analiza el
+5. Se calcula el despeje de fresnel del hayDespejeCamino
+6. Se pasa la tabla de Resultados
+7. Se analiza el margen de fading
 */
 function InputUser() {
     var Gtx=parseNumber(document.getElementById("gananciatx").value);
@@ -36,13 +37,12 @@ function InputUser() {
 
     var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
-    if(sensRX>0){
-      alert("La sensibilidad debe ser menor a cero");
+    if(sensRX>0 || sensRX==""){
+      alert("Debe ingresar una Sensibilidad de Recepción correcta");
       return;
     }
     if(Prx>sensRX){
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
-      console.log("MF es: "+MargenFading);
       //disp_canalMC = DispCanalBarnett(distancia,MargenFading);
       var aux = DispCanalITU(distancia,MargenFading);
       disp_mensualMC=aux[0];

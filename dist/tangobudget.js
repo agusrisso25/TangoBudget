@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-18 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-21 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -371,85 +371,12 @@ function InputUser() {
 
     var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
-    if(sensRX>0){
-      alert("La sensibilidad debe ser menor a cero");
+    if(sensRX>0 || sensRX==""){
+      alert("Debe ingresar una Sensibilidad de Recepción correcta");
       return;
     }
     if(Prx>sensRX){
       MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
-      console.log("MF es: "+MargenFading);
-      //disp_canalMC = DispCanalBarnett(distancia,MargenFading);
-      var aux = DispCanalITU(distancia,MargenFading);
-      disp_mensualMC=aux[0];
-      disp_anualMC=aux[1];
-      indisp_anualmin=aux[2];
-      disp_canalLL= DispCanalLLuvia(perdidasLluvia,MargenFading);
-      disp_canalTOT=100-((100-disp_anualMC)+(100-disp_canalLL));
-      disp_canalTOT_min=(100-disp_canalTOT)*525600/100;
-
-      if(disp_canalTOT>=99.998){
-        //hay que definir cual es el aceptable.
-        console.log("Enlace aceptable");
-        enlace=0;
-      }
-      else
-        console.log("Enlace no aceptable");
-        enlace=1;
-      //return;
-    }
-    else{
-      alert("Se debe mejorar la potencia de transmisión.");
-      //return;
-    }
-    //Se analiza la linea de vista para pasar a la tabla de resultados
-    if (hayLOS == 1){
-      hayLOS="Sí";
-    }
-    else if (hayLOS == 0){
-      hayLOS="No";
-    }
-    else
-      return;
-
-    Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);
-    print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
-    return;
-}
-
-function InputUser() {
-    var Gtx=parseNumber(document.getElementById("gananciatx").value);
-    var Grx=parseNumber(document.getElementById("gananciarx").value);
-    var Ptx=parseNumber(document.getElementById("potenciatx").value);
-    var MargenFading;
-    var disp_canalTOT;
-    var disp_mensualMC;
-    var disp_anualMC;
-    var disp_canalLL;
-    var indisp_anualmin;
-    var disp_canalTOT_min;
-    var enlace;
-
-    var distancia = haversine(radius, latitud, longitud);
-
-    var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
-    var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
-    var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
-    var perdidasLluvia=AtenuacionLluvia();
-    var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
-
-    var diffBullington=0;
-    //if(fresnelGlobal==1)
-      //diffBullington=Bullington(distancia);
-
-    var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
-    var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
-    if(sensRX>0){
-      alert("La sensibilidad debe ser menor a cero");
-      return;
-    }
-    if(Prx>sensRX){
-      MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
-      console.log("MF es: "+MargenFading);
       //disp_canalMC = DispCanalBarnett(distancia,MargenFading);
       var aux = DispCanalITU(distancia,MargenFading);
       disp_mensualMC=aux[0];
@@ -797,11 +724,11 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		},
 		{
 			name: "Potencia del Receptor (dBm)",
-			value: Prx.toFixed(3)
+			value: Prx
 		},
 		{
 			name: "Angulo Tilt (grados)",
-			value: AnguloTilt.toFixed(3)
+			value: AnguloTilt
 		},
 		{
 			name: "Sensibilidad de Recepción (dBm) ",
@@ -813,7 +740,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		},
 		{
 			name: "Largo del camino (Km) ",
-			value: distancia.toFixed(4)
+			value: distancia
 		},
 		{
 			name: "Polarizacion ",
@@ -825,27 +752,27 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		},
 		{
 	    name: "Perdidas de Espacio Libre (dB)",
-	    value: perdidasFSL.toFixed(3)
+	    value: perdidasFSL
 	  },
 		{
 	    name: "Perdidas por Fading (dB)",
-	    value: MargenFading.toFixed(3)
+	    value: MargenFading
 	  },
 		{
 	    name: "Perdidas por Lluvia (dB)",
-	    value: perdidasLluvia.toFixed(3)
+	    value: perdidasLluvia
 	  },
 		{
 	    name: "Perdidas de Conectores (dB)",
-	    value: perdidasConectores.toFixed(2)
+	    value: perdidasConectores
 	  },
 		{
 	    name: "Otras Perdidas (dB)",
-	    value: perdidasOtras.toFixed(2)
+	    value: perdidasOtras
 	  },
 		{
 	    name: "TOTAL DE PERDIDAS (dB)",
-	    value: totPerdidas.toFixed(3)
+	    value: totPerdidas
 	  },
 		{
 			name: "",
@@ -1579,7 +1506,7 @@ function ResultadosPruebaB(){
 	  },
 		{
 	    name: "Perdidas por Lluvia (dB)",
-	    value: result.perdidasLluvia.toFixed(3)
+	    value: result.perdidasLluvia
 	  },
 		{
 	    name: "Perdidas de Conectores (dB)",

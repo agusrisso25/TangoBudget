@@ -55,11 +55,11 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		},
 		{
 			name: "Potencia del Receptor (dBm)",
-			value: Prx.toFixed(3)
+			value: Prx
 		},
 		{
 			name: "Angulo Tilt (grados)",
-			value: AnguloTilt.toFixed(3)
+			value: AnguloTilt
 		},
 		{
 			name: "Sensibilidad de Recepción (dBm) ",
@@ -71,7 +71,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		},
 		{
 			name: "Largo del camino (Km) ",
-			value: distancia.toFixed(4)
+			value: distancia
 		},
 		{
 			name: "Polarizacion ",
@@ -83,27 +83,27 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		},
 		{
 	    name: "Perdidas de Espacio Libre (dB)",
-	    value: perdidasFSL.toFixed(3)
+	    value: perdidasFSL
 	  },
 		{
 	    name: "Perdidas por Fading (dB)",
-	    value: MargenFading.toFixed(3)
+	    value: MargenFading
 	  },
 		{
 	    name: "Perdidas por Lluvia (dB)",
-	    value: perdidasLluvia.toFixed(3)
+	    value: perdidasLluvia
 	  },
 		{
 	    name: "Perdidas de Conectores (dB)",
-	    value: perdidasConectores.toFixed(2)
+	    value: perdidasConectores
 	  },
 		{
 	    name: "Otras Perdidas (dB)",
-	    value: perdidasOtras.toFixed(2)
+	    value: perdidasOtras
 	  },
 		{
 	    name: "TOTAL DE PERDIDAS (dB)",
-	    value: totPerdidas.toFixed(3)
+	    value: totPerdidas
 	  },
 		{
 			name: "",
