@@ -14,6 +14,10 @@ function InputUser() {
     var Gtx=parseNumber(document.getElementById("gananciatx").value);
     var Grx=parseNumber(document.getElementById("gananciarx").value);
     var Ptx=parseNumber(document.getElementById("potenciatx").value);
+
+    if(Gtx==""|| Ptx=="" || Grx=="")
+      alert("Ingrese la información obligatoria");
+
     var MargenFading;
     var disp_canalTOT;
     var disp_mensualMC;
@@ -22,8 +26,11 @@ function InputUser() {
     var indisp_anualmin;
     var disp_canalTOT_min;
     var enlace;
-
     var distancia = haversine(radius, latitud, longitud);
+
+    var pol=(document.getElementById("polarizacion").value);
+    if (pol=="0")
+      alert("Ingrese una polarización");
 
     var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
     var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
@@ -32,8 +39,8 @@ function InputUser() {
     var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
     var diffBullington=0;
-    //if(fresnelGlobal==1)
-      //diffBullington=Bullington(distancia);
+    if(fresnelGlobal==1)
+      diffBullington=Bullington(distancia);
 
     var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
     var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
