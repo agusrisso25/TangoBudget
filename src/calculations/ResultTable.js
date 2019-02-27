@@ -6,7 +6,7 @@ disp_canal: La disponibilidad calculada
 AnguloTilt: Angulo de inclinación calculado
 */
 
-function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -29,6 +29,11 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	else {
 		despejefinal="No hay despeje de Fresnel";
 	}
+
+	if (enlace==1)
+		enlace="Enlace Aceptable";
+	else if (enlace==0)
+		enlace="Enlace no Aceptable";
 
 	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
 
@@ -144,7 +149,15 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		{
 	    name: "Disponibilidad Total de Canal (min)",
 	    value: disp_canalTOT_min.toFixed(6)
-	  }];
+	  },
+		{
+			name: "",
+			value: ""
+		},
+		{
+			name: "Viabilidad del enlace",
+			value: enlace
+		}];
 
 	function populateTable(obj) {
 	  var report = document.getElementById('result_table');

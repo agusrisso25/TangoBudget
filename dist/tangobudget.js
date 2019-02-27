@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-21 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-26 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -345,74 +345,91 @@ function indispMin(disponibilidad){ // pasaje de la disponibilidad anual a la in
 }
 
 function InputUser() {
-    var Gtx=parseNumber(document.getElementById("gananciatx").value);
-    var Grx=parseNumber(document.getElementById("gananciarx").value);
-    var Ptx=parseNumber(document.getElementById("potenciatx").value);
-    var MargenFading;
-    var disp_canalTOT;
-    var disp_mensualMC;
-    var disp_anualMC;
-    var disp_canalLL;
-    var indisp_anualmin;
-    var disp_canalTOT_min;
-    var enlace;
+  var Gtx=parseNumber(document.getElementById("gananciatx").value);
+  var Grx=parseNumber(document.getElementById("gananciarx").value);
+  var Ptx=parseNumber(document.getElementById("potenciatx").value);
 
-    var distancia = haversine(radius, latitud, longitud);
+  if(Gtx==""|| Ptx=="" || Grx==""){
+    alert("Ingrese la información obligatoria");
+    return;
+  }
 
-    var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
-    var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
-    var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
-    var perdidasLluvia=AtenuacionLluvia();
-    var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+  var MargenFading;
+  var disp_canalTOT;
+  var disp_mensualMC;
+  var disp_anualMC;
+  var disp_canalLL;
+  var indisp_anualmin;
+  var disp_canalTOT_min;
+  var enlace;
+  var distancia = haversine(radius, latitud, longitud);
 
-    var diffBullington=0;
-    //if(fresnelGlobal==1)
-      //diffBullington=Bullington(distancia);
+  var pol=(document.getElementById("polarizacion").value);
+  if (pol=="0")
+    alert("Ingrese una polarización");
 
-    var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
-    var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
-    if(sensRX>0 || sensRX==""){
-      alert("Debe ingresar una Sensibilidad de Recepción correcta");
-      return;
-    }
-    if(Prx>sensRX){
-      MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
-      //disp_canalMC = DispCanalBarnett(distancia,MargenFading);
-      var aux = DispCanalITU(distancia,MargenFading);
-      disp_mensualMC=aux[0];
-      disp_anualMC=aux[1];
-      indisp_anualmin=aux[2];
-      disp_canalLL= DispCanalLLuvia(perdidasLluvia,MargenFading);
-      disp_canalTOT=100-((100-disp_anualMC)+(100-disp_canalLL));
-      disp_canalTOT_min=(100-disp_canalTOT)*525600/100;
+  var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
+  var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
+  var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
+  var perdidasLluvia=AtenuacionLluvia();
+  var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
 
-      if(disp_canalTOT>=99.998){
-        //hay que definir cual es el aceptable.
-        console.log("Enlace aceptable");
-        enlace=0;
-      }
-      else
-        console.log("Enlace no aceptable");
-        enlace=1;
-      //return;
-    }
-    else{
-      alert("Se debe mejorar la potencia de transmisión.");
-      //return;
-    }
-    //Se analiza la linea de vista para pasar a la tabla de resultados
-    if (hayLOS == 1){
-      hayLOS="Sí";
-    }
-    else if (hayLOS == 0){
-      hayLOS="No";
+  var diffBullington=0;
+  if(fresnelGlobal==1)
+    diffBullington=Bullington(distancia);
+
+  var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
+  var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
+  if(sensRX>0 || sensRX==""){
+    alert("Debe ingresar una Sensibilidad de Recepción correcta");
+    return;
+  }
+  if(Prx>sensRX){
+    MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
+    //disp_canalMC = DispCanalBarnett(distancia,MargenFading);
+    var aux = DispCanalITU(distancia,MargenFading);
+    disp_mensualMC=aux[0];
+    disp_anualMC=aux[1];
+    indisp_anualmin=aux[2];
+    disp_canalLL= DispCanalLLuvia(perdidasLluvia,MargenFading);
+    disp_canalTOT=100-((100-disp_anualMC)+(100-disp_canalLL));
+    disp_canalTOT_min=(100-disp_canalTOT)*525600/100;
+
+    if(disp_canalTOT>=99.998){
+      //hay que definir cual es el aceptable.
+      console.log("Enlace aceptable");
+      enlace=0;
     }
     else
-      return;
-
-    Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);
-    print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
+      console.log("Enlace no aceptable");
+      enlace=1;
+    //return;
+  }
+  else{
+    alert("Se debe mejorar la potencia de transmisión.");
+    //return;
+  }
+  //Se analiza la linea de vista para pasar a la tabla de resultados
+  if (hayLOS == 1){
+    hayLOS="Sí";
+  }
+  else if (hayLOS == 0){
+    hayLOS="No";
+  }
+  else
     return;
+
+  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
+  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
+
+  document.getElementById("gananciatx").value="";
+  document.getElementById("gananciarx").value="";
+  document.getElementById("potenciatx").value="";
+  document.getElementById("polarizacion").value="0";
+  document.getElementById("sensibilidadrx").value="";
+  document.getElementById("perdidasconectores").value="";
+  document.getElementById("otrasperdidas").value="";
+  return;
 }
 
 function LOS(elevations,coordenadas) {
@@ -554,6 +571,15 @@ function ModifyRxTx() {
 		document.getElementById("alturaantenarx").value = "5";
 		document.getElementById("alturaantenatx").value = "5";
 	}
+	else if(htx>5 && hrx<5)
+	{
+		hrx=5;
+		document.getElementById("alturaantenarx").value = "5";
+	}
+	else if (htx<5 && hrx>5){
+		htx=5;
+		document.getElementById("alturaantenatx").value = "5";
+	}
 	flag=4;
 	displayPathElevation(camino,elevator,dist);
 	return;
@@ -675,7 +701,7 @@ function AtenuacionLluvia() {
 	return(A);
 }
 
-function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -698,6 +724,11 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	else {
 		despejefinal="No hay despeje de Fresnel";
 	}
+
+	if (enlace==1)
+		enlace="Enlace Aceptable";
+	else if (enlace==0)
+		enlace="Enlace no Aceptable";
 
 	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
 
@@ -813,7 +844,15 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		{
 	    name: "Disponibilidad Total de Canal (min)",
 	    value: disp_canalTOT_min.toFixed(6)
-	  }];
+	  },
+		{
+			name: "",
+			value: ""
+		},
+		{
+			name: "Viabilidad del enlace",
+			value: enlace
+		}];
 
 	function populateTable(obj) {
 	  var report = document.getElementById('result_table');
@@ -1043,15 +1082,25 @@ function plotElevation(elevations, status) {
     resFresnel=Fresnel(distanciaobject_array[contador],valuetomodify);
     fresnelOI_array[contador]=resFresnel; //Guardo en el histórico el resultado del despeje de fresnel
     despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
+
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
       distanciaFresnel[largoarray]=muestra_mod[contador];
       alturaFresnel[largoarray]=valuetomodify;
     }
 
+    var k;
+    for(k=0;k<contador;k++){
+      if (muestra_mod[k]==muestra_mod[contador]){
+        alert("Ya hay un objeto interferente agregado para esta ubicación");
+        return;
+      }
+    }
+
     data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva
     contador++;
     objInterferente=document.getElementById("objetointerferente").value;
+
     if(!objInterferente){
       alert ("Ingrese un tipo de interferencia");
       flag=0;
@@ -1190,7 +1239,7 @@ function deleteMarkersAndPath() {
     document.getElementById('table_div').innerHTML="";
 
     document.getElementById('elevation_chart').innerHTML="";
-
+    document.getElementById('link').innerHTML="";
 }
 
 // Los marcadores aparecen cuando el usuario hace click en el mapa:
@@ -1378,7 +1427,7 @@ function parseSearchString() {
   return result;
 }
 
-function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
+function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -1423,6 +1472,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&contador='+contador+
      '&valuetomodify_array='+valuetomodify_array+
      '&fresnelGlobal='+fresnel+
+     '&enlace='+enlace+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }
@@ -1450,7 +1500,13 @@ function ResultadosPruebaB(){
     despejefinal="No hay despeje de Fresnel";
   }
 
-  var totPerdidas=result.perdidasFSL+result.perdidasLluvia+result.perdidasOtras+result.perdidasConectores;
+  var enlace;
+  if (parseFloat(result.enlace)==1)
+		enlace="Enlace Aceptable";
+	else if (parseFloat(result.enlace)==0)
+		enlace="Enlace no Aceptable";
+
+  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasLluvia)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
   var obj = [
 		{
 			name: "Altura total del Transmisor (m) ",
@@ -1555,7 +1611,15 @@ function ResultadosPruebaB(){
 		{
 	    name: "Disponibilidad Total de Canal (min)",
 	    value: result.disp_canalTOT_min
-	  }];
+	  },
+    {
+      name: "",
+      value: ""
+    },
+    {
+      name: "Viabilidad del enlace",
+      value: enlace
+    }];
 
   function populateTable(obj) {
     var report = document.getElementById('result_table_pruebaB');

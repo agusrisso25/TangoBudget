@@ -30,5 +30,5 @@ function deleteMarkersAndPath() {
     document.getElementById('table_div').innerHTML="";
 
     document.getElementById('elevation_chart').innerHTML="";
-
+    document.getElementById('link').innerHTML="";
 }

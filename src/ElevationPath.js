@@ -74,6 +74,7 @@ function plotElevation(elevations, status) {
     resFresnel=Fresnel(distanciaobject_array[contador],valuetomodify);
     fresnelOI_array[contador]=resFresnel; //Guardo en el histórico el resultado del despeje de fresnel
     despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
+
     if (despeje[contador]==1){
       var largoarray=(distanciaFresnel.length-1);
       distanciaFresnel[largoarray]=muestra_mod[contador];
@@ -83,6 +84,7 @@ function plotElevation(elevations, status) {
     data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva
     contador++;
     objInterferente=document.getElementById("objetointerferente").value;
+
     if(!objInterferente){
       alert ("Ingrese un tipo de interferencia");
       flag=0;

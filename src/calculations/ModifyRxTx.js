@@ -11,6 +11,15 @@ function ModifyRxTx() {
 		document.getElementById("alturaantenarx").value = "5";
 		document.getElementById("alturaantenatx").value = "5";
 	}
+	else if(htx>5 && hrx<5)
+	{
+		hrx=5;
+		document.getElementById("alturaantenarx").value = "5";
+	}
+	else if (htx<5 && hrx>5){
+		htx=5;
+		document.getElementById("alturaantenatx").value = "5";
+	}
 	flag=4;
 	displayPathElevation(camino,elevator,dist);
 	return;

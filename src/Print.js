@@ -1,4 +1,4 @@
-function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
+function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -43,6 +43,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&contador='+contador+
      '&valuetomodify_array='+valuetomodify_array+
      '&fresnelGlobal='+fresnel+
+     '&enlace='+enlace+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }

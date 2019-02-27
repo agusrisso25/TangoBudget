@@ -21,7 +21,13 @@ function ResultadosPruebaB(){
     despejefinal="No hay despeje de Fresnel";
   }
 
-  var totPerdidas=result.perdidasFSL+result.perdidasLluvia+result.perdidasOtras+result.perdidasConectores;
+  var enlace;
+  if (parseFloat(result.enlace)==1)
+		enlace="Enlace Aceptable";
+	else if (parseFloat(result.enlace)==0)
+		enlace="Enlace no Aceptable";
+
+  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasLluvia)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
   var obj = [
 		{
 			name: "Altura total del Transmisor (m) ",
@@ -126,7 +132,15 @@ function ResultadosPruebaB(){
 		{
 	    name: "Disponibilidad Total de Canal (min)",
 	    value: result.disp_canalTOT_min
-	  }];
+	  },
+    {
+      name: "",
+      value: ""
+    },
+    {
+      name: "Viabilidad del enlace",
+      value: enlace
+    }];
 
   function populateTable(obj) {
     var report = document.getElementById('result_table_pruebaB');
