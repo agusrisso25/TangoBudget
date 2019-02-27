@@ -5,6 +5,18 @@ perdidasFSL: Valor calculado de la pérdidas de espacio libre
 disp_canal: La disponibilidad calculada
 AnguloTilt: Angulo de inclinación calculado
 */
+function populateTable(obj) {
+	var report = document.getElementById('result_table');
+	// Limpiar tabla antes de agregar datos
+	report.innerHTML = '';
+	var tabla = "";
+	// Por cada elemento agregar una fila con dos columnas. Una para el nombre y otra para el valor
+	for (var i = 0; i < Object.keys(obj).length; i++) {
+		var tr = "<tr><td>" + obj[i].name + "</td><td>" + obj[i].value + "</td></tr>";
+		tabla += tr;
+	}
+	report.innerHTML = tabla;
+}
 
 function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
 	var despejefinal;
@@ -159,15 +171,5 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: enlace
 		}];
 
-	function populateTable(obj) {
-	  var report = document.getElementById('result_table');
-	  // Limpiar tabla antes de agregar datos
-	  report.innerHTML = '';
-	  // Por cada elemento agregar una fila con dos columnas. Una para el nombre y otra para el valor
-	  for (var i = 0; i < Object.keys(obj).length; i++) {
-	    var tr = "<tr><td>" + obj[i].name + "</td><td>" + obj[i].value + "</td></tr>";
-	    report.innerHTML += tr;
-	  }
-	}
-	populateTable(obj);
+		populateTable(obj);
 }

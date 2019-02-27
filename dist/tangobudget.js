@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-26 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-02-27 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -344,7 +344,7 @@ function indispMin(disponibilidad){ // pasaje de la disponibilidad anual a la in
   return IndisMin;
 }
 
-function InputUser() {
+function InputUser() { console.log('Lucas2232322323');
   var Gtx=parseNumber(document.getElementById("gananciatx").value);
   var Grx=parseNumber(document.getElementById("gananciarx").value);
   var Ptx=parseNumber(document.getElementById("potenciatx").value);
@@ -410,25 +410,18 @@ function InputUser() {
     //return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
-  if (hayLOS == 1){
+  if (hayLOS == 1 || hayLOS=="Sí"){
     hayLOS="Sí";
   }
-  else if (hayLOS == 0){
+  else if (hayLOS == 0 || hayLOS=="No"){
     hayLOS="No";
   }
   else
     return;
 
+console.log('Llegue aaca');
   Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
   print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
-
-  document.getElementById("gananciatx").value="";
-  document.getElementById("gananciarx").value="";
-  document.getElementById("potenciatx").value="";
-  document.getElementById("polarizacion").value="0";
-  document.getElementById("sensibilidadrx").value="";
-  document.getElementById("perdidasconectores").value="";
-  document.getElementById("otrasperdidas").value="";
   return;
 }
 
@@ -701,6 +694,19 @@ function AtenuacionLluvia() {
 	return(A);
 }
 
+function populateTable(obj) {
+	var report = document.getElementById('result_table');
+	// Limpiar tabla antes de agregar datos
+	report.innerHTML = '';
+	var tabla = "";
+	// Por cada elemento agregar una fila con dos columnas. Una para el nombre y otra para el valor
+	for (var i = 0; i < Object.keys(obj).length; i++) {
+		var tr = "<tr><td>" + obj[i].name + "</td><td>" + obj[i].value + "</td></tr>";
+		tabla += tr;
+	}
+	report.innerHTML = tabla;
+}
+
 function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
@@ -854,17 +860,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: enlace
 		}];
 
-	function populateTable(obj) {
-	  var report = document.getElementById('result_table');
-	  // Limpiar tabla antes de agregar datos
-	  report.innerHTML = '';
-	  // Por cada elemento agregar una fila con dos columnas. Una para el nombre y otra para el valor
-	  for (var i = 0; i < Object.keys(obj).length; i++) {
-	    var tr = "<tr><td>" + obj[i].name + "</td><td>" + obj[i].value + "</td></tr>";
-	    report.innerHTML += tr;
-	  }
-	}
-	populateTable(obj);
+		populateTable(obj);
 }
 
 function AgregarTabla(objInterferente){
@@ -1087,14 +1083,6 @@ function plotElevation(elevations, status) {
       var largoarray=(distanciaFresnel.length-1);
       distanciaFresnel[largoarray]=muestra_mod[contador];
       alturaFresnel[largoarray]=valuetomodify;
-    }
-
-    var k;
-    for(k=0;k<contador;k++){
-      if (muestra_mod[k]==muestra_mod[contador]){
-        alert("Ya hay un objeto interferente agregado para esta ubicación");
-        return;
-      }
     }
 
     data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva

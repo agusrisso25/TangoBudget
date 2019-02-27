@@ -10,7 +10,7 @@ los pasos de analisis son los siguientes:
 6. Se pasa la tabla de Resultados
 7. Se analiza el margen de fading
 */
-function InputUser() {
+function InputUser() { console.log('Lucas2232322323');
   var Gtx=parseNumber(document.getElementById("gananciatx").value);
   var Grx=parseNumber(document.getElementById("gananciarx").value);
   var Ptx=parseNumber(document.getElementById("potenciatx").value);
@@ -66,34 +66,26 @@ function InputUser() {
       console.log("Enlace aceptable");
       enlace=0;
     }
-    else
+    else{
       console.log("Enlace no aceptable");
       enlace=1;
-    //return;
+      return;
+    }
   }
   else{
     alert("Se debe mejorar la potencia de transmisión.");
-    //return;
+    return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
-  if (hayLOS == 1){
+  if (hayLOS == 1 || hayLOS=="Sí"){
     hayLOS="Sí";
   }
-  else if (hayLOS == 0){
+  else if (hayLOS == 0 || hayLOS=="No"){
     hayLOS="No";
   }
   else
     return;
-
   Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
   print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
-
-  document.getElementById("gananciatx").value="";
-  document.getElementById("gananciarx").value="";
-  document.getElementById("potenciatx").value="";
-  document.getElementById("polarizacion").value="0";
-  document.getElementById("sensibilidadrx").value="";
-  document.getElementById("perdidasconectores").value="";
-  document.getElementById("otrasperdidas").value="";
   return;
 }
