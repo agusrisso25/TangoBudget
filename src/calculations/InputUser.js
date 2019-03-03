@@ -10,7 +10,7 @@ los pasos de analisis son los siguientes:
 6. Se pasa la tabla de Resultados
 7. Se analiza el margen de fading
 */
-function InputUser() { console.log('Lucas2232322323');
+function InputUser() {
   var Gtx=parseNumber(document.getElementById("gananciatx").value);
   var Grx=parseNumber(document.getElementById("gananciarx").value);
   var Ptx=parseNumber(document.getElementById("potenciatx").value);
@@ -73,8 +73,8 @@ function InputUser() { console.log('Lucas2232322323');
     }
   }
   else{
-    alert("Se debe mejorar la potencia de transmisión.");
-    return;
+    console.log("Se debe mejorar la potencia de transmisión.");
+    //return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
   if (hayLOS == 1 || hayLOS=="Sí"){

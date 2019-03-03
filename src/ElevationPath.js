@@ -10,8 +10,12 @@ Finalmente, luego de todos los casos de uso, se actualiza la tabla y se calcula 
 */
 
 function displayPathElevation(camino, elevator, dist) {
-  var cant_muestras = dist * 100; // 100 muestras por km
-  cant_redondeo = Math.floor(cant_muestras);
+  if(dist>5)
+    cant_redondeo=500;
+  else{
+    var cant_muestras = dist * 100; // 100 muestras por km
+    cant_redondeo = Math.floor(cant_muestras);
+  }
 
   elevator.getElevationAlongPath({
     'path': camino,

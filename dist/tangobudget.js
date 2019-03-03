@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-02-27 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
+/*! tangobudget - v0.0.1 - 2019-03-03 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
 // Y se dibuja una linea entre cada marcador.
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
@@ -344,7 +344,7 @@ function indispMin(disponibilidad){ // pasaje de la disponibilidad anual a la in
   return IndisMin;
 }
 
-function InputUser() { console.log('Lucas2232322323');
+function InputUser() { 
   var Gtx=parseNumber(document.getElementById("gananciatx").value);
   var Grx=parseNumber(document.getElementById("gananciarx").value);
   var Ptx=parseNumber(document.getElementById("potenciatx").value);
@@ -400,14 +400,15 @@ function InputUser() { console.log('Lucas2232322323');
       console.log("Enlace aceptable");
       enlace=0;
     }
-    else
+    else{
       console.log("Enlace no aceptable");
       enlace=1;
-    //return;
+      return;
+    }
   }
   else{
     alert("Se debe mejorar la potencia de transmisión.");
-    //return;
+    return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
   if (hayLOS == 1 || hayLOS=="Sí"){
@@ -418,8 +419,6 @@ function InputUser() { console.log('Lucas2232322323');
   }
   else
     return;
-
-console.log('Llegue aaca');
   Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
   print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
   return;
@@ -1014,8 +1013,12 @@ function dragElement(elmnt) {
 }
 
 function displayPathElevation(camino, elevator, dist) {
-  var cant_muestras = dist * 100; // 100 muestras por km
-  cant_redondeo = Math.floor(cant_muestras);
+  if(dist>5)
+    cant_redondeo=500;
+  else{
+    var cant_muestras = dist * 100; // 100 muestras por km
+    cant_redondeo = Math.floor(cant_muestras);
+  }
 
   elevator.getElevationAlongPath({
     'path': camino,
