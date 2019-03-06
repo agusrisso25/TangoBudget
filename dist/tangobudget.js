@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-03-05 */function addMarkersAndAll(location, map) {
+/*! tangobudget - v0.0.1 - 2019-03-06 */function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
   path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
@@ -380,6 +380,7 @@ function InputUser() {
 
   var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
   var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
+  console.log("Prx: " +Prx);
   if(sensRX>0 || sensRX==""){
     alert("Debe ingresar una Sensibilidad de Recepción correcta");
     return;
@@ -407,8 +408,8 @@ function InputUser() {
     }
   }
   else{
-    console.log("Se debe mejorar la potencia de transmisión.");
-    //return;
+    alert("La potencia de recepción es menor a la sensibilidad");
+    return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
   if (hayLOS == 1 || hayLOS=="Sí"){
@@ -608,7 +609,7 @@ function AtenuacionLluvia() {
 			i++;
 		}
 		frecu = arrayfrec[i];
-		alert("Se aproximó dicho valor a" + frecu + "GHz para calcular la atenuación por lluvia.");
+		console.log("Se aproximó dicho valor a" + frecu + "GHz para calcular la atenuación por lluvia.");
 		indice=i;
 	}
 
@@ -681,8 +682,6 @@ function AtenuacionLluvia() {
 		alert ("Ingrese un tipo de polarización");
 		return;
 	}
-	console.log("k de lluvia: " +k);
-	console.log("alfa de lluvia: " +alfa);
 
 	var gamaR= k*Math.pow(R, alfa);
 	var d0=35*Math.exp(-0.015*R);

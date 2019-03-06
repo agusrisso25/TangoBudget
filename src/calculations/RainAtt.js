@@ -23,7 +23,7 @@ function AtenuacionLluvia() {
 			i++;
 		}
 		frecu = arrayfrec[i];
-		alert("Se aproximó dicho valor a" + frecu + "GHz para calcular la atenuación por lluvia.");
+		console.log("Se aproximó dicho valor a" + frecu + "GHz para calcular la atenuación por lluvia.");
 		indice=i;
 	}
 
@@ -96,8 +96,6 @@ function AtenuacionLluvia() {
 		alert ("Ingrese un tipo de polarización");
 		return;
 	}
-	console.log("k de lluvia: " +k);
-	console.log("alfa de lluvia: " +alfa);
 
 	var gamaR= k*Math.pow(R, alfa);
 	var d0=35*Math.exp(-0.015*R);

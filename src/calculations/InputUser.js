@@ -48,6 +48,7 @@ function InputUser() {
 
   var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
   var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
+  console.log("Prx: " +Prx);
   if(sensRX>0 || sensRX==""){
     alert("Debe ingresar una Sensibilidad de Recepción correcta");
     return;
@@ -75,8 +76,8 @@ function InputUser() {
     }
   }
   else{
-    console.log("Se debe mejorar la potencia de transmisión.");
-    //return;
+    alert("La potencia de recepción es menor a la sensibilidad");
+    return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
   if (hayLOS == 1 || hayLOS=="Sí"){
