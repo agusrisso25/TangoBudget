@@ -1,3 +1,7 @@
+/* Se calcula la disponibilidad anual por lluvia por definición de la ITU
+Es necesario pasar los parámetros de pérdidas por lluvia y el Margen de Fading calculado para poder aplicar
+la definición en el marco teórico */
+
 function DispCanalLLuvia (perdidasLluvia, MargenFading) {
 
   var c01= 0.12+0.4*Math.log10(Math.pow((Inputfreq/10),0.8)); //Cuando Inputfreq es mayor a 10GHz

@@ -1,4 +1,6 @@
-//Make the DIV element draggagle:
+/* Esta función se utiliza para poder arrastrar los marcadores del mapa
+*/
+
 (function () {
   var boton = document.getElementById("Boton");
   if (boton) {

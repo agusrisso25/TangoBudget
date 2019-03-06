@@ -1,6 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-03-03 */// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
-// Y se dibuja una linea entre cada marcador.
-function addMarkersAndAll(location, map) {
+/*! tangobudget - v0.0.1 - 2019-03-05 */function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
   path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
@@ -177,7 +175,7 @@ function DispCanalBarnett(distancia,MargenFading) { //Barnet Vigant
 	return disp_canal;
 }
 
-function DispCanalITU (distancia, MargenFading) { // ITU 530 - disp anual
+function DispCanalITU (distancia, MargenFading) {
   var dN1 = -400;
   var rugosidad= 5.9; // uso este porque recomienta ITU
   var alturaantena;
@@ -338,13 +336,13 @@ function getFreq() {
 	return;
 }
 
-function indispMin(disponibilidad){ // pasaje de la disponibilidad anual a la indisponibilidad en minutos
+function indispMin(disponibilidad){
   var anomin = 525600;
   var IndisMin = (100 - disponibilidad)*anomin/100;
   return IndisMin;
 }
 
-function InputUser() { 
+function InputUser() {
   var Gtx=parseNumber(document.getElementById("gananciatx").value);
   var Grx=parseNumber(document.getElementById("gananciarx").value);
   var Ptx=parseNumber(document.getElementById("potenciatx").value);
@@ -372,7 +370,9 @@ function InputUser() {
   var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
   var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
   var perdidasLluvia=AtenuacionLluvia();
-  var AnguloTilt=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+  var aux2=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
+  var TiltTx = aux2[0];
+  var TiltRx = aux2[1];
 
   var diffBullington=0;
   if(fresnelGlobal==1)
@@ -407,8 +407,8 @@ function InputUser() {
     }
   }
   else{
-    alert("Se debe mejorar la potencia de transmisión.");
-    return;
+    console.log("Se debe mejorar la potencia de transmisión.");
+    //return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
   if (hayLOS == 1 || hayLOS=="Sí"){
@@ -419,8 +419,8 @@ function InputUser() {
   }
   else
     return;
-  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
-  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
+  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);
+  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
   return;
 }
 
@@ -706,7 +706,7 @@ function populateTable(obj) {
 	report.innerHTML = tabla;
 }
 
-function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -730,10 +730,6 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		despejefinal="No hay despeje de Fresnel";
 	}
 
-	if (enlace==1)
-		enlace="Enlace Aceptable";
-	else if (enlace==0)
-		enlace="Enlace no Aceptable";
 
 	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
 
@@ -763,8 +759,12 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: Prx
 		},
 		{
-			name: "Angulo Tilt (grados)",
-			value: AnguloTilt
+			name: "Angulo Tilt Antena Transmisora (grados)",
+			value: TiltTx
+		},
+		{
+			name: "Angulo Tilt Antena Receptora (grados)",
+			value: TiltRx
 		},
 		{
 			name: "Sensibilidad de Recepción (dBm) ",
@@ -853,10 +853,6 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		{
 			name: "",
 			value: ""
-		},
-		{
-			name: "Viabilidad del enlace",
-			value: enlace
 		}];
 
 		populateTable(obj);
@@ -912,9 +908,11 @@ function BorrarFila(){
 	}
 
 function Tilt(distancia) {
-	var resultado;
-	resultado=Math.atan2((altura[altura.length-1]-altura[0]),(distancia));
-	return resultado;
+	var resultadohtx;
+	var resultadohrx;
+	resultadohtx=Math.atan2((altura[altura.length-1]-altura[0]),(distancia));
+	resultadohrx=Math.atan2((altura[0]-altura[altura.length-1]),(-distancia));
+	return [resultadohtx,resultadohrx];
 }
 
 function DeshacerAltura() {
@@ -963,7 +961,6 @@ function DistanceToBorders (coordenadas, posic_Pmax){
     var distanciaTX = haversine(radius, lat, lng); // no se si puede llamar asi nomas, capaz se sobre escribe
     console.log("Distancia a TX" + distanciaRX.toFixed(6) + " km");
 }
-//Make the DIV element draggagle:
 (function () {
   var boton = document.getElementById("Boton");
   if (boton) {
@@ -1233,7 +1230,6 @@ function deleteMarkersAndPath() {
     document.getElementById('link').innerHTML="";
 }
 
-// Los marcadores aparecen cuando el usuario hace click en el mapa:
 // Cada marcador se etiqueta con un letra alfabetica.
 var labels = "TR";
 var labelIndex = 0;
@@ -1387,9 +1383,8 @@ function initMapPrintable() {
 
 }
 
-        //Funcion para el cálculo de distancia entre dos puntos:
-        function haversine(radius, latitud, longitud) {
-          
+function haversine(radius, latitud, longitud) {
+
           var lat1 = ToRadians(latitud[0]);
           var long1 = ToRadians(longitud[0]);
           var lat2 = ToRadians(latitud[1]);
@@ -1400,14 +1395,14 @@ function initMapPrintable() {
           var sinLat = Math.sin(DistanceLat/2.0);
           var sinLong = Math.sin(DistanceLong/2.0);
           var a = Math.pow(sinLat, 2.0)+Math.cos(lat1)*Math.cos(lat2)*Math.pow(sinLong,2.0);
-          var distance = radius*2*Math.asin(Math.min(1, Math.sqrt(a)));  
+          var distance = radius*2*Math.asin(Math.min(1, Math.sqrt(a)));
           return distance;
 
         }
+
 function toggleBounce(){
-          marker.setAnimation(google.maps.Animation.BOUNCE);//rebora marcador la primera vez que se ingresa en el mapa
-          // Si da el tiempo, ver como hacer que robote cada vez que se hace click en el marcador (sin arrastrar)
-        }
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+}
 
 function parseSearchString() {
   result = {};
@@ -1418,7 +1413,7 @@ function parseSearchString() {
   return result;
 }
 
-function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
+function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -1440,7 +1435,8 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&disp_anualMC='+disp_anualMC.toFixed(6)+
      '&indisp_anualmin='+indisp_anualmin.toFixed(6)+
      '&disp_canalTOT_min='+disp_canalTOT_min.toFixed(6)+
-     '&AnguloTilt='+AnguloTilt.toFixed(2)+
+     '&TiltTx='+TiltTx.toFixed(2)+
+     '&TiltRx='+TiltRx.toFixed(2)+
      '&Gtx='+Gtx+
      '&Grx='+Grx+
      '&Ptx='+Ptx+
@@ -1463,7 +1459,6 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&contador='+contador+
      '&valuetomodify_array='+valuetomodify_array+
      '&fresnelGlobal='+fresnel+
-     '&enlace='+enlace+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }
@@ -1524,8 +1519,12 @@ function ResultadosPruebaB(){
 			value: result.Prx
 		},
 		{
-			name: "Angulo Tilt (grados)",
-			value: result.AnguloTilt
+			name: "Angulo Tilt Antena Transmisora (grados)",
+			value: result.TiltTx
+		},
+    {
+			name: "Angulo Tilt Antena Receptora (grados)",
+			value: result.TiltRx
 		},
 		{
 			name: "Sensibilidad de Recepción (dBm) ",
@@ -1628,10 +1627,10 @@ function ResultadosPruebaB(){
   populateTable(obj);
   }
 
-// Convert from radians to degrees.
 function toDegrees(radians){
 	return ((radians * 180) / Math.PI);
 }
+
 function parseNumber(numberString){
   var reMatch = /^[+-]?(\d+)(?:[,.](\d+))?$/.exec(numberString);
   if (!reMatch) {
@@ -1643,7 +1642,6 @@ function parseNumber(numberString){
   }
 }
 
-//Funcion para grados a radianes (necesaria para el calculo de distancia):
 function ToRadians(degree) {
   return (degree * (Math.PI / 180));
 }

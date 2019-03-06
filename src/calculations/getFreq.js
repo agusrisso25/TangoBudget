@@ -1,5 +1,6 @@
-/* Este bloque toma la frecuencia que ingresó el usuario en la plataforma y deshabilita el campo de modificación
-*/
+/* Este bloque toma la frecuencia que ingresó el usuario en la plataforma y calcula el despeje de fresnel
+que genera el perfil de elevacion sin objetos interferentes. */
+
 function getFreq() {
 	Inputfreq=parseNumber(document.getElementById("frecuencia").value);
 	var despeje60;

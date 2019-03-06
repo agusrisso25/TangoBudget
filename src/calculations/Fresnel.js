@@ -1,6 +1,6 @@
 /* Este bloque tiene como funcionalidad calcular el radio de fresnel y luego ver si el objeto interferente
 genera una obstrucción del 40% o 60% del Fresnel.
-Se procede a hallar el radio para calcular la zona de Fresnel. Para ello el usuario deberá ingresar:
+Se procede a hallar el radio para calcular la zona de Fresnel. Para ello el programa deberá pasar:
 Pmax: Punto o muestra en el que se coloca el objeto inteferente
 h_Pmax: Altura del objeto interferente
 */

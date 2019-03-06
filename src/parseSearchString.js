@@ -1,4 +1,5 @@
-
+/* Esta función se utiliza parsear todos los elementos de la URL en PruebaB y guardarlo en un array
+*/
 function parseSearchString() {
   result = {};
   location.search.substr(1).split('&').forEach(function (par) {

@@ -1,4 +1,5 @@
-// Los marcadores aparecen cuando el usuario hace click en el mapa:
+/* Esta función declara las variables Globales e inicializa los dos mapas Printable e Interactive
+*/
 // Cada marcador se etiqueta con un letra alfabetica.
 var labels = "TR";
 var labelIndex = 0;

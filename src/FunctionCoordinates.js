@@ -1,3 +1,7 @@
+/* Esta función despliega las coordenadas de los marcadores en los campos Transmisor y Receptor.
+Además la distancia entre esos dos marcadores.
+*/
+
 function showCoordenadas(latitud, longitud) {
   for (var i = 0; i < markers.length; i++) {
     //document.getElementById('result1').innerHTML= "Latitud: " + latitud[0] + ", "+ "Longitud: " + longitud[0];

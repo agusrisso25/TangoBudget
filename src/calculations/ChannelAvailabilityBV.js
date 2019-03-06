@@ -1,10 +1,10 @@
-/* Este bloque tiene como funcionalidad analizar el tipo de terreno que ingresó el usuario y a raíz de eso, calcular
-el margen de fading.
+/* Este bloque tiene como funcionalidad analizar el tipo de terreno y el factor del clima. A raíz de eso, calcula
+La disponibilidad de canal.
 Para ello, es necesario leer toda la información que ingresó el usuario en la plataforma:
 distancia: Largo del camino
+MargenFading: El margen de fading hallado anteriorimente.
 A: Factor de Rugosidad del terreno
 B: Factor del clima
-MargenFading: Margen de Fading
 */
 
 function DispCanalBarnett(distancia,MargenFading) { //Barnet Vigant

@@ -18,7 +18,7 @@ function populateTable(obj) {
 	report.innerHTML = tabla;
 }
 
-function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -42,10 +42,6 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		despejefinal="No hay despeje de Fresnel";
 	}
 
-	if (enlace==1)
-		enlace="Enlace Aceptable";
-	else if (enlace==0)
-		enlace="Enlace no Aceptable";
 
 	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
 
@@ -75,8 +71,12 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: Prx
 		},
 		{
-			name: "Angulo Tilt (grados)",
-			value: AnguloTilt
+			name: "Angulo Tilt Antena Transmisora (grados)",
+			value: TiltTx
+		},
+		{
+			name: "Angulo Tilt Antena Receptora (grados)",
+			value: TiltRx
 		},
 		{
 			name: "Sensibilidad de Recepción (dBm) ",
@@ -165,10 +165,6 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		{
 			name: "",
 			value: ""
-		},
-		{
-			name: "Viabilidad del enlace",
-			value: enlace
 		}];
 
 		populateTable(obj);

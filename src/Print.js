@@ -1,4 +1,6 @@
-function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,AnguloTilt,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
+/* Este bloque toma toda la información calculada y arma el link para que el usuario pueda ingresar al reporte final
+*/
+function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -20,7 +22,8 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&disp_anualMC='+disp_anualMC.toFixed(6)+
      '&indisp_anualmin='+indisp_anualmin.toFixed(6)+
      '&disp_canalTOT_min='+disp_canalTOT_min.toFixed(6)+
-     '&AnguloTilt='+AnguloTilt.toFixed(2)+
+     '&TiltTx='+TiltTx.toFixed(2)+
+     '&TiltRx='+TiltRx.toFixed(2)+
      '&Gtx='+Gtx+
      '&Grx='+Grx+
      '&Ptx='+Ptx+
@@ -43,7 +46,6 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&contador='+contador+
      '&valuetomodify_array='+valuetomodify_array+
      '&fresnelGlobal='+fresnel+
-     '&enlace='+enlace+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }

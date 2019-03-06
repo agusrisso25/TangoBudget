@@ -1,4 +1,11 @@
-function DispCanalITU (distancia, MargenFading) { // ITU 530 - disp anual
+/*Este bloque consiste en hallar la disponibilidad de canal utilizando la definición dada en la ITU 530
+Se calculan las siguientes disponibilidades:
+- Disponibilidad mensual
+- Disponibilidad anual
+- Minutos de indisponibilidad anual
+*/
+
+function DispCanalITU (distancia, MargenFading) {
   var dN1 = -400;
   var rugosidad= 5.9; // uso este porque recomienta ITU
   var alturaantena;

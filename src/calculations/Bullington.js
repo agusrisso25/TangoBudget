@@ -1,4 +1,5 @@
-/*Se calculan las pérdidas por difracción cuando hay un obstáculo que genera interferencia entre el 40% y 60% de Fresnel
+/*Se calculan las pérdidas por difracción cuando hay un obstáculo que genera interferencia entre el
+40% y 60% de Fresnel
 */
 function Bullington(distancia) {
 		var lambda;

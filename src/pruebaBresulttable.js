@@ -1,3 +1,5 @@
+/* Esta función se utiliza para desplegar los resultados en pruebaB
+*/
 function ResultadosPruebaB(){
   var despejefinal;
 
@@ -54,8 +56,12 @@ function ResultadosPruebaB(){
 			value: result.Prx
 		},
 		{
-			name: "Angulo Tilt (grados)",
-			value: result.AnguloTilt
+			name: "Angulo Tilt Antena Transmisora (grados)",
+			value: result.TiltTx
+		},
+    {
+			name: "Angulo Tilt Antena Receptora (grados)",
+			value: result.TiltRx
 		},
 		{
 			name: "Sensibilidad de Recepción (dBm) ",

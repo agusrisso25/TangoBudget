@@ -1,4 +1,5 @@
+/* Función que habilita al marcador rebotar una vez que se hace click en el mapa
+*/
 function toggleBounce(){
-          marker.setAnimation(google.maps.Animation.BOUNCE);//rebora marcador la primera vez que se ingresa en el mapa
-          // Si da el tiempo, ver como hacer que robote cada vez que se hace click en el marcador (sin arrastrar)
-        }
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+}

@@ -1,5 +1,7 @@
-// Add the marker at the clicked location, and add the next-available label from the array of alphabetical characters.
-// Y se dibuja una linea entre cada marcador.
+/* Esta función permite agregar un marcador en la ubicación clickeada. En caso que se haya hecho dos veces
+click en el mapa, se dibuja una linea (Polyline) entre los dos marcadores.
+*/
+
 function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)

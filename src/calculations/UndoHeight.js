@@ -1,5 +1,5 @@
 /* Este bloque tiene como funcionalidad deshacer la el último objeto interferente modificado por el usuario
-En caso que se hayan desecho todos los cambios, se desplegará una alerta*/
+En caso que se hayan deshecho todos los cambios, se desplegará una alerta*/
 
 function DeshacerAltura() {
 	var resultadoFresnel;
