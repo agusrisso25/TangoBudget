@@ -140,27 +140,27 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		},
 		{
 	    name: "Disponibilidad de Canal del peor mes por Multi Camino(%)",
-	    value: disp_mensualMC.toFixed(6)
+	    value: disp_mensualMC.toFixed(8)
 	  },
 		{
 	    name: "Disponibilidad de Canal anual por Multi Camino(%)",
-	    value: disp_anualMC.toFixed(6)
+	    value: disp_anualMC.toFixed(8)
 	  },
 		{
 	    name: "Indisponibilidad anual (min)",
-	    value: indisp_anualmin.toFixed(6)
+	    value: indisp_anualmin.toFixed(8)
 	  },
 		{
 	    name: "Disponibilidad de Canal anual por lluvia (%)",
-	    value: disp_canalLL.toFixed(6)
+	    value: disp_canalLL.toFixed(8)
 	  },
 	  {
 	    name: "Disponibilidad Total del Canal (Multi Camino + Lluvia) (%)",
-	    value: disp_canalTOT.toFixed(6)
+	    value: disp_canalTOT.toFixed(8)
 	  },
 		{
 	    name: "Disponibilidad Total de Canal (min)",
-	    value: disp_canalTOT_min.toFixed(6)
+	    value: disp_canalTOT_min.toFixed(8)
 	  },
 		{
 			name: "",

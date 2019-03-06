@@ -192,9 +192,9 @@ function DispCanalITU (distancia, MargenFading) {
       alturaantena = altura[altura.length-1];
 
   k = Math.pow(10,-4.4-0.0027*dN1)*Math.pow(10+rugosidad,-0.46);
-  epsilon = Math.abs(altura[0]-altura[altura.length-1])/distancia;
+  epsilon = Math.abs((altura[0]-altura[altura.length-1])/distancia);
   Pw = k*Math.pow(distancia,3.4)*Math.pow(1+epsilon,-1.03)*Math.pow(Inputfreq,0.8)*Math.pow(10,-0.00076*alturaantena-MargenFading/10);
-  dispmensual = 100-Pw;
+  dispmensual = (1-Pw)*100;
   dispanual = PasajeAnual(distancia, epsilon, Pw);
   indispminanual= indispMin(dispanual);
   return [dispmensual,dispanual,indispminanual];
@@ -235,11 +235,19 @@ function DispCanalLLuvia (perdidasLluvia, MargenFading) {
     i++;
   }
 
+  var valor_mascercano;
   var A=aux.sort();
+  for(m=0;aux[m]<ec1;m++)
+  {
+    valor_mascercano=aux[m];
+  }
 
-  result_ec2=A[A.length-1];
-  index_p=ec2.indexOf(result_ec2);
+
+  //result_ec2=A[A.length-1];
+  index_p=ec2.indexOf(valor_mascercano);
   result_p=p[index_p];
+
+  console.log("result_p: "+result_p);
 
   displluvia=100-result_p;
   return(displluvia);
@@ -581,7 +589,7 @@ function ModifyRxTx() {
 function PasajeAnual(distancia, epsilon, Pw){
   var DeltaG=10.5-(5.6*Math.log10(1.1-Math.pow(Math.abs(Math.cos(2)),0.7)))-2.7*Math.log10(distancia)+1.7*Math.log10(1+Math.abs(epsilon));
   console.log("deltaG: "+DeltaG);
-  var dispanual = 100-Math.pow(10,-DeltaG/10)*Pw;
+  var dispanual = (1-Math.pow(10,-DeltaG/10)*Pw)*100;
 
   return dispanual;
 }
@@ -827,27 +835,27 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		},
 		{
 	    name: "Disponibilidad de Canal del peor mes por Multi Camino(%)",
-	    value: disp_mensualMC.toFixed(6)
+	    value: disp_mensualMC.toFixed(8)
 	  },
 		{
 	    name: "Disponibilidad de Canal anual por Multi Camino(%)",
-	    value: disp_anualMC.toFixed(6)
+	    value: disp_anualMC.toFixed(8)
 	  },
 		{
 	    name: "Indisponibilidad anual (min)",
-	    value: indisp_anualmin.toFixed(6)
+	    value: indisp_anualmin.toFixed(8)
 	  },
 		{
 	    name: "Disponibilidad de Canal anual por lluvia (%)",
-	    value: disp_canalLL.toFixed(6)
+	    value: disp_canalLL.toFixed(8)
 	  },
 	  {
 	    name: "Disponibilidad Total del Canal (Multi Camino + Lluvia) (%)",
-	    value: disp_canalTOT.toFixed(6)
+	    value: disp_canalTOT.toFixed(8)
 	  },
 		{
 	    name: "Disponibilidad Total de Canal (min)",
-	    value: disp_canalTOT_min.toFixed(6)
+	    value: disp_canalTOT_min.toFixed(8)
 	  },
 		{
 			name: "",

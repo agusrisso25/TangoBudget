@@ -37,11 +37,19 @@ function DispCanalLLuvia (perdidasLluvia, MargenFading) {
     i++;
   }
 
+  var valor_mascercano;
   var A=aux.sort();
+  for(m=0;aux[m]<ec1;m++)
+  {
+    valor_mascercano=aux[m];
+  }
 
-  result_ec2=A[A.length-1];
-  index_p=ec2.indexOf(result_ec2);
+
+  //result_ec2=A[A.length-1];
+  index_p=ec2.indexOf(valor_mascercano);
   result_p=p[index_p];
+
+  console.log("result_p: "+result_p);
 
   displluvia=100-result_p;
   return(displluvia);

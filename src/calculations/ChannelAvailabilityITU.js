@@ -22,9 +22,9 @@ function DispCanalITU (distancia, MargenFading) {
       alturaantena = altura[altura.length-1];
 
   k = Math.pow(10,-4.4-0.0027*dN1)*Math.pow(10+rugosidad,-0.46);
-  epsilon = Math.abs(altura[0]-altura[altura.length-1])/distancia;
+  epsilon = Math.abs((altura[0]-altura[altura.length-1])/distancia);
   Pw = k*Math.pow(distancia,3.4)*Math.pow(1+epsilon,-1.03)*Math.pow(Inputfreq,0.8)*Math.pow(10,-0.00076*alturaantena-MargenFading/10);
-  dispmensual = 100-Pw;
+  dispmensual = (1-Pw)*100;
   dispanual = PasajeAnual(distancia, epsilon, Pw);
   indispminanual= indispMin(dispanual);
   return [dispmensual,dispanual,indispminanual];
