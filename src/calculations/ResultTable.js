@@ -67,18 +67,6 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: Ptx
 		},
 		{
-			name: "Potencia del Receptor (dBm)",
-			value: Prx
-		},
-		{
-			name: "Angulo Tilt Antena Transmisora (grados)",
-			value: TiltTx
-		},
-		{
-			name: "Angulo Tilt Antena Receptora (grados)",
-			value: TiltRx
-		},
-		{
 			name: "Sensibilidad de Recepción (dBm) ",
 			value: sensRX
 		},
@@ -99,11 +87,23 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: ""
 		},
 		{
+			name: "Angulo Tilt Antena Transmisora (grados)",
+			value: TiltTx
+		},
+		{
+			name: "Angulo Tilt Antena Receptora (grados)",
+			value: TiltRx
+		},
+		{
+			name: "Potencia del Receptor (dBm)",
+			value: Prx
+		},
+		{
 	    name: "Perdidas de Espacio Libre (dB)",
 	    value: perdidasFSL
 	  },
 		{
-	    name: "Perdidas por Fading (dB)",
+	    name: "Margen de Fading (dB)",
 	    value: MargenFading
 	  },
 		{

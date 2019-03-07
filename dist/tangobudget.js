@@ -762,18 +762,6 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: Ptx
 		},
 		{
-			name: "Potencia del Receptor (dBm)",
-			value: Prx
-		},
-		{
-			name: "Angulo Tilt Antena Transmisora (grados)",
-			value: TiltTx
-		},
-		{
-			name: "Angulo Tilt Antena Receptora (grados)",
-			value: TiltRx
-		},
-		{
 			name: "Sensibilidad de Recepción (dBm) ",
 			value: sensRX
 		},
@@ -794,11 +782,23 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: ""
 		},
 		{
+			name: "Angulo Tilt Antena Transmisora (grados)",
+			value: TiltTx
+		},
+		{
+			name: "Angulo Tilt Antena Receptora (grados)",
+			value: TiltRx
+		},
+		{
+			name: "Potencia del Receptor (dBm)",
+			value: Prx
+		},
+		{
 	    name: "Perdidas de Espacio Libre (dB)",
 	    value: perdidasFSL
 	  },
 		{
-	    name: "Perdidas por Fading (dB)",
+	    name: "Margen de Fading (dB)",
 	    value: MargenFading
 	  },
 		{
@@ -1643,9 +1643,11 @@ function parseNumber(numberString){
   if (!reMatch) {
     return NaN;
   } else if (!reMatch[2]) {
+    console.log("reMatch[1]: "+reMatch[1]);
     return +reMatch[1];
   } else {
-    return +(reMatch[1] +'.'+ reMatch[2]);
+    console.log("reMatch[1] y 2: " +reMatch[1]+ "."+reMatch[2]);
+    return +(reMatch[1]+'.'+reMatch[2]);
   }
 }
 
