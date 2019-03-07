@@ -24,9 +24,10 @@ function ResultadosPruebaB(){
   }
 
   var enlace;
-  if (parseFloat(result.enlace)==1)
+  console.log("enlace:" +parseFloat(result.enlace));
+  if (result.enlace=="0")
 		enlace="Enlace Aceptable";
-	else if (parseFloat(result.enlace)==0)
+	else if (result.enlace=="1")
 		enlace="Enlace no Aceptable";
 
   var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasLluvia)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);

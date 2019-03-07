@@ -102,6 +102,7 @@ function AtenuacionLluvia() {
 	var r = 1/((0.477*Math.pow(distancia,0.633)*Math.pow(R,(0.073*alfa))*Math.pow(Inputfreq,0.123))-10.579*(1-Math.exp(-0.024*distancia)));
 	var deff= distancia*r;
 	var A = gamaR*deff;
+	A=A.toFixed(2);
 
 	return(A);
 }

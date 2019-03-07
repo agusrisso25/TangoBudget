@@ -18,7 +18,7 @@ function populateTable(obj) {
 	report.innerHTML = tabla;
 }
 
-function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -26,6 +26,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	var dimensionesrx=document.getElementById("dimensionesrx").value;
 	var pol=parseNumber(document.getElementById("polarizacion").value);
 
+	distancia=distancia.toFixed(3);
 	if(pol==1)
 		pol="Vertical";
 	else
@@ -42,6 +43,10 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		despejefinal="No hay despeje de Fresnel";
 	}
 
+	if(enlace==0)
+		enlace="Enlace Aceptable";
+	else if(enlace==1)
+		enlace="Enlace NO Aceptable";
 
 	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
 
@@ -165,6 +170,10 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		{
 			name: "",
 			value: ""
+		},
+		{
+			name: "Disponibilidad del enlace",
+			value: enlace
 		}];
 
 		populateTable(obj);

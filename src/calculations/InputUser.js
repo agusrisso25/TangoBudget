@@ -47,6 +47,7 @@ function InputUser() {
     diffBullington=Bullington(distancia);
 
   var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
+  Prx=Prx.toFixed(2);
   var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
   console.log("Prx: " +Prx);
   if(sensRX>0 || sensRX==""){
@@ -77,6 +78,8 @@ function InputUser() {
   }
   else{
     alert("La potencia de recepción es menor a la sensibilidad");
+    document.getElementById('table_div').innerHTML="";
+    document.getElementById('link').innerHTML="";
     return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
@@ -88,7 +91,9 @@ function InputUser() {
   }
   else
     return;
-  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);
-  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
+
+  console.log("Enlace en inputuser: " +enlace);
+  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
+  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
   return;
 }

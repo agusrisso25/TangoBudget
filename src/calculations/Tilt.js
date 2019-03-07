@@ -4,5 +4,7 @@ function Tilt(distancia) {
 	var resultadohrx;
 	resultadohtx=Math.atan2((altura[altura.length-1]-altura[0]),(distancia));
 	resultadohrx=Math.atan2((altura[0]-altura[altura.length-1]),(-distancia));
-	return [resultadohtx,resultadohrx];
+	var htx=resultadohtx.toFixed(2);
+	var hrx=resultadohrx.toFixed(2);
+	return [htx,hrx];
 }

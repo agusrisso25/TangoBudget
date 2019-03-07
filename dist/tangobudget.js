@@ -302,7 +302,8 @@ function FSL(distancia) {
 	lambda = c/Inputfreq;
 	var frec=Inputfreq*1000;
 	var freespaceloss=32.4+20*Math.log10(frec*distancia);
-	return (freespaceloss);
+	resultado=freespaceloss.toFixed(2);
+	return (resultado);
 }
 
 function getFreq() {
@@ -387,6 +388,7 @@ function InputUser() {
     diffBullington=Bullington(distancia);
 
   var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
+  Prx=Prx.toFixed(2);
   var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
   console.log("Prx: " +Prx);
   if(sensRX>0 || sensRX==""){
@@ -417,6 +419,8 @@ function InputUser() {
   }
   else{
     alert("La potencia de recepción es menor a la sensibilidad");
+    document.getElementById('table_div').innerHTML="";
+    document.getElementById('link').innerHTML="";
     return;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
@@ -428,8 +432,10 @@ function InputUser() {
   }
   else
     return;
-  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);
-  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras);//se genera la url del PruebaB
+
+  console.log("Enlace en inputuser: " +enlace);
+  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
+  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
   return;
 }
 
@@ -696,6 +702,7 @@ function AtenuacionLluvia() {
 	var r = 1/((0.477*Math.pow(distancia,0.633)*Math.pow(R,(0.073*alfa))*Math.pow(Inputfreq,0.123))-10.579*(1-Math.exp(-0.024*distancia)));
 	var deff= distancia*r;
 	var A = gamaR*deff;
+	A=A.toFixed(2);
 
 	return(A);
 }
@@ -713,7 +720,7 @@ function populateTable(obj) {
 	report.innerHTML = tabla;
 }
 
-function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -721,6 +728,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	var dimensionesrx=document.getElementById("dimensionesrx").value;
 	var pol=parseNumber(document.getElementById("polarizacion").value);
 
+	distancia=distancia.toFixed(3);
 	if(pol==1)
 		pol="Vertical";
 	else
@@ -737,6 +745,10 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		despejefinal="No hay despeje de Fresnel";
 	}
 
+	if(enlace==0)
+		enlace="Enlace Aceptable";
+	else if(enlace==1)
+		enlace="Enlace NO Aceptable";
 
 	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
 
@@ -860,6 +872,10 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 		{
 			name: "",
 			value: ""
+		},
+		{
+			name: "Disponibilidad del enlace",
+			value: enlace
 		}];
 
 		populateTable(obj);
@@ -919,7 +935,9 @@ function Tilt(distancia) {
 	var resultadohrx;
 	resultadohtx=Math.atan2((altura[altura.length-1]-altura[0]),(distancia));
 	resultadohrx=Math.atan2((altura[0]-altura[altura.length-1]),(-distancia));
-	return [resultadohtx,resultadohrx];
+	var htx=resultadohtx.toFixed(2);
+	var hrx=resultadohrx.toFixed(2);
+	return [htx,hrx];
 }
 
 function DeshacerAltura() {
@@ -1420,7 +1438,7 @@ function parseSearchString() {
   return result;
 }
 
-function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras){
+function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -1434,22 +1452,29 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
   var pol=parseNumber(document.getElementById("polarizacion").value);
   var freq=Inputfreq;
   var fresnel=fresnelGlobal;
+  distancia=distancia.toFixed(3);
+  disp_canalTOT=disp_canalTOT.toFixed(6);
+  disp_canalLL=disp_canalLL.toFixed(6);
+  disp_mensualMC=disp_mensualMC.toFixed(6);
+  disp_anualMC=disp_anualMC.toFixed(6);
+  indisp_anualmin=indisp_anualmin.toFixed(6);
+  disp_canalTOT_min=disp_canalTOT_min.toFixed(6);
 
-  document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL.toFixed(2) +
-     '&disp_canalTOT='+ disp_canalTOT.toFixed(6) +
-     '&disp_canalLL='+disp_canalLL.toFixed(6)+
-     '&disp_mensualMC='+disp_mensualMC.toFixed(6)+
-     '&disp_anualMC='+disp_anualMC.toFixed(6)+
-     '&indisp_anualmin='+indisp_anualmin.toFixed(6)+
-     '&disp_canalTOT_min='+disp_canalTOT_min.toFixed(6)+
-     '&TiltTx='+TiltTx.toFixed(2)+
-     '&TiltRx='+TiltRx.toFixed(2)+
+  document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL +
+     '&disp_canalTOT='+ disp_canalTOT +
+     '&disp_canalLL='+disp_canalLL+
+     '&disp_mensualMC='+disp_mensualMC+
+     '&disp_anualMC='+disp_anualMC+
+     '&indisp_anualmin='+indisp_anualmin+
+     '&disp_canalTOT_min='+disp_canalTOT_min+
+     '&TiltTx='+TiltTx+
+     '&TiltRx='+TiltRx+
      '&Gtx='+Gtx+
      '&Grx='+Grx+
      '&Ptx='+Ptx+
-     '&Prx='+Prx.toFixed(3)+
+     '&Prx='+Prx+
      '&MargenFading='+MargenFading+
-     '&distancia='+distancia.toFixed(3)+
+     '&distancia='+distancia+
      '&perdidasLluvia='+perdidasLluvia+
      '&perdidasConectores='+perdidasConectores+
      '&perdidasOtras='+perdidasOtras+
@@ -1466,6 +1491,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&contador='+contador+
      '&valuetomodify_array='+valuetomodify_array+
      '&fresnelGlobal='+fresnel+
+     '&enlace='+enlace+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }
@@ -1494,9 +1520,10 @@ function ResultadosPruebaB(){
   }
 
   var enlace;
-  if (parseFloat(result.enlace)==1)
+  console.log("enlace:" +parseFloat(result.enlace));
+  if (result.enlace=="0")
 		enlace="Enlace Aceptable";
-	else if (parseFloat(result.enlace)==0)
+	else if (result.enlace=="1")
 		enlace="Enlace no Aceptable";
 
   var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasLluvia)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
@@ -1643,11 +1670,9 @@ function parseNumber(numberString){
   if (!reMatch) {
     return NaN;
   } else if (!reMatch[2]) {
-    console.log("reMatch[1]: "+reMatch[1]);
     return +reMatch[1];
   } else {
-    console.log("reMatch[1] y 2: " +reMatch[1]+ "."+reMatch[2]);
-    return +(reMatch[1]+'.'+reMatch[2]);
+    return +(reMatch[1] +'.'+ reMatch[2]);
   }
 }
 
