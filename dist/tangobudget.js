@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-03-06 */function addMarkersAndAll(location, map) {
+/*! tangobudget - v0.0.1 - 2019-03-09 */function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
   path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
@@ -455,7 +455,7 @@ function LOS(elevations,coordenadas) {
   		return 0; //NO TENGO LOS: return 0
   }
   //caso 2: Pmax mayor a la antena Tx y menor a la Rx
-  else if ((altura[0].toFixed(3)<Pmax) && (Pmax<altura[elevations.length-1].toFixed(3))){ //el punto mas alto es el de la posicion elevations.length
+  else if ((parseFloat(altura[0].toFixed(3))<Pmax) && (Pmax<parseFloat(altura[elevations.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion elevations.length
   	pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
   	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
   	if (pend1>=pend2){
@@ -464,7 +464,7 @@ function LOS(elevations,coordenadas) {
       return 0; //NO TENGO LOS: return 0
   	}
   //caso 3: Pmax mayor a la antena Rx y menor a la Tx
-  else if ((altura[elevations.length-1].toFixed(3)<Pmax)&&(Pmax<altura[0].toFixed(3))){ //el punto mas bajo es el de la posicion 0
+  else if ((parseFloat(altura[elevations.length-1].toFixed(3))<Pmax)&&(Pmax<parseFloat(altura[0].toFixed(3)))){ //el punto mas bajo es el de la posicion 0
   	pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
   	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
   	if (pend2<pend1)
@@ -482,14 +482,14 @@ function LOS(elevations,coordenadas) {
 		posic_Pmax2= altura.indexOf(data.getDistinctValues(1)[elevations.length-2]);
 
 	  if(posic_Pmax2 == 0 || posic_Pmax2 == (elevations.length-1)){ //Si Pmax2 sigue siendo uno de los extremos...
-			var Pmax3= data.getDistinctValues(1)[elevations.length-3].toFixed(1);
+			var Pmax3= parseFloat(data.getDistinctValues(1)[elevations.length-3].toFixed(1));
 			var posic_Pmax3=altura.indexOf(data.getDistinctValues(1)[elevations.length-3]);
 	    	//caso 1: Pmax3 mayor a ambas antenas
-					if (Pmax3>altura[elevations.length-1].toFixed(3) && Pmax3>altura[0].toFixed(3))
+					if (Pmax3>parseFloat(altura[elevations.length-1].toFixed(3)) && Pmax3>parseFloat(altura[0].toFixed(3)))
               return 0; //NO TENGO LOS: return 0
 
 				//caso 2: Pmax3 mayor a la antena Tx y menor a la Rx
-					else if ((altura[0].toFixed(3)<Pmax3)&& (Pmax3<altura[elevations.length-1].toFixed(3))){ //el punto mas alto es el de la posicion elevations.length
+					else if ((parseFloat(altura[0].toFixed(3))<Pmax3)&& (Pmax3<parseFloat(altura[elevations.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion elevations.length
 							pend1= ((altura[elevations.length-2].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 							pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 							if (pend1>=pend2)
@@ -498,7 +498,7 @@ function LOS(elevations,coordenadas) {
                 return 0; //NO TENGO LOS: return 0
 							}//cierro caso 2 Pmx3
 				//caso 3: Pmax mayor a la antena Rx y menor a la Tx
-				else if ((altura[elevations.length-1].toFixed(3)<Pmax3) && (Pmax3<altura[0].toFixed(3))){ //el punto mas bajo es el de la posicion 0
+				else if ((parseFloat(altura[elevations.length-1].toFixed(3))<Pmax3) && (Pmax3<parseFloat(altura[0].toFixed(3)))){ //el punto mas bajo es el de la posicion 0
 						pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 						pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 						if (pend2<pend1)
@@ -514,12 +514,12 @@ function LOS(elevations,coordenadas) {
  //CASO B2: Si Pmax 2 es la maxima altura en mi path... y no es extremo
 else {
 			//caso 1: Pmax2 mayor a ambas antenas
-			var Pmax2 = data.getDistinctValues(1)[elevations.length-2].toFixed(1); //nos da el valor de altura mas alto
-			if (Pmax2 > altura[elevations.length-1].toFixed(3) && Pmax2>altura[0].toFixed(3)){
+			var Pmax2 = parseFloat(data.getDistinctValues(1)[elevations.length-2].toFixed(1)); //nos da el valor de altura mas alto
+			if (Pmax2 > parseFloat(altura[elevations.length-1].toFixed(3) && Pmax2>altura[0].toFixed(3))){
 				return 0; //NO TENGO LOS: return 0
 			}
 			//caso 2: Pmax2 mayor a la antena Tx y menor a la Rx
-			else if ((altura[0].toFixed(3)<Pmax2) && (Pmax2<altura[elevations.length-1].toFixed(3))){ //el punto mas alto es el de la posicion elevations.length
+			else if ((parseFloat(altura[0].toFixed(3))<Pmax2) && (Pmax2<parseFloat(altura[elevations.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion elevations.length
 				pend1= ((altura[elevations.length-1].toFixed(3)-altura[0].toFixed(3))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 				pend2= (Pmax2-altura[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 					if (pend1>=pend2)
@@ -529,7 +529,7 @@ else {
 			}
 
 			//caso 3: Pmax2 mayor a la antena Rx y menor a la Tx
-			else if ((altura[elevations.length-1].toFixed(1)<Pmax2) && (Pmax2<altura[0].toFixed(1))){ //el punto mas bajo es el de la posicion 0
+			else if ((parseFloat(altura[elevations.length-1].toFixed(1))<Pmax2) && (Pmax2<parseFloat(altura[0].toFixed(1)))){ //el punto mas bajo es el de la posicion 0
 				pend1= ((altura[elevations.length-1].toFixed(1)-altura[0].toFixed(1))/((elevations.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
 				pend2= (Pmax2-altura[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 				if (pend2<pend1)
@@ -1666,14 +1666,16 @@ function toDegrees(radians){
 }
 
 function parseNumber(numberString){
-  var reMatch = /^[+-]?(\d+)(?:[,.](\d+))?$/.exec(numberString);
+  /*var reMatch = /^[+-]?(\d+)(?:[,.](\d+))?$/.exec(numberString);
   if (!reMatch) {
     return NaN;
   } else if (!reMatch[2]) {
     return +reMatch[1];
   } else {
     return +(reMatch[1] +'.'+ reMatch[2]);
-  }
+  }*/
+  var res = numberString.replace(",", ".");
+  return (res);
 }
 
 function ToRadians(degree) {
