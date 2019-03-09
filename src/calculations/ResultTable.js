@@ -25,6 +25,8 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	var dimensionestx=document.getElementById("dimensionestx").value;
 	var dimensionesrx=document.getElementById("dimensionesrx").value;
 	var pol=parseNumber(document.getElementById("polarizacion").value);
+	perdidasOtras=parseFloat(perdidasOtras);
+	perdidasConectores=parseFloat(perdidasConectores);
 
 	distancia=distancia.toFixed(3);
 	if(pol==1)
