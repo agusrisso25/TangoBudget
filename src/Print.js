@@ -54,6 +54,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&valuetomodify_array='+valuetomodify_array+
      '&fresnelGlobal='+fresnel+
      '&enlace='+enlace+
+     '&hayLOS='+hayLOS+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }

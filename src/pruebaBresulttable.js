@@ -30,7 +30,7 @@ function ResultadosPruebaB(){
 	else if (result.enlace=="1")
 		enlace="Enlace no Aceptable";
 
-  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasLluvia)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
+  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
   var obj = [
 		{
 			name: "Altura total del Transmisor (m) ",
@@ -53,18 +53,6 @@ function ResultadosPruebaB(){
 			value: result.Ptx
 		},
 		{
-			name: "Potencia del Receptor (dBm)",
-			value: result.Prx
-		},
-		{
-			name: "Angulo Tilt Antena Transmisora (grados)",
-			value: result.TiltTx
-		},
-    {
-			name: "Angulo Tilt Antena Receptora (grados)",
-			value: result.TiltRx
-		},
-		{
 			name: "Sensibilidad de Recepción (dBm) ",
 			value: result.sensRX
 		},
@@ -79,6 +67,18 @@ function ResultadosPruebaB(){
 		{
 			name: "",
 			value: ""
+		},
+    {
+			name: "Angulo Tilt Antena Transmisora (grados)",
+			value: result.TiltTx
+		},
+    {
+			name: "Angulo Tilt Antena Receptora (grados)",
+			value: result.TiltRx
+		},
+		{
+			name: "Potencia del Receptor (dBm)",
+			value: result.Prx
 		},
 		{
 	    name: "Perdidas de Espacio Libre (dB)",
@@ -144,6 +144,10 @@ function ResultadosPruebaB(){
       name: "",
       value: ""
     },
+    {
+	    name: "Hay linea de vista?",
+	    value: result.hayLOS
+	  },
     {
       name: "Viabilidad del enlace",
       value: enlace

@@ -37,6 +37,7 @@ function InputUser() {
   var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
   var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
   var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
+  perdidasFSL=parseFloat(perdidasFSL);
   var perdidasLluvia=AtenuacionLluvia();
   var aux2=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
   var TiltTx = aux2[0];

@@ -378,6 +378,7 @@ function InputUser() {
   var perdidasConectores= parseNumber(document.getElementById("perdidasconectores").value);
   var perdidasOtras=parseNumber(document.getElementById("otrasperdidas").value);
   var perdidasFSL = FSL(distancia); //Se calculan las pérdidas de espacio libre considerando la altura de las antenas con los postes incluidos
+  perdidasFSL=parseFloat(perdidasFSL);
   var perdidasLluvia=AtenuacionLluvia();
   var aux2=Tilt(distancia); // Se calcula el ángulo del inclinación que deben tener las antenas para que tengan LOS
   var TiltTx = aux2[0];
@@ -727,6 +728,9 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	var dimensionestx=document.getElementById("dimensionestx").value;
 	var dimensionesrx=document.getElementById("dimensionesrx").value;
 	var pol=parseNumber(document.getElementById("polarizacion").value);
+	perdidasOtras=parseFloat(perdidasOtras);
+	perdidasConectores=parseFloat(perdidasConectores);
+	perdidasFSL=parseFloat(perdidasFSL);
 
 	distancia=distancia.toFixed(3);
 	if(pol==1)
@@ -1492,6 +1496,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&valuetomodify_array='+valuetomodify_array+
      '&fresnelGlobal='+fresnel+
      '&enlace='+enlace+
+     '&hayLOS='+hayLOS+
      '" target="_blank">Haga click aquí para imprimir la página de resultados</a>';
   return;
 }
@@ -1526,7 +1531,7 @@ function ResultadosPruebaB(){
 	else if (result.enlace=="1")
 		enlace="Enlace no Aceptable";
 
-  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasLluvia)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
+  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
   var obj = [
 		{
 			name: "Altura total del Transmisor (m) ",
@@ -1549,18 +1554,6 @@ function ResultadosPruebaB(){
 			value: result.Ptx
 		},
 		{
-			name: "Potencia del Receptor (dBm)",
-			value: result.Prx
-		},
-		{
-			name: "Angulo Tilt Antena Transmisora (grados)",
-			value: result.TiltTx
-		},
-    {
-			name: "Angulo Tilt Antena Receptora (grados)",
-			value: result.TiltRx
-		},
-		{
 			name: "Sensibilidad de Recepción (dBm) ",
 			value: result.sensRX
 		},
@@ -1575,6 +1568,18 @@ function ResultadosPruebaB(){
 		{
 			name: "",
 			value: ""
+		},
+    {
+			name: "Angulo Tilt Antena Transmisora (grados)",
+			value: result.TiltTx
+		},
+    {
+			name: "Angulo Tilt Antena Receptora (grados)",
+			value: result.TiltRx
+		},
+		{
+			name: "Potencia del Receptor (dBm)",
+			value: result.Prx
 		},
 		{
 	    name: "Perdidas de Espacio Libre (dB)",
@@ -1641,6 +1646,10 @@ function ResultadosPruebaB(){
       value: ""
     },
     {
+	    name: "Hay linea de vista?",
+	    value: result.hayLOS
+	  },
+    {
       name: "Viabilidad del enlace",
       value: enlace
     }];
@@ -1671,19 +1680,21 @@ function parseNumber(numberString){
   if (busqueda>=0)
     res = numberString.replace(",", ".");
   else {
-    res= parseFloat(numberString);//numberString.toString().replace(/[.]/, ",");
-    /*var reMatch = /^[+-]?(\d+)(?:[,.](\d+))?$/.exec(numberString);
-    if (!reMatch) {
-      return NaN;
-    } else if (!reMatch[2]) {
-      return +reMatch[1];
-    } else {
-      return +(reMatch[1] +'.'+ reMatch[2]);
-    }*/
+    res= parseFloat(numberString);    
   }
   res=parseFloat(res);
   return (res);
 }
+
+
+/*var reMatch = /^[+-]?(\d+)(?:[,.](\d+))?$/.exec(numberString);
+if (!reMatch) {
+  return NaN;
+} else if (!reMatch[2]) {
+  return +reMatch[1];
+} else {
+  return +(reMatch[1] +'.'+ reMatch[2]);
+}*/
 
 function ToRadians(degree) {
   return (degree * (Math.PI / 180));
