@@ -19,7 +19,7 @@ function AtenuacionLluvia() {
 	var indice= arrayfrec.indexOf(Inputfreq);
 	if(indice== -1){
 		var i=0;
-		while (Inputfreq<=arrayfrec[i]){ // redondeo para abajo
+		while (Inputfreq>=arrayfrec[i]){ // redondeo para abajo
 			i++;
 		}
 		frecu = arrayfrec[i];
