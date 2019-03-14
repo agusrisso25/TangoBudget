@@ -32,14 +32,18 @@ function Bullington(distancia) {
 				mayorPendTx=pend1;
 			ctemayorPendTx=cte1;
 		}
+		console.log("mayorPendTx: "+mayorPendTx);
+		console.log("ctePendTx: "+ctemayorPendTx);
 
 		for(j=0;j<distanciaFresnel.length;j++){
-			pend2=((altura[altura.length-1]-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
-			cte2=altura[altura.length-1]-distancia*((altura[altura.length-1]-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
-			if(mayorPendRx>pend2){
+			pend2=((altura[altura.length-1]-alturaFresnel[j])/(distancia*1000-distanciaFresnel[j]));
+			cte2=altura[altura.length-1]-distancia*1000*((altura[altura.length-1]-alturaFresnel[j])/(distancia*1000-distanciaFresnel[j]));
+			if(mayorPendRx<pend2){
 				mayorPendRx=pend2;
 				ctemayorPendRx=cte2;
 				}
+				console.log("mayorPendRx: "+mayorPendRx);
+				console.log("ctePendRx: "+ctemayorPendRx);
 		}
 
 		/* Luego, se debe intersectar las dos rectas con mayor pendiente para encontrar la distancia y altura del
@@ -52,8 +56,12 @@ function Bullington(distancia) {
 		*/
 		OIficticio=Math.floor((ctemayorPendRx-ctemayorPendTx)/(mayorPendTx-mayorPendRx)); //este valor sirve para tener una noción de donde estará el objeto interferente ficticio
 		h_OIficticio=mayorPendTx*OIficticio+ctemayorPendTx; //Esta será la altura del objeto ficticio
-		a1= OIficticio*100;
-		a2=(distancia-a1);
+
+		console.log("OIficticio:" +OIficticio);
+		console.log("h_OIficticio:" +h_OIficticio);
+
+		a1= OIficticio*10;
+		a2=(distancia*1000-a1);
 
 		d1=Math.abs(a1/Math.cos(mayorPendTx));
 		d2=Math.abs(a2/Math.cos(mayorPendRx));

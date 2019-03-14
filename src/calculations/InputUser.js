@@ -11,6 +11,10 @@ los pasos de analisis son los siguientes:
 7. Se analiza el margen de fading
 */
 function InputUser() {
+  if(fresnelGlobal==2){
+    alert("El 40% del Fresnel está obstruido. Por favor mejorar las alturas de las antenas para avanzar");
+    return;
+  }
   var Gtx=parseNumber(document.getElementById("gananciatx").value);
   var Grx=parseNumber(document.getElementById("gananciarx").value);
   var Ptx=parseNumber(document.getElementById("potenciatx").value);
@@ -45,20 +49,22 @@ function InputUser() {
 
   var diffBullington=0;
   if(fresnelGlobal==1)
-    diffBullington=Bullington(distancia);
+    diffBullington=Bullington(distancia).toFixed(3);
 
-  var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
+  var Prx=parseFloat(Gtx)+parseFloat(Grx)+parseFloat(Ptx)-parseFloat(perdidasConectores)-parseFloat(perdidasFSL)-parseFloat(perdidasOtras)-parseFloat(diffBullington); //Se calcula la potencia de recepción
   Prx=Prx.toFixed(2);
   var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
-  console.log("Prx: " +Prx);
   if(sensRX>0 || sensRX==""){
     alert("Debe ingresar una Sensibilidad de Recepción correcta");
     return;
   }
   if(Prx>sensRX){
     MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
+    if (MargenFading<30){
+      alert("Se recomienda tener un Margen de Fading mayor a 30 dB");
+    }
     //disp_canalMC = DispCanalBarnett(distancia,MargenFading);
-    var aux = DispCanalITU(distancia,MargenFading);
+    var aux = DispCanalITU(distancia,MargenFading,perdidasLluvia);
     disp_mensualMC=aux[0];
     disp_anualMC=aux[1];
     indisp_anualmin=aux[2];
@@ -72,20 +78,19 @@ function InputUser() {
       enlace=0;
     }
     else{
-      console.log("Enlace no aceptable");
+      alert("Cuidado! Se recomienda verificar la disponibilidad del canal total.\n Se recomienda verificar: \n 1. Altura de las antenas \n 2.Acortar la distancia entre las antenas  \n 3. Frecuencia de transmisión \n 4. Mejorar el Margen de Fading ");
       enlace=1;
-      return;
     }
   }
   else{
-    alert("La potencia de recepción es menor a la sensibilidad");
+    alert("Ten cuidado! La potencia de recepción es menor a la sensibilidad. \n Con estos valores el enlace no es aceptable.\n Se sugiere tomar cualquiera de las siguientes opciones: \n 1. Aumentar la potencia de Transmisión \n 2. Aumentar la ganancia de las antenas \n 3. Acortar la distancia entre las antenas \n 4. Disminuir la frecuencia de transmisión");
     document.getElementById('table_div').innerHTML="";
     document.getElementById('link').innerHTML="";
-    return;
+    enlace=1;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
-  if (hayLOS == 1 || hayLOS=="Sí"){
-    hayLOS="Sí";
+  if (hayLOS == 1 || hayLOS=="Si"){
+    hayLOS="Si";
   }
   else if (hayLOS == 0 || hayLOS=="No"){
     hayLOS="No";
@@ -93,8 +98,7 @@ function InputUser() {
   else
     return;
 
-  console.log("Enlace en inputuser: " +enlace);
-  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
-  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
+  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace);
+  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace);//se genera la url del PruebaB
   return;
 }

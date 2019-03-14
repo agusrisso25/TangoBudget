@@ -9,6 +9,6 @@ function FSL(distancia) {
 	lambda = c/Inputfreq;
 	var frec=Inputfreq*1000;
 	var freespaceloss=32.4+20*Math.log10(frec*distancia);
-	resultado=freespaceloss.toFixed(2);
+	resultado=freespaceloss.toFixed(3);
 	return (resultado);
 }

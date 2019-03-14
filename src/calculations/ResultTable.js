@@ -18,7 +18,7 @@ function populateTable(obj) {
 	report.innerHTML = tabla;
 }
 
-function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -28,6 +28,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	perdidasOtras=parseFloat(perdidasOtras);
 	perdidasConectores=parseFloat(perdidasConectores);
 	perdidasFSL=parseFloat(perdidasFSL);
+	diffBullington=parseFloat(diffBullington);
 
 	distancia=distancia.toFixed(3);
 	if(pol==1)
@@ -51,7 +52,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	else if(enlace==1)
 		enlace="Enlace NO Aceptable";
 
-	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
+	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores+diffBullington;
 
 	var obj = [
 		{
@@ -107,7 +108,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: Prx
 		},
 		{
-	    name: "Perdidas de Espacio Libre (dB)",
+	    name: "Pérdidas de Espacio Libre (dB)",
 	    value: perdidasFSL
 	  },
 		{
@@ -115,16 +116,20 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	    value: MargenFading
 	  },
 		{
-	    name: "Perdidas por Lluvia (dB)",
+	    name: "Pérdidas por Lluvia (dB)",
 	    value: perdidasLluvia
 	  },
 		{
-	    name: "Perdidas de Conectores (dB)",
+	    name: "Pérdidas de Conectores (dB)",
 	    value: perdidasConectores
 	  },
 		{
-	    name: "Otras Perdidas (dB)",
+	    name: "Otras Pérdidas (dB)",
 	    value: perdidasOtras
+	  },
+		{
+	    name: "Pérdidas por Bullington (dB)",
+	    value: diffBullington
 	  },
 		{
 	    name: "TOTAL DE PERDIDAS (dB)",

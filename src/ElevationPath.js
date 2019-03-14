@@ -36,7 +36,6 @@ function plotElevation(elevations, status) {
       getFreq(); //Se recalcula el fresnel del camino
       document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").value = "0";
-      document.getElementById("frecuencia").value = "0";
       despeje=[]; //Se borra array de los despejes de los OI
       muestra_mod=[];
       for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
@@ -99,6 +98,8 @@ function plotElevation(elevations, status) {
         objInterferente='Arbol';
       else if (objInterferente=="edificio")
         objInterferente='Edificio';
+      else if(objInterferente=="Otro")
+        objInterferente='Otro';
 
     AgregarTabla(objInterferente);
     flag = 0;
@@ -109,8 +110,11 @@ function plotElevation(elevations, status) {
     data.setValue(muestra_mod[contador-1],1,altura[muestra_mod[contador-1]]); //Se modifica al valor anterior
     BorrarFila(); //Elimina de la tabla el ultimo valor modificado
 
-    delete (despeje[(fresnelOI_array[contador-1])]);
+    var firstocurr=despeje.indexOf(fresnelOI_array[contador-1]);//delete (despeje[(fresnelOI_array[contador-1])]);
+    despeje.splice(firstocurr,1);
     fresnelOI_array.pop(); //remueve el ultimo elemento del array
+    valuetomodify_array.pop();
+    distanciaobject_array.pop();
     contador--; //y se decrementa el contador
     flag=0;
   }
@@ -137,15 +141,15 @@ function plotElevation(elevations, status) {
     //luego debo saber en qué región de decisión está el despeje.
   	resultadoFresnel=hayDespejeCamino.sort();
   	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
-  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
   		fresnelGlobal=0;
   	}
   	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
-  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+  		document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
   		fresnelGlobal=1;
   	}
   	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
-  		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+  		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
   		fresnelGlobal=2;
   	}
   	else{
@@ -157,15 +161,15 @@ function plotElevation(elevations, status) {
     resultadoFresnel=despeje.sort();
     if(resultadoFresnel[despeje.length-1]==0){
       fresnelGlobal=0;
-      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
     }
     else if (resultadoFresnel[despeje.length-1]==1){
       fresnelGlobal=1;
-      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+      document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
     }
     else if(resultadoFresnel[despeje.length-1]==2){
       fresnelGlobal=2;
-      document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+      document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
     }
     else {
       document.getElementById("Fresnel").innerHTML = " ";

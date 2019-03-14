@@ -24,13 +24,12 @@ function ResultadosPruebaB(){
   }
 
   var enlace;
-  console.log("enlace:" +parseFloat(result.enlace));
   if (result.enlace=="0")
 		enlace="Enlace Aceptable";
 	else if (result.enlace=="1")
 		enlace="Enlace no Aceptable";
 
-  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
+  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores)+parseFloat(result.diffBullington);
   var obj = [
 		{
 			name: "Altura total del Transmisor (m) ",
@@ -81,24 +80,28 @@ function ResultadosPruebaB(){
 			value: result.Prx
 		},
 		{
-	    name: "Perdidas de Espacio Libre (dB)",
+	    name: "Pérdidas de Espacio Libre (dB)",
 	    value: result.perdidasFSL
 	  },
 		{
-	    name: "Perdidas por Fading (dB)",
+	    name: "Pérdidas por Fading (dB)",
 	    value: result.MargenFading
 	  },
 		{
-	    name: "Perdidas por Lluvia (dB)",
+	    name: "Pérdidas por Lluvia (dB)",
 	    value: result.perdidasLluvia
 	  },
 		{
-	    name: "Perdidas de Conectores (dB)",
+	    name: "Pérdidas de Conectores (dB)",
 	    value: result.perdidasConectores
 	  },
 		{
 	    name: "Otras Perdidas (dB)",
 	    value: result.perdidasOtras
+	  },
+    {
+	    name: "Pérdidas por Bullington (dB)",
+	    value: result.diffBullington
 	  },
 		{
 	    name: "TOTAL DE PERDIDAS (dB)",

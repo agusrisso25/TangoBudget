@@ -18,39 +18,43 @@ function DispCanalLLuvia (perdidasLluvia, MargenFading) {
   var index_p;
   var displluvia;
 
-  if(Inputfreq<10){
-    c0=c02;
+  if(perdidasLluvia==0){
+    displluvia=100;
   }
-  else {
-    c0=c01;
+  else{
+    if(Inputfreq<10){
+      c0=c02;
+    }
+    else {
+      c0=c01;
+    }
+    var c1=Math.pow(0.07,c0)*(Math.pow(0.12,(1-c0)));
+    var c2=0.855*c0+0.546*(1-c0);
+    var c3=0.139*c0+0.043*(1-c0);
+
+    i=0;
+    for(k=0.01;k>Math.pow(10,-7);k=k-0.000001){
+      p[i]=k;
+      ec2[i]=c1*(Math.pow(k,-(c2+c3*Math.log10(k))));
+      aux[i]=ec2[i];
+      i++;
+    }
+
+    var valor_mascercano;
+    var A=aux.sort();
+    for(m=0;aux[m]<ec1;m++)
+    {
+      valor_mascercano=aux[m];
+    }
+
+
+    //result_ec2=A[A.length-1];
+    index_p=ec2.indexOf(valor_mascercano);
+    result_p=p[index_p];
+
+    console.log("result_p: "+result_p);
+
+    displluvia=100-result_p;
+    return(displluvia);
   }
-
-  var c1=Math.pow(0.07,c0)*(Math.pow(0.12,(1-c0)));
-  var c2=0.855*c0+0.546*(1-c0);
-  var c3=0.139*c0+0.043*(1-c0);
-
-  i=0;
-  for(k=0.01;k>Math.pow(10,-7);k=k-0.000001){
-    p[i]=k;
-    ec2[i]=c1*(Math.pow(k,-(c2+c3*Math.log10(k))));
-    aux[i]=ec2[i];
-    i++;
-  }
-
-  var valor_mascercano;
-  var A=aux.sort();
-  for(m=0;aux[m]<ec1;m++)
-  {
-    valor_mascercano=aux[m];
-  }
-
-
-  //result_ec2=A[A.length-1];
-  index_p=ec2.indexOf(valor_mascercano);
-  result_p=p[index_p];
-
-  console.log("result_p: "+result_p);
-
-  displluvia=100-result_p;
-  return(displluvia);
 }

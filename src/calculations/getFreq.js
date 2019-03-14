@@ -22,15 +22,15 @@ function getFreq() {
 	var resultadoFresnel=hayDespejeCamino.sort();
 
 	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
-		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
 		fresnelGlobal=0;
 	}
 	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
-		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+		document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
 		fresnelGlobal=1;
 	}
 	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
-		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
 		fresnelGlobal=2;
 	}
 	else{

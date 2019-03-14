@@ -1,6 +1,6 @@
 /* Este bloque toma toda la información calculada y arma el link para que el usuario pueda ingresar al reporte final
 */
-function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
+function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -40,6 +40,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&perdidasLluvia='+perdidasLluvia+
      '&perdidasConectores='+perdidasConectores+
      '&perdidasOtras='+perdidasOtras+
+     '&diffBullington='+diffBullington+
      '&coordtx='+coordtx+
      '&coordrx='+coordrx+
      '&Freq='+freq+

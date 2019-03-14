@@ -5,7 +5,7 @@ Se calculan las siguientes disponibilidades:
 - Minutos de indisponibilidad anual
 */
 
-function DispCanalITU (distancia, MargenFading) {
+function DispCanalITU (distancia, MargenFading,perdidasLluvia) {
   var dN1 = -400;
   var rugosidad= 5.9; // uso este porque recomienta ITU
   var alturaantena;

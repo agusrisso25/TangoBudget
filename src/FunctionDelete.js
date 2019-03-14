@@ -21,7 +21,6 @@ function deleteMarkersAndPath() {
     document.getElementById('receptor').value = "0";
     document.getElementById('alturaantenarx').value = "0";
     document.getElementById('alturaantenatx').value = "0";
-    document.getElementById('frecuencia').value = "0";
 
     document.getElementById('result3').innerHTML="";
     document.getElementById("Ldevista").innerHTML= "";
