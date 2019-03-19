@@ -33,11 +33,12 @@ function plotElevation(elevations, status) {
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
-      getFreq(); //Se recalcula el fresnel del camino
       document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").value = "0";
       despeje=[]; //Se borra array de los despejes de los OI
       muestra_mod=[];
+
+      document.getElementById("Ldevista").innerHTML = "";
       for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
         BorrarFila();
     }
@@ -61,6 +62,7 @@ function plotElevation(elevations, status) {
         return;
       }
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
+      altura2[i]=altura[i];
       coordenadas[i] = elevations[i].location;
     }
     flag=0;
@@ -85,6 +87,7 @@ function plotElevation(elevations, status) {
     }
 
     data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva
+    altura2[muestra_mod[contador]]=valuetomodify;
     contador++;
     objInterferente=document.getElementById("objetointerferente").value;
 
@@ -108,6 +111,7 @@ function plotElevation(elevations, status) {
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador-1],1,altura[muestra_mod[contador-1]]); //Se modifica al valor anterior
+    altura2[muestra_mod[contador-1]]=altura[muestra_mod[contador-1]];
     BorrarFila(); //Elimina de la tabla el ultimo valor modificado
 
     var firstocurr=despeje.indexOf(fresnelOI_array[contador-1]);//delete (despeje[(fresnelOI_array[contador-1])]);
@@ -127,7 +131,13 @@ function plotElevation(elevations, status) {
     data.setValue(altura.length-1,1,parseFloat(document.getElementById("alturaantenarx").value)+AlturaFin);
     altura[0]=(AlturaIni+parseFloat(document.getElementById("alturaantenatx").value));
     altura[altura.length-1]= (AlturaFin+parseFloat(document.getElementById("alturaantenarx").value));
+    altura2[0]=(AlturaIni+parseFloat(document.getElementById("alturaantenatx").value));
+    altura2[altura.length-1]= (AlturaFin+parseFloat(document.getElementById("alturaantenarx").value));
     flag=0;
+    if (Inputfreq){
+      getFreq();
+    }
+
   }
 
   chart.draw(data, {

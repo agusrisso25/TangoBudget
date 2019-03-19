@@ -35,6 +35,10 @@ function addMarkersAndAll(location, map) {
 
       latitud[1] = marker.getPosition().lat();
       longitud[1] = marker.getPosition().lng();
+      if(table_div && link){
+        document.getElementById('result_table').innerHTML="";
+        document.getElementById('link').innerHTML="";
+      }
     }
     else {
       // si muevo el marcador A
@@ -48,7 +52,10 @@ function addMarkersAndAll(location, map) {
 
       latitud[0] = marker.getPosition().lat();
       longitud[0] = marker.getPosition().lng();
-
+      if(table_div && link){
+        document.getElementById('result_table').innerHTML="";
+        document.getElementById('link').innerHTML="";
+      }
     }
     flag=2; //Seteo el flag en 2 para que desde elevationPath se actualice el data
     showCoordenadas(latitud, longitud);

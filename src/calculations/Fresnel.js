@@ -16,18 +16,18 @@ function Fresnel(Pmax,h_Pmax){
 
   var distancia = (haversine(radius, latitud, longitud))*1000;
   var pmedio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var h_pmedio = ((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
-  var alpha=Math.atan2((altura[altura.length-1]-altura[0]),distancia); //Resultado en Radianes
+  var h_pmedio = ((-altura2[0]+altura2[altura2.length-1])/distancia)*(distancia/2)+altura2[0];
+  var alpha=Math.atan2((altura2[altura2.length-1]-altura2[0]),distancia); //Resultado en Radianes
 
-  var d1=pmedio/Math.cos(((-2/distancia)*(altura[0]-h_pmedio))/distancia);
-  var d2=pmedio/Math.cos(((-2/distancia)*(altura[altura.length-1]-h_pmedio))/distancia);
+  var d1=pmedio/Math.cos(((-2/distancia)*(altura2[0]-h_pmedio))/distancia);
+  var d2=pmedio/Math.cos(((-2/distancia)*(altura2[altura2.length-1]-h_pmedio))/distancia);
 
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
   var fresnel60= R1*0.6;
   var fresnel40= R1*0.4;
 
-  pendLOS=((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
+  //pendLOS=((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
   var resultadofresnelTOT;
 
   if(h_Pmax>h_pmedio) {

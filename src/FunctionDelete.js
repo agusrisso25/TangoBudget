@@ -28,6 +28,8 @@ function deleteMarkersAndPath() {
     document.getElementById('result_table').innerHTML="";
     document.getElementById('table_div').innerHTML="";
 
+    document.getElementById('result_table').innerHTML="";
+    document.getElementById('link').innerHTML="";
     document.getElementById('elevation_chart').innerHTML="";
     document.getElementById('link').innerHTML="";
 }

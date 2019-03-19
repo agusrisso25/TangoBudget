@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-03-09 */function addMarkersAndAll(location, map) {
+/*! tangobudget - v0.0.1 - 2019-03-18 */function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
   path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
@@ -31,6 +31,10 @@
 
       latitud[1] = marker.getPosition().lat();
       longitud[1] = marker.getPosition().lng();
+      if(table_div && link){
+        document.getElementById('result_table').innerHTML="";
+        document.getElementById('link').innerHTML="";
+      }
     }
     else {
       // si muevo el marcador A
@@ -44,9 +48,16 @@
 
       latitud[0] = marker.getPosition().lat();
       longitud[0] = marker.getPosition().lng();
-
+      if(table_div && link){
+        document.getElementById('result_table').innerHTML="";
+        document.getElementById('link').innerHTML="";
+      }
     }
     flag=2; //Seteo el flag en 2 para que desde elevationPath se actualice el data
+    altura=[];
+    altura2=[];
+    hayDespejeCamino=[];
+    getFreq(); //Se recalcula el fresnel del camino
     showCoordenadas(latitud, longitud);
 
     if (markers.length == 2) {
@@ -105,14 +116,18 @@ function Bullington(distancia) {
 				mayorPendTx=pend1;
 			ctemayorPendTx=cte1;
 		}
+		console.log("mayorPendTx: "+mayorPendTx);
+		console.log("ctePendTx: "+ctemayorPendTx);
 
 		for(j=0;j<distanciaFresnel.length;j++){
-			pend2=((altura[altura.length-1]-alturaFresnel[i])/(distancia-distanciaFresnel[i]));
-			cte2=altura[altura.length-1]-distancia*((altura[altura.length-1]-alturaFresnel[j])/(distancia-distanciaFresnel[j]));
-			if(mayorPendRx>pend2){
+			pend2=((altura[altura.length-1]-alturaFresnel[j])/(distancia*1000-distanciaFresnel[j]));
+			cte2=altura[altura.length-1]-distancia*1000*((altura[altura.length-1]-alturaFresnel[j])/(distancia*1000-distanciaFresnel[j]));
+			if(mayorPendRx<pend2){
 				mayorPendRx=pend2;
 				ctemayorPendRx=cte2;
 				}
+				console.log("mayorPendRx: "+mayorPendRx);
+				console.log("ctePendRx: "+ctemayorPendRx);
 		}
 
 		/* Luego, se debe intersectar las dos rectas con mayor pendiente para encontrar la distancia y altura del
@@ -125,8 +140,12 @@ function Bullington(distancia) {
 		*/
 		OIficticio=Math.floor((ctemayorPendRx-ctemayorPendTx)/(mayorPendTx-mayorPendRx)); //este valor sirve para tener una noción de donde estará el objeto interferente ficticio
 		h_OIficticio=mayorPendTx*OIficticio+ctemayorPendTx; //Esta será la altura del objeto ficticio
-		a1= OIficticio*100;
-		a2=(distancia-a1);
+
+		console.log("OIficticio:" +OIficticio);
+		console.log("h_OIficticio:" +h_OIficticio);
+
+		a1= OIficticio*10;
+		a2=(distancia*1000-a1);
 
 		d1=Math.abs(a1/Math.cos(mayorPendTx));
 		d2=Math.abs(a2/Math.cos(mayorPendRx));
@@ -175,7 +194,7 @@ function DispCanalBarnett(distancia,MargenFading) { //Barnet Vigant
 	return disp_canal;
 }
 
-function DispCanalITU (distancia, MargenFading) {
+function DispCanalITU (distancia, MargenFading,perdidasLluvia) {
   var dN1 = -400;
   var rugosidad= 5.9; // uso este porque recomienta ITU
   var alturaantena;
@@ -216,41 +235,45 @@ function DispCanalLLuvia (perdidasLluvia, MargenFading) {
   var index_p;
   var displluvia;
 
-  if(Inputfreq<10){
-    c0=c02;
+  if(perdidasLluvia==0){
+    displluvia=100;
   }
-  else {
-    c0=c01;
+  else{
+    if(Inputfreq<10){
+      c0=c02;
+    }
+    else {
+      c0=c01;
+    }
+    var c1=Math.pow(0.07,c0)*(Math.pow(0.12,(1-c0)));
+    var c2=0.855*c0+0.546*(1-c0);
+    var c3=0.139*c0+0.043*(1-c0);
+
+    i=0;
+    for(k=0.01;k>Math.pow(10,-7);k=k-0.000001){
+      p[i]=k;
+      ec2[i]=c1*(Math.pow(k,-(c2+c3*Math.log10(k))));
+      aux[i]=ec2[i];
+      i++;
+    }
+
+    var valor_mascercano;
+    var A=aux.sort();
+    for(m=0;aux[m]<ec1;m++)
+    {
+      valor_mascercano=aux[m];
+    }
+
+
+    //result_ec2=A[A.length-1];
+    index_p=ec2.indexOf(valor_mascercano);
+    result_p=p[index_p];
+
+    console.log("result_p: "+result_p);
+
+    displluvia=100-result_p;
+    return(displluvia);
   }
-
-  var c1=Math.pow(0.07,c0)*(Math.pow(0.12,(1-c0)));
-  var c2=0.855*c0+0.546*(1-c0);
-  var c3=0.139*c0+0.043*(1-c0);
-
-  i=0;
-  for(k=0.01;k>Math.pow(10,-7);k=k-0.000001){
-    p[i]=k;
-    ec2[i]=c1*(Math.pow(k,-(c2+c3*Math.log10(k))));
-    aux[i]=ec2[i];
-    i++;
-  }
-
-  var valor_mascercano;
-  var A=aux.sort();
-  for(m=0;aux[m]<ec1;m++)
-  {
-    valor_mascercano=aux[m];
-  }
-
-
-  //result_ec2=A[A.length-1];
-  index_p=ec2.indexOf(valor_mascercano);
-  result_p=p[index_p];
-
-  console.log("result_p: "+result_p);
-
-  displluvia=100-result_p;
-  return(displluvia);
 }
 
 function Fresnel(Pmax,h_Pmax){
@@ -264,18 +287,18 @@ function Fresnel(Pmax,h_Pmax){
 
   var distancia = (haversine(radius, latitud, longitud))*1000;
   var pmedio=(distancia)/2; //Se halla el punto medio entre las antenas Tx y Rx
-  var h_pmedio = ((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
-  var alpha=Math.atan2((altura[altura.length-1]-altura[0]),distancia); //Resultado en Radianes
+  var h_pmedio = ((-altura2[0]+altura2[altura2.length-1])/distancia)*(distancia/2)+altura2[0];
+  var alpha=Math.atan2((altura2[altura2.length-1]-altura2[0]),distancia); //Resultado en Radianes
 
-  var d1=pmedio/Math.cos(((-2/distancia)*(altura[0]-h_pmedio))/distancia);
-  var d2=pmedio/Math.cos(((-2/distancia)*(altura[altura.length-1]-h_pmedio))/distancia);
+  var d1=pmedio/Math.cos(((-2/distancia)*(altura2[0]-h_pmedio))/distancia);
+  var d2=pmedio/Math.cos(((-2/distancia)*(altura2[altura2.length-1]-h_pmedio))/distancia);
 
   R1=Math.sqrt((lambda*d1*d2)/(d1+d2)); //Se halla el radio de la primera zona de fresnel, por definición
 
   var fresnel60= R1*0.6;
   var fresnel40= R1*0.4;
 
-  pendLOS=((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
+  //pendLOS=((-altura[0]+altura[altura.length-1])/distancia)*(distancia/2)+altura[0];
   var resultadofresnelTOT;
 
   if(h_Pmax>h_pmedio) {
@@ -302,7 +325,7 @@ function FSL(distancia) {
 	lambda = c/Inputfreq;
 	var frec=Inputfreq*1000;
 	var freespaceloss=32.4+20*Math.log10(frec*distancia);
-	resultado=freespaceloss.toFixed(2);
+	resultado=freespaceloss.toFixed(3);
 	return (resultado);
 }
 
@@ -313,12 +336,12 @@ function getFreq() {
 
 	//Se calcula si hay despeje de fresnel a lo largo del camino
 	var j=0;
-	for (i=1;i<(altura.length-1); i++){
-		hayDespejeCamino[i]=Fresnel(i,altura[i]);
+	for (i=1;i<altura.length-1; i++){
+		hayDespejeCamino[i]=Fresnel(i*10,altura2[i]);
 		//En caso que tenga un objeto interferente entre 60% y 40% necesito guardar la muestra y la altura del camino para pérdidas por Difracción
 		if (hayDespejeCamino[i] == 1){
 			distanciaFresnel [j]= i;
-			alturaFresnel [j]= altura[i];
+			alturaFresnel [j]= altura2[i];
 			j++;
 		}
 	}
@@ -327,15 +350,15 @@ function getFreq() {
 	var resultadoFresnel=hayDespejeCamino.sort();
 
 	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
-		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
 		fresnelGlobal=0;
 	}
 	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
-		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+		document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
 		fresnelGlobal=1;
 	}
 	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
-		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
 		fresnelGlobal=2;
 	}
 	else{
@@ -352,6 +375,14 @@ function indispMin(disponibilidad){
 }
 
 function InputUser() {
+  if(fresnelGlobal==2){
+    alert("El 40% del Fresnel está obstruido. Por favor mejorar las alturas de las antenas para avanzar");
+    if(table_div && link){
+      document.getElementById('result_table').innerHTML="";
+      document.getElementById('link').innerHTML="";
+    }
+    return;
+  }
   var Gtx=parseNumber(document.getElementById("gananciatx").value);
   var Grx=parseNumber(document.getElementById("gananciarx").value);
   var Ptx=parseNumber(document.getElementById("potenciatx").value);
@@ -386,20 +417,22 @@ function InputUser() {
 
   var diffBullington=0;
   if(fresnelGlobal==1)
-    diffBullington=Bullington(distancia);
+    diffBullington=Bullington(distancia).toFixed(3);
 
-  var Prx=parseFloat(Gtx+Grx+Ptx-perdidasConectores-perdidasFSL-perdidasOtras-diffBullington); //Se calcula la potencia de recepción
+  var Prx=parseFloat(Gtx)+parseFloat(Grx)+parseFloat(Ptx)-parseFloat(perdidasConectores)-parseFloat(perdidasFSL)-parseFloat(perdidasOtras)-parseFloat(diffBullington); //Se calcula la potencia de recepción
   Prx=Prx.toFixed(2);
   var sensRX=parseFloat(document.getElementById("sensibilidadrx").value); //parametro de la datasheet de la antena
-  console.log("Prx: " +Prx);
   if(sensRX>0 || sensRX==""){
     alert("Debe ingresar una Sensibilidad de Recepción correcta");
     return;
   }
   if(Prx>sensRX){
     MargenFading=(Prx-sensRX); //Condicion necesaria para que el receptor pueda recibir la señal
+    if (MargenFading<30){
+      alert("Se recomienda tener un Margen de Fading mayor a 30 dB");
+    }
     //disp_canalMC = DispCanalBarnett(distancia,MargenFading);
-    var aux = DispCanalITU(distancia,MargenFading);
+    var aux = DispCanalITU(distancia,MargenFading,perdidasLluvia);
     disp_mensualMC=aux[0];
     disp_anualMC=aux[1];
     indisp_anualmin=aux[2];
@@ -413,20 +446,19 @@ function InputUser() {
       enlace=0;
     }
     else{
-      console.log("Enlace no aceptable");
+      alert("Cuidado! Se recomienda verificar la disponibilidad del canal total.\n Se recomienda verificar: \n 1. Altura de las antenas \n 2.Acortar la distancia entre las antenas  \n 3. Frecuencia de transmisión \n 4. Mejorar el Margen de Fading ");
       enlace=1;
-      return;
     }
   }
   else{
-    alert("La potencia de recepción es menor a la sensibilidad");
-    document.getElementById('table_div').innerHTML="";
+    alert("Ten cuidado! La potencia de recepción es menor a la sensibilidad. \n Con estos valores el enlace no es aceptable.\n Se sugiere tomar cualquiera de las siguientes opciones: \n 1. Aumentar la potencia de Transmisión \n 2. Aumentar la ganancia de las antenas \n 3. Acortar la distancia entre las antenas \n 4. Disminuir la frecuencia de transmisión");
+    document.getElementById('result_table').innerHTML="";
     document.getElementById('link').innerHTML="";
-    return;
+    enlace=1;
   }
   //Se analiza la linea de vista para pasar a la tabla de resultados
-  if (hayLOS == 1 || hayLOS=="Sí"){
-    hayLOS="Sí";
+  if (hayLOS == 1 || hayLOS=="Si"){
+    hayLOS="Si";
   }
   else if (hayLOS == 0 || hayLOS=="No"){
     hayLOS="No";
@@ -434,9 +466,8 @@ function InputUser() {
   else
     return;
 
-  console.log("Enlace en inputuser: " +enlace);
-  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);
-  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace);//se genera la url del PruebaB
+  Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace);
+  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace);//se genera la url del PruebaB
   return;
 }
 
@@ -444,30 +475,30 @@ function LOS(elevations,coordenadas) {
   var pend1;
   var pend2;
   var posic_Pmax2;
-  var posic_Pmax= altura.indexOf(data.getDistinctValues(1).filter(function (v) {
+  var posic_Pmax= altura2.indexOf(data.getDistinctValues(1).filter(function (v) {
       return !isNaN(v);
-    })[altura.length - 1]); //calculo la posicion del array del punto mas alto
+    })[altura2.length - 1]); //calculo la posicion del array del punto mas alto
 
-  //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura del punto maximo.
-  if(posic_Pmax != 0 && posic_Pmax != altura.length-1){
+  //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura2 del punto maximo.
+  if(posic_Pmax != 0 && posic_Pmax != altura2.length-1){
   	//caso 1: Pmax mayor a ambas antenas
-  	var Pmax= parseFloat(data.getDistinctValues(1)[altura.length-1].toFixed(3)); //calculo altura maxima
-    if (Pmax>altura[altura.length-1].toFixed(3) && Pmax>altura[0].toFixed(3)){
+  	var Pmax= parseFloat(data.getDistinctValues(1)[altura2.length-1].toFixed(3)); //calculo altura2 maxima
+    if (Pmax>altura2[altura2.length-1].toFixed(3) && Pmax>altura2[0].toFixed(3)){
   		return 0; //NO TENGO LOS: return 0
   }
   //caso 2: Pmax mayor a la antena Tx y menor a la Rx
-  else if ((parseFloat(altura[0].toFixed(3))<Pmax) && (Pmax<parseFloat(altura[altura.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion altura.length
-  	pend1= ((altura[altura.length-1].toFixed(3)-altura[0].toFixed(3))/((altura.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-  	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+  else if ((parseFloat(altura2[0].toFixed(3))<Pmax) && (Pmax<parseFloat(altura2[altura2.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion altura2.length
+  	pend1= ((altura2[altura2.length-1].toFixed(3)-altura2[0].toFixed(3))/((altura2.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+  	pend2= (Pmax-altura2[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
   	if (pend1>=pend2){
   		return 1;} //TENGO LOS: return 1
   	else
       return 0; //NO TENGO LOS: return 0
   	}
   //caso 3: Pmax mayor a la antena Rx y menor a la Tx
-  else if ((parseFloat(altura[altura.length-1].toFixed(3))<Pmax)&&(Pmax<parseFloat(altura[0].toFixed(3)))){ //el punto mas bajo es el de la posicion 0
-  	pend1= ((altura[altura.length-1].toFixed(3)-altura[0].toFixed(3))/((altura.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-  	pend2= (Pmax-altura[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+  else if ((parseFloat(altura2[altura2.length-1].toFixed(3))<Pmax)&&(Pmax<parseFloat(altura2[0].toFixed(3)))){ //el punto mas bajo es el de la posicion 0
+  	pend1= ((altura2[altura2.length-1].toFixed(3)-altura2[0].toFixed(3))/((altura2.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+  	pend2= (Pmax-altura2[0].toFixed(3))/(posic_Pmax-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
   	if (pend2<pend1)
   		return 1; //TENGO LOS: return 1
   	else
@@ -479,29 +510,29 @@ function LOS(elevations,coordenadas) {
   }
 
   //CASO B1: La posicion máxima es el origen o el destino
-  else if(posic_Pmax == 0 || posic_Pmax == (altura.length-1)){
-		posic_Pmax2= parseFloat(altura.indexOf(data.getDistinctValues(1)[altura.length-2]));
+  else if(posic_Pmax == 0 || posic_Pmax == (altura2.length-1)){
+		posic_Pmax2= parseFloat(altura2.indexOf(data.getDistinctValues(1)[altura2.length-2]));
 
-	  if(posic_Pmax2 == 0 || posic_Pmax2 == (altura.length-1)){ //Si Pmax2 sigue siendo uno de los extremos...
-			var Pmax3= parseFloat(data.getDistinctValues(1)[altura.length-3].toFixed(1));
-			var posic_Pmax3=altura.indexOf(data.getDistinctValues(1)[altura.length-3]);
+	  if(posic_Pmax2 == 0 || posic_Pmax2 == (altura2.length-1)){ //Si Pmax2 sigue siendo uno de los extremos...
+			var Pmax3= parseFloat(data.getDistinctValues(1)[altura2.length-3].toFixed(1));
+			var posic_Pmax3=altura2.indexOf(data.getDistinctValues(1)[altura2.length-3]);
 	    	//caso 1: Pmax3 mayor a ambas antenas
-					if (Pmax3>parseFloat(altura[altura.length-1].toFixed(3)) && Pmax3>parseFloat(altura[0].toFixed(3)))
+					if (Pmax3>parseFloat(altura2[altura2.length-1].toFixed(3)) && Pmax3>parseFloat(altura2[0].toFixed(3)))
               return 0; //NO TENGO LOS: return 0
 
 				//caso 2: Pmax3 mayor a la antena Tx y menor a la Rx
-					else if ((parseFloat(altura[0].toFixed(3))<Pmax3)&& (Pmax3<parseFloat(altura[altura.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion altura.length
-							pend1= ((altura[altura.length-2].toFixed(3)-altura[0].toFixed(3))/((altura.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-							pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+					else if ((parseFloat(altura2[0].toFixed(3))<Pmax3)&& (Pmax3<parseFloat(altura2[altura2.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion altura2.length
+							pend1= ((altura2[altura2.length-2].toFixed(3)-altura2[0].toFixed(3))/((altura2.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+							pend2= (Pmax3-altura2[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 							if (pend1>=pend2)
 									return 1; //TENGO LOS: return 1
 							else
                 return 0; //NO TENGO LOS: return 0
 							}//cierro caso 2 Pmx3
 				//caso 3: Pmax mayor a la antena Rx y menor a la Tx
-				else if ((parseFloat(altura[altura.length-1].toFixed(3))<Pmax3) && (Pmax3<parseFloat(altura[0].toFixed(3)))){ //el punto mas bajo es el de la posicion 0
-						pend1= ((altura[altura.length-1].toFixed(3)-altura[0].toFixed(3))/((altura.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-						pend2= (Pmax3-altura[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+				else if ((parseFloat(altura2[altura2.length-1].toFixed(3))<Pmax3) && (Pmax3<parseFloat(altura2[0].toFixed(3)))){ //el punto mas bajo es el de la posicion 0
+						pend1= ((altura2[altura2.length-1].toFixed(3)-altura2[0].toFixed(3))/((altura2.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+						pend2= (Pmax3-altura2[0].toFixed(3))/(posic_Pmax3-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 						if (pend2<pend1)
 								return 1; //TENGO LOS: return 1
 						else
@@ -512,17 +543,17 @@ function LOS(elevations,coordenadas) {
 					return 1; //tengo LOS: return 1
      }
 
- //CASO B2: Si Pmax 2 es la maxima altura en mi path... y no es extremo
+ //CASO B2: Si Pmax 2 es la maxima altura2 en mi path... y no es extremo
 else {
 			//caso 1: Pmax2 mayor a ambas antenas
-			var Pmax2 = parseFloat(data.getDistinctValues(1)[altura.length-2].toFixed(1)); //nos da el valor de altura mas alto
-			if (Pmax2 > parseFloat(altura[altura.length-1].toFixed(3) && Pmax2>altura[0].toFixed(3))){
+			var Pmax2 = parseFloat(data.getDistinctValues(1)[altura2.length-2].toFixed(1)); //nos da el valor de altura2 mas alto
+			if (Pmax2 > parseFloat(altura2[altura2.length-1].toFixed(3) && Pmax2>altura2[0].toFixed(3))){
 				return 0; //NO TENGO LOS: return 0
 			}
 			//caso 2: Pmax2 mayor a la antena Tx y menor a la Rx
-			else if ((parseFloat(altura[0].toFixed(3))<Pmax2) && (Pmax2<parseFloat(altura[altura.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion altura.length
-				pend1= ((altura[altura.length-1].toFixed(3)-altura[0].toFixed(3))/((altura.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-				pend2= (Pmax2-altura[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+			else if ((parseFloat(altura2[0].toFixed(3))<Pmax2) && (Pmax2<parseFloat(altura2[altura2.length-1].toFixed(3)))){ //el punto mas alto es el de la posicion altura2.length
+				pend1= ((altura2[altura2.length-1].toFixed(3)-altura2[0].toFixed(3))/((altura2.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+				pend2= (Pmax2-altura2[0].toFixed(3))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 					if (pend1>=pend2)
 						return 1; //TENGO LOS: return 1
 					else
@@ -530,9 +561,9 @@ else {
 			}
 
 			//caso 3: Pmax2 mayor a la antena Rx y menor a la Tx
-			else if ((parseFloat(altura[altura.length-1].toFixed(1))<Pmax2) && (Pmax2<parseFloat(altura[0].toFixed(1)))){ //el punto mas bajo es el de la posicion 0
-				pend1= ((altura[altura.length-1].toFixed(1)-altura[0].toFixed(1))/((altura.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
-				pend2= (Pmax2-altura[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
+			else if ((parseFloat(altura2[altura2.length-1].toFixed(1))<Pmax2) && (Pmax2<parseFloat(altura2[0].toFixed(1)))){ //el punto mas bajo es el de la posicion 0
+				pend1= ((altura2[altura2.length-1].toFixed(1)-altura2[0].toFixed(1))/((altura2.length-1)-0)); //hallo el valor de la pendiente de la recta que pasa por las antenas.
+				pend2= (Pmax2-altura2[0].toFixed(1))/(posic_Pmax2-0); //hallo el valor de la pendiente de la recta que pasa por el punto maximo y la antena Tx
 				if (pend2<pend1)
 					return 1; //TENGO LOS: return 1
 				else
@@ -595,7 +626,6 @@ function ModifyRxTx() {
 
 function PasajeAnual(distancia, epsilon, Pw){
   var DeltaG=10.5-(5.6*Math.log10(1.1-Math.pow(Math.abs(Math.cos(2)),0.7)))-2.7*Math.log10(distancia)+1.7*Math.log10(1+Math.abs(epsilon));
-  console.log("deltaG: "+DeltaG);
   var dispanual = (1-Math.pow(10,-DeltaG/10)*Pw)*100;
 
   return dispanual;
@@ -703,8 +733,10 @@ function AtenuacionLluvia() {
 	var r = 1/((0.477*Math.pow(distancia,0.633)*Math.pow(R,(0.073*alfa))*Math.pow(Inputfreq,0.123))-10.579*(1-Math.exp(-0.024*distancia)));
 	var deff= distancia*r;
 	var A = gamaR*deff;
-	A=A.toFixed(2);
+	A=A.toFixed(3);
 
+	if (A<0)
+		A=0;
 	return(A);
 }
 
@@ -721,7 +753,7 @@ function populateTable(obj) {
 	report.innerHTML = tabla;
 }
 
-function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
+function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace){
 	var despejefinal;
 	var htx=altura[0].toFixed(2) +" metros";
 	var hrx=altura[altura.length-1].toFixed(2) +" metros";
@@ -731,6 +763,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	perdidasOtras=parseFloat(perdidasOtras);
 	perdidasConectores=parseFloat(perdidasConectores);
 	perdidasFSL=parseFloat(perdidasFSL);
+	diffBullington=parseFloat(diffBullington);
 
 	distancia=distancia.toFixed(3);
 	if(pol==1)
@@ -754,7 +787,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	else if(enlace==1)
 		enlace="Enlace NO Aceptable";
 
-	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores;
+	var totPerdidas=perdidasFSL+perdidasOtras+perdidasConectores+diffBullington;
 
 	var obj = [
 		{
@@ -810,7 +843,7 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 			value: Prx
 		},
 		{
-	    name: "Perdidas de Espacio Libre (dB)",
+	    name: "Pérdidas de Espacio Libre (dB)",
 	    value: perdidasFSL
 	  },
 		{
@@ -818,16 +851,20 @@ function Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,dis
 	    value: MargenFading
 	  },
 		{
-	    name: "Perdidas por Lluvia (dB)",
+	    name: "Pérdidas por Lluvia (dB)",
 	    value: perdidasLluvia
 	  },
 		{
-	    name: "Perdidas de Conectores (dB)",
+	    name: "Pérdidas de Conectores (dB)",
 	    value: perdidasConectores
 	  },
 		{
-	    name: "Otras Perdidas (dB)",
+	    name: "Otras Pérdidas (dB)",
 	    value: perdidasOtras
+	  },
+		{
+	    name: "Pérdidas por Bullington (dB)",
+	    value: diffBullington
 	  },
 		{
 	    name: "TOTAL DE PERDIDAS (dB)",
@@ -973,71 +1010,6 @@ function DeshacerAltura() {
 	}
 }
 
-//Aca debo de calcular las distancias a la posicion 0 y 255 desde el punto más alto != a los extremos:
-
-function DistanceToBorders (coordenadas, posic_Pmax){
-    lat[0] = coordenadas[posic_Pmax].lat(); // Coordenadas del punto más alto != a TX o RX
-    lng[0] = coordenadas[posic_Pmax].lng();
-    lat[1]= coordenadas[255].lat();
-    lng[1]=coordenadas[255].lng();
-
-    var distanciaRX = haversine(radius, lat, lng);
-    console.log("Distancia a RX" + distanciaRX.toFixed(6) + " km");
-
-    lat[1]= coordenadas[0].lat();
-    lng[1]=coordenadas[0].lng();
-
-    var distanciaTX = haversine(radius, lat, lng); // no se si puede llamar asi nomas, capaz se sobre escribe
-    console.log("Distancia a TX" + distanciaRX.toFixed(6) + " km");
-}
-(function () {
-  var boton = document.getElementById("Boton");
-  if (boton) {
-    dragElement(boton);
-  }
-})();
-
-function dragElement(elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  if (document.getElementById(elmnt.id + "Header")) {
-    /* if present, the header is where you move the DIV from:*/
-    document.getElementById(elmnt.id + "Header").onmousedown = dragMouseDown;
-  } else {
-    /* otherwise, move the DIV from anywhere inside the DIV:*/
-    elmnt.onmousedown = dragMouseDown;
-  }
-
-  function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  }
-
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
-
-  function closeDragElement() {
-    /* stop moving when mouse button is released:*/
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
-}
-
 function displayPathElevation(camino, elevator, dist) {
   if(dist>5)
     cant_redondeo=500;
@@ -1062,12 +1034,12 @@ function plotElevation(elevations, status) {
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
-      getFreq(); //Se recalcula el fresnel del camino
       document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").value = "0";
-      document.getElementById("frecuencia").value = "0";
       despeje=[]; //Se borra array de los despejes de los OI
       muestra_mod=[];
+
+      document.getElementById("Ldevista").innerHTML = "";
       for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
         BorrarFila();
     }
@@ -1091,6 +1063,7 @@ function plotElevation(elevations, status) {
         return;
       }
       altura[i] = data.getValue(i, 1); // guardo en el array altura todas las alturas de elevation en orden
+      altura2[i]=altura[i];
       coordenadas[i] = elevations[i].location;
     }
     flag=0;
@@ -1115,6 +1088,7 @@ function plotElevation(elevations, status) {
     }
 
     data.setValue(muestra_mod[contador], 1, valuetomodify); //Se setea en data la información nueva
+    altura2[muestra_mod[contador]]=valuetomodify;
     contador++;
     objInterferente=document.getElementById("objetointerferente").value;
 
@@ -1128,6 +1102,8 @@ function plotElevation(elevations, status) {
         objInterferente='Arbol';
       else if (objInterferente=="edificio")
         objInterferente='Edificio';
+      else if(objInterferente=="Otro")
+        objInterferente='Otro';
 
     AgregarTabla(objInterferente);
     flag = 0;
@@ -1136,10 +1112,14 @@ function plotElevation(elevations, status) {
 
   else if (flag==3){  //Cuando se desea deshacer la altura modificada
     data.setValue(muestra_mod[contador-1],1,altura[muestra_mod[contador-1]]); //Se modifica al valor anterior
+    altura2[muestra_mod[contador-1]]=altura[muestra_mod[contador-1]];
     BorrarFila(); //Elimina de la tabla el ultimo valor modificado
 
-    delete (despeje[(fresnelOI_array[contador-1])]);
+    var firstocurr=despeje.indexOf(fresnelOI_array[contador-1]);//delete (despeje[(fresnelOI_array[contador-1])]);
+    despeje.splice(firstocurr,1);
     fresnelOI_array.pop(); //remueve el ultimo elemento del array
+    valuetomodify_array.pop();
+    distanciaobject_array.pop();
     contador--; //y se decrementa el contador
     flag=0;
   }
@@ -1152,7 +1132,13 @@ function plotElevation(elevations, status) {
     data.setValue(altura.length-1,1,parseFloat(document.getElementById("alturaantenarx").value)+AlturaFin);
     altura[0]=(AlturaIni+parseFloat(document.getElementById("alturaantenatx").value));
     altura[altura.length-1]= (AlturaFin+parseFloat(document.getElementById("alturaantenarx").value));
+    altura2[0]=(AlturaIni+parseFloat(document.getElementById("alturaantenatx").value));
+    altura2[altura.length-1]= (AlturaFin+parseFloat(document.getElementById("alturaantenarx").value));
     flag=0;
+    if (Inputfreq){
+      getFreq();
+    }
+
   }
 
   chart.draw(data, {
@@ -1166,15 +1152,15 @@ function plotElevation(elevations, status) {
     //luego debo saber en qué región de decisión está el despeje.
   	resultadoFresnel=hayDespejeCamino.sort();
   	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
-  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
   		fresnelGlobal=0;
   	}
   	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
-  		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+  		document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
   		fresnelGlobal=1;
   	}
   	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
-  		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+  		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
   		fresnelGlobal=2;
   	}
   	else{
@@ -1186,15 +1172,15 @@ function plotElevation(elevations, status) {
     resultadoFresnel=despeje.sort();
     if(resultadoFresnel[despeje.length-1]==0){
       fresnelGlobal=0;
-      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje del 60%";
+      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
     }
     else if (resultadoFresnel[despeje.length-1]==1){
       fresnelGlobal=1;
-      document.getElementById("Fresnel").innerHTML = "Se tiene un despeje entre el 40% y 60%";
+      document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
     }
     else if(resultadoFresnel[despeje.length-1]==2){
       fresnelGlobal=2;
-      document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel";
+      document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
     }
     else {
       document.getElementById("Fresnel").innerHTML = " ";
@@ -1247,7 +1233,6 @@ function deleteMarkersAndPath() {
     document.getElementById('receptor').value = "0";
     document.getElementById('alturaantenarx').value = "0";
     document.getElementById('alturaantenatx').value = "0";
-    document.getElementById('frecuencia').value = "0";
 
     document.getElementById('result3').innerHTML="";
     document.getElementById("Ldevista").innerHTML= "";
@@ -1255,6 +1240,8 @@ function deleteMarkersAndPath() {
     document.getElementById('result_table').innerHTML="";
     document.getElementById('table_div').innerHTML="";
 
+    document.getElementById('result_table').innerHTML="";
+    document.getElementById('link').innerHTML="";
     document.getElementById('elevation_chart').innerHTML="";
     document.getElementById('link').innerHTML="";
 }
@@ -1268,6 +1255,7 @@ var longitud = []; //las longitudes se almacenan en un array
 var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = []; //Array que tiene toda la información del perfil de elevación y sin errores
+var altura2 = [];
 var coordenadas = [];
 var flag=0; //defino este flag para testear caso de uso en displayPathElevation
 var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight
@@ -1442,7 +1430,7 @@ function parseSearchString() {
   return result;
 }
 
-function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,enlace){
+function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace){
   var lat0=latitud[0].toFixed(3);
   var lng0=longitud[0].toFixed(3);
   var lat1=latitud[1].toFixed(3);
@@ -1482,6 +1470,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
      '&perdidasLluvia='+perdidasLluvia+
      '&perdidasConectores='+perdidasConectores+
      '&perdidasOtras='+perdidasOtras+
+     '&diffBullington='+diffBullington+
      '&coordtx='+coordtx+
      '&coordrx='+coordrx+
      '&Freq='+freq+
@@ -1525,13 +1514,12 @@ function ResultadosPruebaB(){
   }
 
   var enlace;
-  console.log("enlace:" +parseFloat(result.enlace));
   if (result.enlace=="0")
 		enlace="Enlace Aceptable";
 	else if (result.enlace=="1")
 		enlace="Enlace no Aceptable";
 
-  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores);
+  var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores)+parseFloat(result.diffBullington);
   var obj = [
 		{
 			name: "Altura total del Transmisor (m) ",
@@ -1582,24 +1570,28 @@ function ResultadosPruebaB(){
 			value: result.Prx
 		},
 		{
-	    name: "Perdidas de Espacio Libre (dB)",
+	    name: "Pérdidas de Espacio Libre (dB)",
 	    value: result.perdidasFSL
 	  },
 		{
-	    name: "Perdidas por Fading (dB)",
+	    name: "Pérdidas por Fading (dB)",
 	    value: result.MargenFading
 	  },
 		{
-	    name: "Perdidas por Lluvia (dB)",
+	    name: "Pérdidas por Lluvia (dB)",
 	    value: result.perdidasLluvia
 	  },
 		{
-	    name: "Perdidas de Conectores (dB)",
+	    name: "Pérdidas de Conectores (dB)",
 	    value: result.perdidasConectores
 	  },
 		{
 	    name: "Otras Perdidas (dB)",
 	    value: result.perdidasOtras
+	  },
+    {
+	    name: "Pérdidas por Bullington (dB)",
+	    value: result.diffBullington
 	  },
 		{
 	    name: "TOTAL DE PERDIDAS (dB)",

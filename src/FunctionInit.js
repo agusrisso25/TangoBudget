@@ -9,6 +9,7 @@ var longitud = []; //las longitudes se almacenan en un array
 var radius = 6371; // radio de la tierra
 var camino = [];
 var altura = []; //Array que tiene toda la información del perfil de elevación y sin errores
+var altura2 = [];
 var coordenadas = [];
 var flag=0; //defino este flag para testear caso de uso en displayPathElevation
 var muestra_mod=[]; // Nos indica cual es el valor de la muestra que hay que modificar en ModifyHeight

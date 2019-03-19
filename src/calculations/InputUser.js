@@ -13,6 +13,10 @@ los pasos de analisis son los siguientes:
 function InputUser() {
   if(fresnelGlobal==2){
     alert("El 40% del Fresnel está obstruido. Por favor mejorar las alturas de las antenas para avanzar");
+    if(table_div && link){
+      document.getElementById('result_table').innerHTML="";
+      document.getElementById('link').innerHTML="";
+    }
     return;
   }
   var Gtx=parseNumber(document.getElementById("gananciatx").value);
@@ -84,7 +88,7 @@ function InputUser() {
   }
   else{
     alert("Ten cuidado! La potencia de recepción es menor a la sensibilidad. \n Con estos valores el enlace no es aceptable.\n Se sugiere tomar cualquiera de las siguientes opciones: \n 1. Aumentar la potencia de Transmisión \n 2. Aumentar la ganancia de las antenas \n 3. Acortar la distancia entre las antenas \n 4. Disminuir la frecuencia de transmisión");
-    document.getElementById('table_div').innerHTML="";
+    document.getElementById('result_table').innerHTML="";
     document.getElementById('link').innerHTML="";
     enlace=1;
   }
