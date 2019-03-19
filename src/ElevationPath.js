@@ -33,6 +33,10 @@ function plotElevation(elevations, status) {
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
+      altura=[];
+      altura2=[];
+      hayDespejeCamino=[];
+      getFreq(); //Se recalcula el fresnel del camino
       document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
       document.getElementById("alturaantenarx").value = "0";
       despeje=[]; //Se borra array de los despejes de los OI
