@@ -24,7 +24,7 @@ function addMarkersAndAll(location, map) {
   showCoordenadas(latitud, longitud);
 
   //Cuando arrastro un marcador:
-  google.maps.event.addListener(marker, "drag", function(evt) {
+  google.maps.event.addListener(marker, "dragend", function(evt) {
     //muevo la linea cuando muevo los marcadores y creo una nueva:
     var etiqueta = marker.getLabel();
     if (etiqueta == "R") {

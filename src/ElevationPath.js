@@ -9,21 +9,36 @@ o si es la primera vez que se desea solicitar el perfil de elevación y data no 
 Finalmente, luego de todos los casos de uso, se actualiza la tabla y se calcula nuevamente si hay linea de vista
 */
 
-function displayPathElevation(camino, elevator, dist) {
-  if(dist>5)
-    cant_redondeo=500;
-  else{
-    var cant_muestras = dist * 100; // 100 muestras por km
-    cant_redondeo = Math.floor(cant_muestras);
-  }
-
-  elevator.getElevationAlongPath({
-    'path': camino,
-    'samples': cant_redondeo
-  }, plotElevation);
+function avoidExecutionOverlap(fun) {
+  var lock = false;
+  return function () {
+    if (!lock) {
+      lock = true;
+      try {
+        fun.apply(this, arguments);
+      } finally {
+        lock = false;
+      }
+    }
+  };
 }
 
-function plotElevation(elevations, status) {
+var displayPathElevation = avoidExecutionOverlap(
+  function displayPathElevation(camino, elevator, dist) {
+    if(dist>5)
+      cant_redondeo=500;
+    else{
+      var cant_muestras = dist * 100; // 100 muestras por km
+      cant_redondeo = Math.floor(cant_muestras);
+    }
+
+    elevator.getElevationAlongPath({
+      'path': camino,
+      'samples': cant_redondeo
+    }, plotElevation);
+  });
+
+var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, status) {
   chartDiv = document.getElementById('elevation_chart');
   if (status !== 'OK') {
     chartDiv.innerHTML = 'No se pudo calcular el perfil de elevación porque: ' + status;
@@ -194,7 +209,11 @@ function plotElevation(elevations, status) {
   hayLOS = LOS(elevations, coordenadas);
   if (hayLOS == 1) {
     document.getElementById("Ldevista").innerHTML = "¡Hay línea de vista!";
-  }
-  else if (hayLOS == 0)
+  } else if (hayLOS == 0) {
     document.getElementById("Ldevista").innerHTML = "¡Cuidado! No hay línea de vista. Se sugiere aumentar las alturas de las antenas.";
-}
+  }
+
+  if (elevations.length !== altura.length) {
+    console.log('elevations.length ('+ elevations.length +') !== altura.length ('+ altura.length +')!');//FIXME
+  }
+});

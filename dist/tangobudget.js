@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-03-18 */function addMarkersAndAll(location, map) {
+/*! tangobudget - v0.0.1 - 2019-03-19 */function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
   path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
@@ -20,7 +20,7 @@
   showCoordenadas(latitud, longitud);
 
   //Cuando arrastro un marcador:
-  google.maps.event.addListener(marker, "drag", function(evt) {
+  google.maps.event.addListener(marker, "dragend", function(evt) {
     //muevo la linea cuando muevo los marcadores y creo una nueva:
     var etiqueta = marker.getLabel();
     if (etiqueta == "R") {
@@ -467,18 +467,23 @@ function InputUser() {
   return;
 }
 
+function getArrayLast(array, fromLast) {
+  fromLast = fromLast || 0;
+  return array[array.length - 1 - fromLast];
+}
+
 function LOS(elevations,coordenadas) {
   var pend1;
   var pend2;
   var posic_Pmax2;
-  var posic_Pmax= altura2.indexOf(data.getDistinctValues(1).filter(function (v) {
+  var posic_Pmax= altura2.indexOf(getArrayLast(data.getDistinctValues(1).filter(function (v) {
       return !isNaN(v);
-    })[altura2.length - 1]); //calculo la posicion del array del punto mas alto
+    }))); //calculo la posicion del array del punto mas alto
 
   //CASO A: La posicion máxima es distinta al origen o al destino, calculo altura2 del punto maximo.
   if(posic_Pmax != 0 && posic_Pmax != altura2.length-1){
   	//caso 1: Pmax mayor a ambas antenas
-  	var Pmax= parseFloat(data.getDistinctValues(1)[altura2.length-1].toFixed(3)); //calculo altura2 maxima
+  	var Pmax= parseFloat(getArrayLast(data.getDistinctValues(1), 0).toFixed(3)); //calculo altura2 maxima
     if (Pmax>altura2[altura2.length-1].toFixed(3) && Pmax>altura2[0].toFixed(3)){
   		return 0; //NO TENGO LOS: return 0
   }
@@ -507,11 +512,11 @@ function LOS(elevations,coordenadas) {
 
   //CASO B1: La posicion máxima es el origen o el destino
   else if(posic_Pmax == 0 || posic_Pmax == (altura2.length-1)){
-		posic_Pmax2= parseFloat(altura2.indexOf(data.getDistinctValues(1)[altura2.length-2]));
+		posic_Pmax2= parseFloat(altura2.indexOf(getArrayLast(data.getDistinctValues(1), 1)));
 
 	  if(posic_Pmax2 == 0 || posic_Pmax2 == (altura2.length-1)){ //Si Pmax2 sigue siendo uno de los extremos...
-			var Pmax3= parseFloat(data.getDistinctValues(1)[altura2.length-3].toFixed(1));
-			var posic_Pmax3=altura2.indexOf(data.getDistinctValues(1)[altura2.length-3]);
+			var Pmax3= parseFloat(getArrayLast(data.getDistinctValues(1), 2).toFixed(1));
+			var posic_Pmax3=altura2.indexOf(getArrayLast(data.getDistinctValues(1), 2));
 	    	//caso 1: Pmax3 mayor a ambas antenas
 					if (Pmax3>parseFloat(altura2[altura2.length-1].toFixed(3)) && Pmax3>parseFloat(altura2[0].toFixed(3)))
               return 0; //NO TENGO LOS: return 0
@@ -542,7 +547,7 @@ function LOS(elevations,coordenadas) {
  //CASO B2: Si Pmax 2 es la maxima altura2 en mi path... y no es extremo
 else {
 			//caso 1: Pmax2 mayor a ambas antenas
-			var Pmax2 = parseFloat(data.getDistinctValues(1)[altura2.length-2].toFixed(1)); //nos da el valor de altura2 mas alto
+			var Pmax2 = parseFloat(getArrayLast(data.getDistinctValues(1), 1).toFixed(1)); //nos da el valor de altura2 mas alto
 			if (Pmax2 > parseFloat(altura2[altura2.length-1].toFixed(3) && Pmax2>altura2[0].toFixed(3))){
 				return 0; //NO TENGO LOS: return 0
 			}
@@ -1006,21 +1011,36 @@ function DeshacerAltura() {
 	}
 }
 
-function displayPathElevation(camino, elevator, dist) {
-  if(dist>5)
-    cant_redondeo=500;
-  else{
-    var cant_muestras = dist * 100; // 100 muestras por km
-    cant_redondeo = Math.floor(cant_muestras);
-  }
-
-  elevator.getElevationAlongPath({
-    'path': camino,
-    'samples': cant_redondeo
-  }, plotElevation);
+function avoidExecutionOverlap(fun) {
+  var lock = false;
+  return function () {
+    if (!lock) {
+      lock = true;
+      try {
+        fun.apply(this, arguments);
+      } finally {
+        lock = false;
+      }
+    }
+  };
 }
 
-function plotElevation(elevations, status) {
+var displayPathElevation = avoidExecutionOverlap(
+  function displayPathElevation(camino, elevator, dist) {
+    if(dist>5)
+      cant_redondeo=500;
+    else{
+      var cant_muestras = dist * 100; // 100 muestras por km
+      cant_redondeo = Math.floor(cant_muestras);
+    }
+
+    elevator.getElevationAlongPath({
+      'path': camino,
+      'samples': cant_redondeo
+    }, plotElevation);
+  });
+
+var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, status) {
   chartDiv = document.getElementById('elevation_chart');
   if (status !== 'OK') {
     chartDiv.innerHTML = 'No se pudo calcular el perfil de elevación porque: ' + status;
@@ -1191,10 +1211,14 @@ function plotElevation(elevations, status) {
   hayLOS = LOS(elevations, coordenadas);
   if (hayLOS == 1) {
     document.getElementById("Ldevista").innerHTML = "¡Hay línea de vista!";
-  }
-  else if (hayLOS == 0)
+  } else if (hayLOS == 0) {
     document.getElementById("Ldevista").innerHTML = "¡Cuidado! No hay línea de vista. Se sugiere aumentar las alturas de las antenas.";
-}
+  }
+
+  if (elevations.length !== altura.length) {
+    console.log('elevations.length ('+ elevations.length +') !== altura.length ('+ altura.length +')!');//FIXME
+  }
+});
 
 function showCoordenadas(latitud, longitud) {
   for (var i = 0; i < markers.length; i++) {
@@ -1670,11 +1694,10 @@ function parseNumber(numberString){
   var busqueda=numberString.search(",");
   var res;
   if (busqueda>=0)
-    res = numberString.replace(",", ".");
+    res = parseFloat(numberString.replace(",", "."));
   else {
-    res= parseFloat(numberString);    
+    res= parseFloat(numberString);
   }
-  res=parseFloat(res);
   return (res);
 }
 

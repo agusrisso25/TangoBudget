@@ -4,11 +4,10 @@ function parseNumber(numberString){
   var busqueda=numberString.search(",");
   var res;
   if (busqueda>=0)
-    res = numberString.replace(",", ".");
+    res = parseFloat(numberString.replace(",", "."));
   else {
-    res= parseFloat(numberString);    
+    res= parseFloat(numberString);
   }
-  res=parseFloat(res);
   return (res);
 }
 
