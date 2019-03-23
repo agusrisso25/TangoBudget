@@ -53,7 +53,7 @@ function InputUser() {
 
   var diffBullington=0;
   if(fresnelGlobal==1)
-    diffBullington=Bullington(distancia).toFixed(3);
+    diffBullington=Bullington(distancia).toFixed(8);
 
   var Prx=parseFloat(Gtx)+parseFloat(Grx)+parseFloat(Ptx)-parseFloat(perdidasConectores)-parseFloat(perdidasFSL)-parseFloat(perdidasOtras)-parseFloat(diffBullington); //Se calcula la potencia de recepción
   Prx=Prx.toFixed(2);

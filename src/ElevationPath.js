@@ -99,8 +99,9 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
     fresnelOI_array[contador]=resFresnel; //Guardo en el histórico el resultado del despeje de fresnel
     despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
 
+    var largoarray;
     if (despeje[contador]==1){
-      var largoarray=(distanciaFresnel.length-1);
+      largoarray=(distanciaFresnel.length);
       distanciaFresnel[largoarray]=muestra_mod[contador];
       alturaFresnel[largoarray]=valuetomodify;
     }

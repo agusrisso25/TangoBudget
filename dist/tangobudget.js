@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-03-22 */function addMarkersAndAll(location, map) {
+/*! tangobudget - v0.0.1 - 2019-03-23 */function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
   path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
@@ -330,10 +330,10 @@ function getFreq() {
 	var despeje60;
 	var despeje40;
 
-	if(distanciaFresnel){
+	/*if(distanciaFresnel){
 		distanciaFresnel=[];
 		alturaFresnel=[];
-	}
+	}*/
 	//Se calcula si hay despeje de fresnel a lo largo del camino
 	var j=0;
 	for (i=1;i<altura.length-1; i++){
@@ -345,26 +345,51 @@ function getFreq() {
 			j++;
 		}
 	}
-
-	//luego debo saber en qué región de decisión está el despeje.
 	var resultadoFresnel=hayDespejeCamino.sort();
-
-	if(resultadoFresnel[hayDespejeCamino.length-2]==0){
-		document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
-		fresnelGlobal=0;
-	}
-	else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
-		document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
-		fresnelGlobal=1;
-	}
-	else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
-		document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
-		fresnelGlobal=2;
+	if(!despeje){
+		//luego debo saber en qué región de decisión está el despeje.
+		if(resultadoFresnel[hayDespejeCamino.length-2]==0){
+			document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
+			fresnelGlobal=0;
+		}
+		else if(resultadoFresnel[hayDespejeCamino.length-2]==1){
+			document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
+			fresnelGlobal=1;
+		}
+		else if(resultadoFresnel[hayDespejeCamino.length-2]==2){
+			document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
+			fresnelGlobal=2;
+		}
+		else{
+			document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+		}
 	}
 	else{
-		document.getElementById("Fresnel").innerHTML = "No se pudo medir";
+		despeje.sort();
+		if(resultadoFresnel[hayDespejeCamino.length-2]==0 && despeje[despeje.length-1]==0){
+			document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
+			fresnelGlobal=0;
+		}
+		else if(resultadoFresnel[hayDespejeCamino.length-2]==1 && despeje[despeje.length-1]==0){
+			document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
+			fresnelGlobal=1;
+		}
+		else if(resultadoFresnel[hayDespejeCamino.length-2]==0 && despeje[despeje.length-1]==1){
+			document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
+			fresnelGlobal=1;
+		}
+		else if(resultadoFresnel[hayDespejeCamino.length-2]==1 && despeje[despeje.length-1]==1){
+			document.getElementById("Fresnel").innerHTML = "Se tiene obstrucción entre el 40% y 60%";
+			fresnelGlobal=1;
+		}
+		else if(resultadoFresnel[hayDespejeCamino.length-2]==2 || despeje[despeje.length-1]==2){
+			document.getElementById("Fresnel").innerHTML = "No hay despeje de fresnel. El 40% se encuentra obstruido.";
+			fresnelGlobal=2;
+		}
+		else{
+			document.getElementById("Fresnel").innerHTML = "";
+		}
 	}
-
 	return;
 }
 
@@ -417,7 +442,7 @@ function InputUser() {
 
   var diffBullington=0;
   if(fresnelGlobal==1)
-    diffBullington=Bullington(distancia).toFixed(3);
+    diffBullington=Bullington(distancia).toFixed(8);
 
   var Prx=parseFloat(Gtx)+parseFloat(Grx)+parseFloat(Ptx)-parseFloat(perdidasConectores)-parseFloat(perdidasFSL)-parseFloat(perdidasOtras)-parseFloat(diffBullington); //Se calcula la potencia de recepción
   Prx=Prx.toFixed(2);
@@ -1105,8 +1130,9 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
     fresnelOI_array[contador]=resFresnel; //Guardo en el histórico el resultado del despeje de fresnel
     despeje[contador]= Fresnel(distanciaobject_array[contador],valuetomodify);
 
+    var largoarray;
     if (despeje[contador]==1){
-      var largoarray=(distanciaFresnel.length-1);
+      largoarray=(distanciaFresnel.length);
       distanciaFresnel[largoarray]=muestra_mod[contador];
       alturaFresnel[largoarray]=valuetomodify;
     }
