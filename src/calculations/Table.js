@@ -41,7 +41,7 @@ function AgregarTabla(objInterferente){
 			resultado40=false;
 		}
 
-		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador-1]]); //Acá empieza a recorrer el array
+		data_detabla.addRow([objInterferente,+parseNumber(document.getElementById("distanciaobjeto").value),+parseNumber(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador-1]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";

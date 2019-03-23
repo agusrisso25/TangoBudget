@@ -6,6 +6,10 @@ function getFreq() {
 	var despeje60;
 	var despeje40;
 
+	if(distanciaFresnel){
+		distanciaFresnel=[];
+		alturaFresnel=[];
+	}
 	//Se calcula si hay despeje de fresnel a lo largo del camino
 	var j=0;
 	for (i=1;i<altura.length-1; i++){

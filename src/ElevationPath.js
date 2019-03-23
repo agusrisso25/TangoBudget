@@ -90,7 +90,7 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
     //por ahora nada
   }
   else if (flag == 1) { //En caso que el flag sea 1, se modifica la altura
-    var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
+    var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseNumber(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
     valuetomodify_array[contador]= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));

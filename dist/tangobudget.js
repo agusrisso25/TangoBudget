@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-03-19 */function addMarkersAndAll(location, map) {
+/*! tangobudget - v0.0.1 - 2019-03-22 */function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
   path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
@@ -330,6 +330,10 @@ function getFreq() {
 	var despeje60;
 	var despeje40;
 
+	if(distanciaFresnel){
+		distanciaFresnel=[];
+		alturaFresnel=[];
+	}
 	//Se calcula si hay despeje de fresnel a lo largo del camino
 	var j=0;
 	for (i=1;i<altura.length-1; i++){
@@ -959,7 +963,7 @@ function AgregarTabla(objInterferente){
 			resultado40=false;
 		}
 
-		data_detabla.addRow([objInterferente,+parseFloat(document.getElementById("distanciaobjeto").value),+parseFloat(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador-1]]); //Acá empieza a recorrer el array
+		data_detabla.addRow([objInterferente,+parseNumber(document.getElementById("distanciaobjeto").value),+parseNumber(document.getElementById("alturaobjeto").value),resultado60 ,resultado40 ,+muestra_mod[contador-1]]); //Acá empieza a recorrer el array
 		table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 		document.getElementById("alturaobjeto").value = "";
     document.getElementById("distanciaobjeto").value = "";
@@ -1092,7 +1096,7 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
     //por ahora nada
   }
   else if (flag == 1) { //En caso que el flag sea 1, se modifica la altura
-    var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
+    var valuetomodify= (parseFloat(altura[muestra_mod[contador]]) + parseNumber(document.getElementById("alturaobjeto").value));
     var distanciaobject = document.getElementById("distanciaobjeto").value;
 
     valuetomodify_array[contador]= (parseFloat(altura[muestra_mod[contador]]) + parseFloat(document.getElementById("alturaobjeto").value));
@@ -1700,16 +1704,6 @@ function parseNumber(numberString){
   }
   return (res);
 }
-
-
-/*var reMatch = /^[+-]?(\d+)(?:[,.](\d+))?$/.exec(numberString);
-if (!reMatch) {
-  return NaN;
-} else if (!reMatch[2]) {
-  return +reMatch[1];
-} else {
-  return +(reMatch[1] +'.'+ reMatch[2]);
-}*/
 
 function ToRadians(degree) {
   return (degree * (Math.PI / 180));
