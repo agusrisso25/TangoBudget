@@ -74,7 +74,7 @@ function initMapInteractive() {
 
 function initMapPrintable() {
   result=parseSearchString();
-  ResultadosPruebaB();
+  ResultadosmainB();
 
   var arr1=result.coordtx.split(",");
   var arr2=result.coordrx.split(",");

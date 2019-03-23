@@ -492,7 +492,7 @@ function InputUser() {
     return;
 
   Resultados(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace);
-  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace);//se genera la url del PruebaB
+  print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_canalTOT,disp_canalTOT_min,TiltTx,TiltRx,Gtx,Grx,Ptx,Prx,MargenFading,sensRX,distancia,perdidasFSL,perdidasLluvia,perdidasConectores,perdidasOtras,diffBullington,enlace);//se genera la url del mainB
   return;
 }
 
@@ -1374,7 +1374,7 @@ function initMapInteractive() {
 
 function initMapPrintable() {
   result=parseSearchString();
-  ResultadosPruebaB();
+  ResultadosmainB();
 
   var arr1=result.coordtx.split(",");
   var arr2=result.coordrx.split(",");
@@ -1506,7 +1506,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
   indisp_anualmin=indisp_anualmin.toFixed(6);
   disp_canalTOT_min=disp_canalTOT_min.toFixed(6);
 
-  document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL +
+  document.getElementById("link").innerHTML = '<a href="mainB.html?perdidasFSL='+ perdidasFSL +
      '&disp_canalTOT='+ disp_canalTOT +
      '&disp_canalLL='+disp_canalLL+
      '&disp_mensualMC='+disp_mensualMC+
@@ -1544,7 +1544,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
   return;
 }
 
-function ResultadosPruebaB(){
+function ResultadosmainB(){
   var despejefinal;
 
   var pol=result.pol;
@@ -1553,9 +1553,9 @@ function ResultadosPruebaB(){
   else
     pol="Horizontal";
 
-  document.getElementById("transmisorpruebaB").value = "("+result.coordtx+")";
-  document.getElementById("receptorpruebaB").value = "("+result.coordrx+")";
-  document.getElementById("distpruebaB").innerHTML = result.distancia+" km";
+  document.getElementById("transmisormainB").value = "("+result.coordtx+")";
+  document.getElementById("receptormainB").value = "("+result.coordrx+")";
+  document.getElementById("distmainB").innerHTML = result.distancia+" km";
 
   if(result.fresnelGlobal=="0"){
     despejefinal="Mayor o igual a 60%";
@@ -1701,7 +1701,7 @@ function ResultadosPruebaB(){
     }];
 
   function populateTable(obj) {
-    var report = document.getElementById('result_table_pruebaB');
+    var report = document.getElementById('result_table_mainB');
 
     // Limpiar tabla antes de agregar datos
     report.innerHTML = '';

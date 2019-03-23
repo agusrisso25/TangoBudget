@@ -1,6 +1,6 @@
-/* Esta función se utiliza para desplegar los resultados en pruebaB
+/* Esta función se utiliza para desplegar los resultados en mainB
 */
-function ResultadosPruebaB(){
+function ResultadosmainB(){
   var despejefinal;
 
   var pol=result.pol;
@@ -9,9 +9,9 @@ function ResultadosPruebaB(){
   else
     pol="Horizontal";
 
-  document.getElementById("transmisorpruebaB").value = "("+result.coordtx+")";
-  document.getElementById("receptorpruebaB").value = "("+result.coordrx+")";
-  document.getElementById("distpruebaB").innerHTML = result.distancia+" km";
+  document.getElementById("transmisormainB").value = "("+result.coordtx+")";
+  document.getElementById("receptormainB").value = "("+result.coordrx+")";
+  document.getElementById("distmainB").innerHTML = result.distancia+" km";
 
   if(result.fresnelGlobal=="0"){
     despejefinal="Mayor o igual a 60%";
@@ -157,7 +157,7 @@ function ResultadosPruebaB(){
     }];
 
   function populateTable(obj) {
-    var report = document.getElementById('result_table_pruebaB');
+    var report = document.getElementById('result_table_mainB');
 
     // Limpiar tabla antes de agregar datos
     report.innerHTML = '';

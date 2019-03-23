@@ -1,4 +1,4 @@
-/* Esta función se utiliza parsear todos los elementos de la URL en PruebaB y guardarlo en un array
+/* Esta función se utiliza parsear todos los elementos de la URL en mainB y guardarlo en un array
 */
 function parseSearchString() {
   result = {};

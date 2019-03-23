@@ -22,7 +22,7 @@ function print(disp_canalLL,disp_mensualMC,disp_anualMC,indisp_anualmin,disp_can
   indisp_anualmin=indisp_anualmin.toFixed(6);
   disp_canalTOT_min=disp_canalTOT_min.toFixed(6);
 
-  document.getElementById("link").innerHTML = '<a href="PruebaB.html?perdidasFSL='+ perdidasFSL +
+  document.getElementById("link").innerHTML = '<a href="mainB.html?perdidasFSL='+ perdidasFSL +
      '&disp_canalTOT='+ disp_canalTOT +
      '&disp_canalLL='+disp_canalLL+
      '&disp_mensualMC='+disp_mensualMC+

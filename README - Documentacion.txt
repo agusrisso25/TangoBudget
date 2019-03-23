@@ -1,21 +1,21 @@
 ﻿Bloques de funcionamiento del programa Tango Budget
 
-**PruebaA.html
-En el archivo principal del tipo html, se tiene la estructura principal del programa, es decir, la descripción gráfica de nuestra aplicación web. En él se define el ``cuerpo'' de la página, se hace referencia a las hojas de estilos CSS y a los archivos javascript que se utilizan para la aplicación. 
+**mainA.html
+En el archivo principal del tipo html, se tiene la estructura principal del programa, es decir, la descripción gráfica de nuestra aplicación web. En él se define el ``cuerpo'' de la página, se hace referencia a las hojas de estilos CSS y a los archivos javascript que se utilizan para la aplicación.
 
 Las hojas de estilo u archivos de formato .CSS se utilizan para para dar formato y diseño en la presentación de la web.
 
 Por otro lado, los archivos JavaScript se utilizan para controlar el comportamiento de los diferentes elementos, es decir que aportan funcionalidad dinámica. En ellos se definen las funciones que hacen que nuestra aplicación funcione acorde a lo diseñado. A continuación, se detalla la funcionalidad de cada archivo .js utilizado para el desarrollo del programa.
 
-*Archivos JavaScript para el funcionamiento de la página principal - PruebaA.html
+*Archivos JavaScript para el funcionamiento de la página principal - mainA.html
 El programa se compone de varios bloques y diferentes funciones javascript que se detallan a continuación.
 
 -AddMarkersAndAll.js
 El objetivo principal de esta función, es permitir al usuario la inserción de dos marcadores del mapa que representan a la antena transmisora y receptora. Una vez ingresadas ambas antenas, el programa detecta las coordenadas de cada marcador y traza una línea recta entre ellas, calculando así la distancia que hay entre ellos.
 
-La forma en que el usuario puede insertar los marcadores en el mapa es haciendo ``click'' en la ubicación deseada de este, acción que automáticamente deriva en la inclusión del marcador sobre el mapa. 
+La forma en que el usuario puede insertar los marcadores en el mapa es haciendo ``click'' en la ubicación deseada de este, acción que automáticamente deriva en la inclusión del marcador sobre el mapa.
 
-Mientras el usuario realiza esta acción, la función AddMarkersAndAll.js se encarga de rellenar un array \footnote{Array: Se le denomina a una zona de almacenamiento que contiene una serie de elementos del mismo tipo, los elementos de la matriz.\cite{Array}} llamado ``path'' que se utiliza para almacenar los valores de latitud y longitud de cada marcador para su posterior uso en el programa. 
+Mientras el usuario realiza esta acción, la función AddMarkersAndAll.js se encarga de rellenar un array \footnote{Array: Se le denomina a una zona de almacenamiento que contiene una serie de elementos del mismo tipo, los elementos de la matriz.\cite{Array}} llamado ``path'' que se utiliza para almacenar los valores de latitud y longitud de cada marcador para su posterior uso en el programa.
 
 Los marcadores, denominados ``marker'' en el código, cuentan con una animación de salto que el usuario visualiza en el momento de su inserción en el mapa. Una particularidad que tienen es que se pueden arrastrar, a través del mapa, hacia otra posición. Esta acción hace que el array ``path'' se actualice almacenando, solamente, la última posición de estos.
 
@@ -24,34 +24,34 @@ Esta función se encarga también de obtener los valores de latitud y longitud d
 Con el fin de que el enlace sea punto a punto, el cliente tiene la capacidad de colocar solamente dos marcadores en el mapa.
 
 -ElevationPath.js
-Este bloque, es uno de los más importantes dado que contiene una función denominada ``displayPathElevation()'' que, como se mencionó anteriormente, se encarga de obtener el perfil de elevación del camino, una vez definidos en el mapa los marcadores. 
+Este bloque, es uno de los más importantes dado que contiene una función denominada ``displayPathElevation()'' que, como se mencionó anteriormente, se encarga de obtener el perfil de elevación del camino, una vez definidos en el mapa los marcadores.
 
 Se define:
 	- La cantidad de muestras que se toma para la creación y despliegue del camino en función de su largo: 100 muestras por km.
     - A partir del punto mencionado anteriormente, se utiliza el servicio de elevación brindado por Google Maps, que proporciona información de locación y elevación sobre el nivel del mar de cada muestra determinada en el camino. En otras palabras, el objeto de elevación definido en el código --``getElevationAlongPath()''--  se comunica con el servicio de elevación de la API de google Maps que, recibe solicitudes, y devuelve los datos de elevación.
 
-Tomando los valores devueltos por el servicio, se dibuja el camino punto a punto entre los dos marcadores y se grafica el perfil de elevación sobre una visualización de ``gráfico de columnas'' de la API de Google Maps. 
+Tomando los valores devueltos por el servicio, se dibuja el camino punto a punto entre los dos marcadores y se grafica el perfil de elevación sobre una visualización de ``gráfico de columnas'' de la API de Google Maps.
 
 Otra forma de acceder a la función, es comprobando el valor de un flag que es seteado desde otras funciones que se mencionan a continuación:
 
-    -Si flag=1: El usuario desea colocar objetos interferentes visto desde la antena transmisora. 
-    Cuando surge esta acción, la información: 
+    -Si flag=1: El usuario desea colocar objetos interferentes visto desde la antena transmisora.
+    Cuando surge esta acción, la información:
         Sobre la muestra modificada: Se guarda en un array llamado "muestra_mod"
         Sobre la distancia modificada: Se guarda en un array llamado "distanciaobject_array"
         Sobre la altura agregada:Sobre la cantidad de OI que se agregaron: Se guarda en una variable global llamada "contador"
-    
+
     No es posible colocar un objeto interferente encima de otro. No tendría sentido agregar un árbol que está a 50 metros desde la antena transmisora y luego colocar otro objeto interferente del tipo edificio a 50 metros desde la antena transmisora. En este caso el programa desplegará una alerta.
-    
+
     Por otra parte se actualiza gráficamente el perfil de elevación.
-    
-    Luego de realizar esto, se llama a la función -"AgregarTabla()"- para que se cree o actualice la tabla que contiene los objetos interferentes agregados. Se agrega una fila por objeto agregado. 
+
+    Luego de realizar esto, se llama a la función -"AgregarTabla()"- para que se cree o actualice la tabla que contiene los objetos interferentes agregados. Se agrega una fila por objeto agregado.
     En caso que el usuario no haya ingresado información en algún campo obligatorio, se despliega una alerta.
-    
+
     No se podrán colocar objetos interferentes en las antenas, dado que en la práctica, si una de las antenas tiene un objeto interferente que la obstruye, se levanta la altura de las antenas o se coloca por delante del OI}
     Si flag=2 o es la primera vez que se solicita el perfil de elevación:
     En caso que sea la primera vez que se solicita el perfil de elevación, se crea una visualización del tipo "DataTable" para poder alojar la información que devuelve el servicio de Google Maps. Luego de obtener la información, se transfiere a un array  llamado "altura"	el muestreo de información quitando los valores que no pudieron ser enviados desde el servidor de Google Maps y se guardaron como ``undefined''. Por otro lado, las coordenadas -(Latitud,Longitud)- de cada una de las muestras del perfil de elevación también se guardan, en un array llamado "coordenadas".
-    
-	Previo a proceder con la manipulación de la información, se realiza un análisis en caso que haya una pérdida de información mayor a un 20%. Puede pasar que la conexión a internet no sea suficiente o que exista un problema en el servidor y devuelva una menor cantidad de información. 
+
+	Previo a proceder con la manipulación de la información, se realiza un análisis en caso que haya una pérdida de información mayor a un 20%. Puede pasar que la conexión a internet no sea suficiente o que exista un problema en el servidor y devuelva una menor cantidad de información.
     En caso que la pérdida sea mayor al 20%, entonces el programa desplegará una alerta al usuario para que recargue la página, y comience de cero.}
     En caso que se hayan movido los marcadores, es necesario que:
         -Se recalcule el perfil de elevación
@@ -60,7 +60,7 @@ Otra forma de acceder a la función, es comprobando el valor de un flag que es s
         -Se eliminen los objetos interferentes que se modificaron
         -Se elimine la información ingresada sobre los datos del enlace
     Si flag=3: El usuario desea deshacer la altura que modificó la última vez. Esto surge desde la función llamada "DeshacerAltura()"
-    
+
     Se decrementa el contador global de objetos interferentes agregados y se borra la información de la posición de los arrays mencionados anteriormente.
     Por último, se actualiza la tabla que contiene los OI que el usuario colocó, quitando el último valor agregado.}
     Si flag=4: El usuario desea agregar altura a las antenas Tx y Rx. Este paso es similar al de agregar OI, sólo que aumenta la altura de las antenas y modifica el primer y último valor del array "altura"
@@ -86,9 +86,9 @@ Este bloque se utiliza para borrar toda la información que pertenece al mapa:
     - Marcadores que se ingresaron en el mapa
 
 FunctionInit.js
-Este bloque se utiliza para inicializar tanto el mapa, como variables que se utilizan a lo largo del funcionamiento de la página web. Los eventos ``listener'' se definen en esta función. Estos, registran un evento a un objeto en específico, por ejemplo, un "click" en el mapa, o en un campo definido en la página web. 
+Este bloque se utiliza para inicializar tanto el mapa, como variables que se utilizan a lo largo del funcionamiento de la página web. Los eventos ``listener'' se definen en esta función. Estos, registran un evento a un objeto en específico, por ejemplo, un "click" en el mapa, o en un campo definido en la página web.
 
-Dentro de esta función, dependiendo de qué mapa es inicializado, las funciones que se utilizarán (Se puede inicializar PruebaA o PruebaB).
+Dentro de esta función, dependiendo de qué mapa es inicializado, las funciones que se utilizarán (Se puede inicializar mainA o mainB).
 
 MarkersToggleBounce.js
 Este bloque añade una animación a los marcadores que se colocan sobre el mapa; hace que estos reboten en el momento en que se hace "click" en el mapa para ser añadidos.
@@ -122,7 +122,7 @@ Se estudian los siguientes casos:
         -caso 3: Pmax2 mayor a la antena Rx y menor a la Tx
         caso 4: Pmax2 menor a ambas antenas
 
-Sea cual sea el caso de uso, la función devolverá 1 si tiene linea de vista y 0 si no la tiene. 
+Sea cual sea el caso de uso, la función devolverá 1 si tiene linea de vista y 0 si no la tiene.
 
 DistanceToBorders.js
 Este bloque se utiliza para calcular la distancia a los bordes, una vez obtenidas las coordenadas de los marcadores.
@@ -131,15 +131,15 @@ DraggableButton.js
 Esta función permite al usuario arrastrar los marcadores colocados en el mapa y recalcular las coordenadas.
 
 FSL.js
-Este bloque tiene como funcionalidad calcular las pérdidas de espacio libre por definición 
+Este bloque tiene como funcionalidad calcular las pérdidas de espacio libre por definición
 
 Fresnel.js
-Este bloque tiene como funcionalidad calcular el radio de Fresnel utilizando su definición y luego detecta si el objeto interferente tiene un 40% o 60% de despeje. 
+Este bloque tiene como funcionalidad calcular el radio de Fresnel utilizando su definición y luego detecta si el objeto interferente tiene un 40% o 60% de despeje.
 
 InputUser.js
-Este módulo tiene como funcionalidad tomar toda la información que ingresó el usuario en la plataforma y hacer todos los cálculos necesarios para generar la tabla de resultados. 
-En caso que falte información obligatoria, el programa desplegará un error. 
-El usuario debe ingresar, observando el datasheet 
+Este módulo tiene como funcionalidad tomar toda la información que ingresó el usuario en la plataforma y hacer todos los cálculos necesarios para generar la tabla de resultados.
+En caso que falte información obligatoria, el programa desplegará un error.
+El usuario debe ingresar, observando el datasheet
     -Ganancia de antena transmisora y receptora
     -Potencia de transmisión
     -Pérdidas de conectores y otras
@@ -154,15 +154,15 @@ Este bloque tiene como funcionalidad ingresar objetos interferentes a lo largo d
 No se poedrá ingresar objetos interferentes sobre las antenas ni se puede colocar objetos interferentes a distancias que exceden el largo del camino definido
 
 ModifyRxTx.js
-Este bloque tiene como funcionalidad modificar la altura de las antenas Tx y Rx. 
+Este bloque tiene como funcionalidad modificar la altura de las antenas Tx y Rx.
 No se podrá ingresar alturas negativas ni nulas.
 
 ResultTable.js
 Este bloque tiene como funcionalidad desplegar los resultados de los cálculos. En ella se desplegarán los cálculos correspondientes a:
 
-    -Altura del transmisor y receptor (m) 
+    -Altura del transmisor y receptor (m)
     -Ganancia del transmisor y receptor (dBi)
-    -Potencia del transmisor y receptor (dBm) 
+    -Potencia del transmisor y receptor (dBm)
     -Ángulo de inclinación entre las antenas (grados)
     -Sensibilidad de recepción (dBm)
     -Frecuencia de transmisión (GHz)
@@ -202,10 +202,10 @@ BorrarFila.js
 Para finalizar con esta acción, se llama a la función BorrarFila.js que remueve la última muestra agregada en la tabla de los OI agregados y borra la información agregada a los array.
 
 Print.js
-Esta función se utiliza para generar la URL que se utilizará para desplegar los resultados finales en el pruebaB.html 
+Esta función se utiliza para generar la URL que se utilizará para desplegar los resultados finales en el mainB.html
 
 getFreq.js
-Esta función se ejecuta cuando el usuario ingresa la frecuencia de transmisión. Una vez que se toma esta información, se guarda la frecuencia en una variable global y se ejecuta la función Fresnel.js para calcular el despeje de Fresnel correspondiente al perfil de elevación sin objetos interferentes. 
+Esta función se ejecuta cuando el usuario ingresa la frecuencia de transmisión. Una vez que se toma esta información, se guarda la frecuencia en una variable global y se ejecuta la función Fresnel.js para calcular el despeje de Fresnel correspondiente al perfil de elevación sin objetos interferentes.
 
 IndispMin.js
 Esta función se utiliza para calcular la cantidad de minutos que puede llegar a tener el enlace en caso de indisponibilidad, utilizando la definición \cite{ITU530}
@@ -220,22 +220,21 @@ Bullington.js
 Este bloque calcula las pérdidas por difracción tomando a los objetos interferentes por filo de cuchillo, utilizando el método de Bullington.
 
 ChannelAvailability.js
-Esta función calcula la disponibilidad del enlace anual por Multi Camino, por el método de Barnett Vigant. 
+Esta función calcula la disponibilidad del enlace anual por Multi Camino, por el método de Barnett Vigant.
 
 ChannelAvailability2.js
 Este bloque utiliza el método de la ITU \cite{ITU530} para calcular la disponibilidad del enlace mensual por Multi Camino. Además devuelve la disponibilidad anual y los minutos de indisponibilidad en el año.
 
-**PruebaB.html
-Una vez que el usuario ya ingresó toda la información y desea imprimir el reporte, junto con el despliegue de resultados, se genera un nuevo link donde, haciendo ``click'', se despliegan todos los resultados relevantes. 
+**mainB.html
+Una vez que el usuario ya ingresó toda la información y desea imprimir el reporte, junto con el despliegue de resultados, se genera un nuevo link donde, haciendo ``click'', se despliegan todos los resultados relevantes.
 
-A diferencia del html PruebaA.html, este contiene el resumen con los resultados de cálculos finales.
+A diferencia del html mainA.html, este contiene el resumen con los resultados de cálculos finales.
 
-Archivos JavaScript para el funcionamiento de la página principal - PruebaB.html
+Archivos JavaScript para el funcionamiento de la página principal - mainB.html
 parseSearchString.js
-Se utiliza el concepto de Query String Search \cite{Querystring} para pasar los parámetros calculados en pruebaA mediante la URL y se puedan visualizar desde PruebaB.html. 
+Se utiliza el concepto de Query String Search \cite{Querystring} para pasar los parámetros calculados en mainA mediante la URL y se puedan visualizar desde mainB.html.
 
-Una vez que está modificada la URL de pruebaB, se toma la información y se guarda en un array llamado "result". 
+Una vez que está modificada la URL de mainB, se toma la información y se guarda en un array llamado "result".
 
-pruebaBresulttable.js
+mainBresulttable.js
 Una vez que se tiene toda la información en el array ``result'', se despliega en la tabla y en el mapa los resultados.
-

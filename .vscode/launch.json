@@ -1,6 +1,6 @@
 {
     // Use IntelliSense para saber los atributos posibles.
-    // Mantenga el puntero para ver las descripciones de los existentes atributos 
+    // Mantenga el puntero para ver las descripciones de los existentes atributos
     // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
@@ -8,9 +8,9 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome",
-            "url": "file:///C:/Users/Usuario/Documents/UCU/tesis/Julio/Modifiedv10/PruebaA.html",
+            "url": "file:///C:/Users/Usuario/Documents/UCU/tesis/Julio/Modifiedv10/mainA.html",
             "webRoot": "${workspaceFolder}"
         },
-       
+
     ]
 }
