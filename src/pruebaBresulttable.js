@@ -32,6 +32,10 @@ function ResultadosmainB(){
   var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores)+parseFloat(result.diffBullington);
   var obj = [
 		{
+			name: "",
+			value: ""
+		},
+		{
 			name: "Altura total del Transmisor (m) ",
 			value: result.htx
 		},
@@ -110,6 +114,61 @@ function ResultadosmainB(){
 		{
 			name: "",
 			value: ""
+		}
+		];
+
+  function populateTable(obj) {
+    var report = document.getElementById('result_table_mainB');
+
+    // Limpiar tabla antes de agregar datos
+    report.innerHTML = '';
+
+    // Por cada elemento agregar una fila con dos columnas. Una para el nombre y otra para el valor
+    for (var i = 0; i < Object.keys(obj).length; i++) {
+      var tr = "<tr><td>" + obj[i].name + "</td><td>" + obj[i].value + "</td></tr>";
+      report.innerHTML += tr;
+    }
+  }
+
+  populateTable(obj);
+  }
+
+	/* Esta función se utiliza para desplegar los resultados en mainB
+*/
+function ResultadosmainB2(){
+  var despejefinal;
+
+  var pol=result.pol;
+  if(pol==1)
+    pol="Vertical";
+  else
+    pol="Horizontal";
+
+  document.getElementById("transmisormainB").value = "("+result.coordtx+")";
+  document.getElementById("receptormainB").value = "("+result.coordrx+")";
+  document.getElementById("distmainB").innerHTML = result.distancia+" km";
+
+  if(result.fresnelGlobal=="0"){
+    despejefinal="Mayor o igual a 60%";
+  }
+  else if(result.fresnelGlobal=="1"){
+    despejefinal="Entre el 40% y 60%";
+  }
+  else {
+    despejefinal="No hay despeje de Fresnel";
+  }
+
+  var enlace;
+  if (result.enlace=="0")
+		enlace="Enlace Aceptable";
+	else if (result.enlace=="1")
+		enlace="Enlace no Aceptable";
+
+  //var totPerdidas=parseFloat(result.perdidasFSL)+parseFloat(result.perdidasOtras)+parseFloat(result.perdidasConectores)+parseFloat(result.diffBullington);
+  var obj = [
+		{
+			name: "",
+			value: ""
 		},
 		{
 	    name: "Despeje de Fresnel",
@@ -154,10 +213,15 @@ function ResultadosmainB(){
     {
       name: "Viabilidad del enlace",
       value: enlace
-    }];
+		},
+		{
+			name: "",
+			value: ""
+		}
+	];
 
   function populateTable(obj) {
-    var report = document.getElementById('result_table_mainB');
+    var report = document.getElementById('result_table_mainB2');
 
     // Limpiar tabla antes de agregar datos
     report.innerHTML = '';

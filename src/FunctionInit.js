@@ -75,6 +75,7 @@ function initMapInteractive() {
 function initMapPrintable() {
   result=parseSearchString();
   ResultadosmainB();
+  ResultadosmainB2();
 
   var arr1=result.coordtx.split(",");
   var arr2=result.coordrx.split(",");
@@ -146,9 +147,11 @@ function initMapPrintable() {
 
     chart.draw(dataB, {
       height: 200,
+      width: 950,
+      alignment: 'center',
       legend: 'none',
       titleX: 'Cantidad de muestras',
-      titleY: 'Elevación (m)'
+      titleY: 'Elevación (m)',
     });
   }
 
