@@ -22,7 +22,7 @@ function getFreq() {
 		}
 	}
 	var resultadoFresnel=hayDespejeCamino.sort();
-	if(!despeje){
+	if(!despeje || despeje.length==0){
 		//luego debo saber en qué región de decisión está el despeje.
 		if(resultadoFresnel[hayDespejeCamino.length-2]==0){
 			document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";

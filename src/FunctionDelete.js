@@ -33,3 +33,23 @@ function deleteMarkersAndPath() {
     document.getElementById('elevation_chart').innerHTML="";
     document.getElementById('link').innerHTML="";
 }
+
+function resetDrag(){
+  altura=[];
+  altura2=[];
+  hayDespejeCamino=[];
+  //getFreq(); //Se recalcula el fresnel del camino
+  document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
+  document.getElementById("alturaantenarx").value = "0";
+  despeje=[]; //Se borra array de los despejes de los OI
+  muestra_mod=[];
+
+  document.getElementById("elevation_chart").innerHTML = "";
+  document.getElementById("Ldevista").innerHTML = "";
+  /*for(i=0;i<muestra_mod.length;i++){ //Borro tabla de objetos interferentes
+    BorrarFila();
+  }*/
+  valuetomodify_array=[];
+  distanciaobject_array=[];
+  contador=0;
+}

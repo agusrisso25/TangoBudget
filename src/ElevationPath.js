@@ -48,19 +48,12 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
-      altura=[];
-      altura2=[];
-      hayDespejeCamino=[];
-      getFreq(); //Se recalcula el fresnel del camino
-      document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
-      document.getElementById("alturaantenarx").value = "0";
-      despeje=[]; //Se borra array de los despejes de los OI
-      muestra_mod=[];
-
-      document.getElementById("Ldevista").innerHTML = "";
-      for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
-        BorrarFila();
+      console.log("llegue a flag=2 en elevationpath");
+      resetDrag();
     }
+
+    console.log("llegue a resetDrag y se ejecuto");
+
 
     data = new google.visualization.DataTable();
     chart = new google.visualization.ColumnChart(chartDiv);

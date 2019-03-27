@@ -50,6 +50,6 @@ function AgregarTabla(objInterferente){
 }
 
 function BorrarFila(){
-	data_detabla.removeRow(contador-1); //Acá empieza a recorrer el array
+	data_detabla.removeRow(muestra_mod.length-1); //Acá empieza a recorrer el array
 	table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 	}
