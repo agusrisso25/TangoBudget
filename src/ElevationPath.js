@@ -48,11 +48,8 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
-      console.log("llegue a flag=2 en elevationpath");
       resetDrag();
     }
-
-    console.log("llegue a resetDrag y se ejecuto");
 
 
     data = new google.visualization.DataTable();
@@ -130,6 +127,7 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
     var firstocurr=despeje.indexOf(fresnelOI_array[contador-1]);//delete (despeje[(fresnelOI_array[contador-1])]);
     despeje.splice(firstocurr,1);
     fresnelOI_array.pop(); //remueve el ultimo elemento del array
+    muestra_mod.pop();
     valuetomodify_array.pop();
     distanciaobject_array.pop();
     contador--; //y se decrementa el contador
@@ -205,9 +203,5 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
     document.getElementById("Ldevista").innerHTML = "¡Hay línea de vista!";
   } else if (hayLOS == 0) {
     document.getElementById("Ldevista").innerHTML = "¡Cuidado! No hay línea de vista. Se sugiere aumentar las alturas de las antenas.";
-  }
-
-  if (elevations.length !== altura.length) {
-    console.log('elevations.length ('+ elevations.length +') !== altura.length ('+ altura.length +')!');//FIXME
   }
 });

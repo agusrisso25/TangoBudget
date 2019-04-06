@@ -52,8 +52,6 @@ function DispCanalLLuvia (perdidasLluvia, MargenFading) {
     index_p=ec2.indexOf(valor_mascercano);
     result_p=p[index_p];
 
-    console.log("result_p: "+result_p);
-
     displluvia=100-result_p;
     return(displluvia);
   }

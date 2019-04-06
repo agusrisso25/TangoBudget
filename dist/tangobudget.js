@@ -1,4 +1,4 @@
-/*! tangobudget - v0.0.1 - 2019-03-26 */function addMarkersAndAll(location, map) {
+/*! tangobudget - v0.0.1 - 2019-04-06 */function addMarkersAndAll(location, map) {
   var distancia_perfil = 0;
   path = poly.getPath(); // en path guardo la poly creada (se crea luego de dos clicks)
   path.push(location); // path es un array por definicion, se hace un push al array de cada location de cada punto de la polyline
@@ -112,8 +112,6 @@ function Bullington(distancia) {
 				mayorPendTx=pend1;
 			ctemayorPendTx=cte1;
 		}
-		console.log("mayorPendTx: "+mayorPendTx);
-		console.log("ctePendTx: "+ctemayorPendTx);
 
 		for(j=0;j<distanciaFresnel.length;j++){
 			pend2=((altura[altura.length-1]-alturaFresnel[j])/(distancia*1000-distanciaFresnel[j]));
@@ -122,8 +120,6 @@ function Bullington(distancia) {
 				mayorPendRx=pend2;
 				ctemayorPendRx=cte2;
 				}
-				console.log("mayorPendRx: "+mayorPendRx);
-				console.log("ctePendRx: "+ctemayorPendRx);
 		}
 
 		/* Luego, se debe intersectar las dos rectas con mayor pendiente para encontrar la distancia y altura del
@@ -136,9 +132,6 @@ function Bullington(distancia) {
 		*/
 		OIficticio=Math.floor((ctemayorPendRx-ctemayorPendTx)/(mayorPendTx-mayorPendRx)); //este valor sirve para tener una noción de donde estará el objeto interferente ficticio
 		h_OIficticio=mayorPendTx*OIficticio+ctemayorPendTx; //Esta será la altura del objeto ficticio
-
-		console.log("OIficticio:" +OIficticio);
-		console.log("h_OIficticio:" +h_OIficticio);
 
 		a1= OIficticio*10;
 		a2=(distancia*1000-a1);
@@ -265,8 +258,6 @@ function DispCanalLLuvia (perdidasLluvia, MargenFading) {
     index_p=ec2.indexOf(valor_mascercano);
     result_p=p[index_p];
 
-    console.log("result_p: "+result_p);
-
     displluvia=100-result_p;
     return(displluvia);
   }
@@ -346,7 +337,7 @@ function getFreq() {
 		}
 	}
 	var resultadoFresnel=hayDespejeCamino.sort();
-	if(!despeje){
+	if(!despeje || despeje.length==0){
 		//luego debo saber en qué región de decisión está el despeje.
 		if(resultadoFresnel[hayDespejeCamino.length-2]==0){
 			document.getElementById("Fresnel").innerHTML = "Se tiene un despeje mayor o igual al 60%";
@@ -466,8 +457,6 @@ function InputUser() {
     disp_canalTOT_min=(100-disp_canalTOT)*525600/100;
 
     if(disp_canalTOT>=99.998){
-      //hay que definir cual es el aceptable.
-      console.log("Enlace aceptable");
       enlace=0;
     }
     else{
@@ -997,7 +986,7 @@ function AgregarTabla(objInterferente){
 }
 
 function BorrarFila(){
-	data_detabla.removeRow(contador-1); //Acá empieza a recorrer el array
+	data_detabla.removeRow(muestra_mod.length-1); //Acá empieza a recorrer el array
 	table.draw(data_detabla, {showRowNumber: true, width: '100%', height: '100%'});
 	}
 
@@ -1079,19 +1068,9 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
   var resultadoFresnel;
   if (!data || flag==2) { //Inicializa la variable global data solamente si no está inicializada o si los marcadores se movieron.
     if (flag==2){
-      altura=[];
-      altura2=[];
-      hayDespejeCamino=[];
-      getFreq(); //Se recalcula el fresnel del camino
-      document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
-      document.getElementById("alturaantenarx").value = "0";
-      despeje=[]; //Se borra array de los despejes de los OI
-      muestra_mod=[];
-
-      document.getElementById("Ldevista").innerHTML = "";
-      for(i=0;i<contador;i++) //Borro tabla de objetos interferentes
-        BorrarFila();
+      resetDrag();
     }
+
 
     data = new google.visualization.DataTable();
     chart = new google.visualization.ColumnChart(chartDiv);
@@ -1168,6 +1147,7 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
     var firstocurr=despeje.indexOf(fresnelOI_array[contador-1]);//delete (despeje[(fresnelOI_array[contador-1])]);
     despeje.splice(firstocurr,1);
     fresnelOI_array.pop(); //remueve el ultimo elemento del array
+    muestra_mod.pop();
     valuetomodify_array.pop();
     distanciaobject_array.pop();
     contador--; //y se decrementa el contador
@@ -1244,10 +1224,6 @@ var plotElevation = avoidExecutionOverlap(function plotElevation(elevations, sta
   } else if (hayLOS == 0) {
     document.getElementById("Ldevista").innerHTML = "¡Cuidado! No hay línea de vista. Se sugiere aumentar las alturas de las antenas.";
   }
-
-  if (elevations.length !== altura.length) {
-    console.log('elevations.length ('+ elevations.length +') !== altura.length ('+ altura.length +')!');//FIXME
-  }
 });
 
 function showCoordenadas(latitud, longitud) {
@@ -1298,6 +1274,26 @@ function deleteMarkersAndPath() {
     document.getElementById('link').innerHTML="";
     document.getElementById('elevation_chart').innerHTML="";
     document.getElementById('link').innerHTML="";
+}
+
+function resetDrag(){
+  altura=[];
+  altura2=[];
+  hayDespejeCamino=[];
+  //getFreq(); //Se recalcula el fresnel del camino
+  document.getElementById("alturaantenatx").value = "0"; //Habilita los campos nuevamente
+  document.getElementById("alturaantenarx").value = "0";
+  despeje=[]; //Se borra array de los despejes de los OI
+  muestra_mod=[];
+
+  document.getElementById("elevation_chart").innerHTML = "";
+  document.getElementById("Ldevista").innerHTML = "";
+  /*for(i=0;i<muestra_mod.length;i++){ //Borro tabla de objetos interferentes
+    BorrarFila();
+  }*/
+  valuetomodify_array=[];
+  distanciaobject_array=[];
+  contador=0;
 }
 
 // Cada marcador se etiqueta con un letra alfabetica.

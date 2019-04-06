@@ -77,8 +77,6 @@ function InputUser() {
     disp_canalTOT_min=(100-disp_canalTOT)*525600/100;
 
     if(disp_canalTOT>=99.998){
-      //hay que definir cual es el aceptable.
-      console.log("Enlace aceptable");
       enlace=0;
     }
     else{
